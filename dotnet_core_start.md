@@ -110,8 +110,45 @@ Git 版本使用
             this.DbContextFactory = contextFactory;
             sqlAnalyzer = SinoRail.DataProvider.Analyzer.SqlAnalyzerFactory.GetAnalyzer(DbContextFactory.DataProvider.DatabaseType);
         }
+        
+        // sql查询示例代码
+        public List<object> GetSummary(DateTime begin, DateTime end)
+        {
+            List<object> lst = new List<object>();
+            try
+            {
+                string query = sqlAnalyzer.Process(DBSqls.SUM_ALARM_PARSED_SUMMARY);
+                using (IDataContext context = DbContextFactory.Create(true))
+                {
+                    lst = context.QueryList<object>(query, new { begin = begin, end = end });
+                }
+            }
+            catch (Exception ex)
+            {
+                SinoRail.Common.Log.Logger.Current.Error(ex.StackTrace);
+                lst = null;
+            }
+            return lst;
+        }
     }
-```
+
+    // 统一定义sql
+    public class DBSqls
+    {
+        // 报警查询
+        public const string SUM_ALARM_PARSED_COSTTIME = @"
+        select t.clientname,count(*) nums, round(avg((t.parsedtime-t.downtime)*(24*60*60)),0) avgtime  from log_consumer_alarm t 
+        where t.collecttime>@begin and t.collecttime<@end and t.finalstatus=1
+        group by t.clientname order by t.clientname
+        ";
+        public const string SUM_ALARM_PARSED_DAYS = @"
+        select days, sum(nums) nums,sum(succ) succ,sum(fail) fail from(
+        select to_char(t.collecttime,'yyyymmdd') days,1 nums,decode(t.status,200,1,0) succ,decode(t.status,200,0,1) fail  from log_consumer_alarm t 
+        where t.collecttime>@begin and t.collecttime<@end 
+        ) group by days order by days 
+        ";
+    }
+``` 
 ### docker file
 ```
     FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
