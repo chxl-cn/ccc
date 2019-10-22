@@ -49,6 +49,12 @@ Git 版本使用
 ### 依赖注入开发规范
     Startup.cs
 ```c# 
+    // 单个读取配置，支持对象序列化的读取
+    string isEncryption = Configuration["ConnectionStrings:IsEncryption"];
+    string dbProviderString = Configuration["ConnectionStrings:DbProvider"];
+    string password = Configuration["ConnectionStrings:ConnectionString"];
+```
+```c# 
     // 注册数据访问组件
     services.AddSingleton(typeof(SinoRail.DataProvider.DataContextFactory), dbFactory);
     // 注册数据库访问类
@@ -95,7 +101,6 @@ Git 版本使用
     {
         DataContextFactory DbContextFactory = null;
         SinoRail.DataProvider.Analyzer.AbsAnalyzer sqlAnalyzer = null;
-
         /// <summary>
         /// 报警数据访问类
         /// </summary>
@@ -109,13 +114,13 @@ Git 版本使用
 ```
 ### docker file
 ```
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
-EXPOSE 8091
-EXPOSE 8092
-COPY app/bin/Release/netcoreapp2.1/publish/ app/
-WORKDIR /app
-ENTRYPOINT ["dotnet", "C3DataProvider.dll"]
-#设置时区 ORACLE需要设置
-ENV TZ=Asia/Beijin
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+    EXPOSE 8091
+    EXPOSE 8092
+    COPY app/bin/Release/netcoreapp2.1/publish/ app/
+    WORKDIR /app
+    ENTRYPOINT ["dotnet", "C3DataProvider.dll"]
+    #设置时区 ORACLE需要设置
+    ENV TZ=Asia/Beijin
+    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ```
