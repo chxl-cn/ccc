@@ -79,5 +79,5 @@ SinoRail.DPC.Cache
     // 读写缓存
     var hello = SinoRail.DPC.Cache.CacheProvider.Get<object>("test_hello");
     SinoRail.DPC.Cache.CacheProvider.Update("test_hello", "world_" + System.DateTime.Now.ToString());
-    hello = SinoRail.DPC.Cache.CacheProvider.Get<string>("test_hello");armDO alarm = context.QueryById<AlarmDO>(sql,id);
+    hello = SinoRail.DPC.Cache.CacheProvider.Get<string>("test_hello");
 ```
