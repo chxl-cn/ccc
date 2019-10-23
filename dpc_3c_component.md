@@ -12,9 +12,25 @@ SinoRail.Common
 -----------------------------------
 ### 加解密组件
 #### 提供AES加解密功能，MD5加密功能
-    AesFactory.cs
+    AES:  
+    不同加密方案提供不同的KEY和VI
 ```C#
     // AES加解密
+    var provider = CryptoProviderFactories.GetCryptoProvider(SinoRail.Common.Security.CryptoType.DbConnection);
+    var cryptoString = "124aaaaaaaaaaaaaaaaaaaaaaaa";
+    var s1 = provider.Encrypt(cryptoString);
+    var s2 = provider.Decrypt(s1);
+```
+    Log:  
+    日志模块
+```C#
+    // 程序启动初始化
+    ILogWriter log4Writer = new Log4Writer("log4net.config");
+    ILogWriter pipWriter = new CustomPipWriter();
+    Logger.Init(new ILogWriter[] { log4Writer, pipWriter }, 2000);
+    
+    // error log
+    Logger.Current.ErrorFormat("ErrorFormatTest {0} {1}。。。", "arg1", "arg2");
 
 ```
 SinoRail.DPC.C3
@@ -31,7 +47,23 @@ SinoRail.Dataprovider
 ### 数据访问组件
     DataContext.cs
 ```c# 
-    // 提供跨数据库访问的API
+    // 一般情况下：DataContextFactory都是通过startup.cs注入
+    // 实例化conn
+    string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["DEFAULT"].ConnectionString;
+    DbProviderFactory factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+    clientConnection = new DataContextProvider()
+    {
+        ConnectionString = connStr,
+        DbProviderFactory = factory,
+        ParameterChar = ":"
+    };
+    // 创建context
+    DataContextFactory factory = new DataContextFactory(clientConnection);
+    using (IDataContext context = factory.Create())
+    {
+        string sql = "select id from ALARM t where t.ID=:id ";
+        AlarmDO alarm = context.QueryById<AlarmDO>(sql,id);
+    }
 
 ```
 
