@@ -1,12 +1,13 @@
-3C developer doc - dotnet core开发规范
+3C developer doc - 公用组件开发说明
 =================
   
 组件目录
 -----------------------------------
-+ SinoRail.Common            公用组件
-+ SinoRail.DPC.C3            3C公用组件
-+ SinoRail.Local            本地化类或语言包
++ SinoRail.Common                公用组件
++ SinoRail.Local                本地化类或语言包
 + SinoRail.Dataprovider            数据访问组件
++ SinoRail.DPC.Cache            缓存组件/REDIS
++ SinoRail.DPC.C3                3C公用组件
 
 SinoRail.Common
 -----------------------------------
@@ -64,6 +65,19 @@ SinoRail.Dataprovider
         string sql = "select id from ALARM t where t.ID=:id ";
         AlarmDO alarm = context.QueryById<AlarmDO>(sql,id);
     }
-
 ```
-
+SinoRail.DPC.Cache
+-----------------------------------
+### 缓存组件
+    CacheProvider.cs  
+    REDIS缓存使用约束：业务模块前缀+_+KEY
+```c# 
+    // 程序启动时 INIT
+    var cache = new SinoRail.DPC.Cache.RedisCacheImpl(connString);
+    string message;
+    SinoRail.DPC.Cache.CacheProvider.Initiate(cache, out message);
+    // 读写缓存
+    var hello = SinoRail.DPC.Cache.CacheProvider.Get<object>("test_hello");
+    SinoRail.DPC.Cache.CacheProvider.Update("test_hello", "world_" + System.DateTime.Now.ToString());
+    hello = SinoRail.DPC.Cache.CacheProvider.Get<string>("test_hello");armDO alarm = context.QueryById<AlarmDO>(sql,id);
+```

@@ -12,7 +12,7 @@ asp.net core
 
 配置文件
 -----------------------------------
-### App.setting
+### AppSetting.Json
     TODO:THE CODE 
 ```JSON
 {
@@ -32,15 +32,15 @@ asp.net core
 
 ```
 ###  MIS_PARAMETER
-TODO:THE CODE 
+TODO:数据库配置 
 ```DB
 ```
 
 Git 版本使用
 -----------------------------------
     1.git code  
-    2.修改代码，commit to local,push to 远程分支  
-    3.测试通过后tag  
+    2.修改代码，commit to local,push to remote branch  
+    3.测试通过后tag  version
     4.merge to master  
 
 
