@@ -13,9 +13,9 @@
 类设计
 -----------------------------------
 ### 类图
-
+略
 ### 类说明
-C3Safeguard  
+略  
 
 
 接口调用
@@ -24,7 +24,40 @@ javascript json调用
 ```javascript 
     ajax调用，参考swagger:http://192.168.1.251:8091/swagger/index.html
 ```
+通过ID解析图像传入参数说明
+```c#
+    public class RequestParam
+    {
+        /// <summary>
+        /// 会话ID[随机字符串]
+        /// </summary>
+        public string SessionId { get; set; }
 
+        /// <summary>
+        /// Alarm ID
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
+        /// Alarm RaiseTime
+        /// </summary>
+        public DateTime InputTime { get; set; }
+    }
+```
+通过scs文件名解析图像传入参数说明
+```c#
+    public class RequestParam
+    {
+        /// <summary>
+        /// 会话ID[随机字符串]
+        /// </summary>
+        public string SessionId { get; set; }
+
+        /// <summary>
+        /// SCS文件名
+        /// </summary>
+        public string RealFileName { get; set; }
+    }
+```
 MvResult结果
 ```c# 
     public class MvResultInfo
@@ -57,7 +90,7 @@ MvResult结果
     }
 ```
 
-获取MV图像
+获取MV4图像代码
 ```c#
     string url = "http://192.168.1.232:8090/api/Mv4";
     string imageUrl = "http://192.168.1.232:8090/api/GetImage";
