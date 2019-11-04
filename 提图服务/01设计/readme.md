@@ -24,40 +24,6 @@ javascript json调用
 ```javascript 
     ajax调用，参考swagger:http://192.168.1.251:8091/swagger/index.html
 ```
-通过ID解析图像传入参数说明
-```c#
-    public class RequestParam
-    {
-        /// <summary>
-        /// 会话ID[随机字符串]
-        /// </summary>
-        public string SessionId { get; set; }
-
-        /// <summary>
-        /// Alarm ID
-        /// </summary>
-        public string Id { get; set; }
-        /// <summary>
-        /// Alarm RaiseTime
-        /// </summary>
-        public DateTime InputTime { get; set; }
-    }
-```
-通过scs文件名解析图像传入参数说明
-```c#
-    public class RequestParam
-    {
-        /// <summary>
-        /// 会话ID[随机字符串]
-        /// </summary>
-        public string SessionId { get; set; }
-
-        /// <summary>
-        /// SCS文件名
-        /// </summary>
-        public string RealFileName { get; set; }
-    }
-```
 MvResult结果
 ```c# 
     public class MvResultInfo
@@ -89,11 +55,64 @@ MvResult结果
         public string Message { get; set; }
     }
 ```
-
-获取MV4图像代码
+解析并获取本地 DLV图像
 ```c#
-    string url = "http://192.168.1.232:8090/api/Mv4";
-    string imageUrl = "http://192.168.1.232:8090/api/GetImage";
+    string url = "http://192.168.1.251:8091/api/dlv";
+    string imageUrl = "http://192.168.1.251:8091/api/GetImage";
+    string jsonTmp = "{  \"sessionId\": \"$1\",  \"fileName\": \"\",  \"id\": \"$2\",  \"inputTime\": \"$3\",  \"available\": true }";
+    string json = jsonTmp.Replace("$1", sid).Replace("$2", alarmId).Replace("$3", raiseTime);
+    var result = SinoRail.Common.Utils.HttpUtil.Post(url, json, null);
+    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<MvResultInfo>(result);
+    // 生成11张图片
+    for(int i=0;i<obj.FrameCount;i++)
+    {
+        string imgPath = $"{imageUrl}/{sid}/{i}";
+    }
+```
+解析并获取本地 Ori图像
+```c#
+    string url = "http://192.168.1.251:8091/api/dlv";
+    string imageUrl = "http://192.168.1.251:8091/api/dlv/GetOri";
+    string jsonTmp = "{  \"sessionId\": \"$1\", \"id\": \"$2\",  \"realFileName\": \"$3\",  \"available\": true }";
+    string json = jsonTmp.Replace("$1", sid).Replace("$2", taskQueueId).Replace("$3", dlvFileName);
+    var result = SinoRail.Common.Utils.HttpUtil.Post(url, json, null);
+    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<MvResultInfo>(result);
+    // 生成11张图片
+    for(int i=0;i<obj.FrameCount;i++)
+    {
+        string imgPath = $"{imageUrl}/{sid}/{i}";
+    }
+```
+
+解析并获取本地DLV文件区域范围内最高温度
+```c#
+    string url = "http://192.168.1.251:8091/api/dlv";
+    string imageUrl = "http://192.168.1.251:8091/api/dlv/GetTemp";
+    string jsonTmp = "{  \"sessionId\": \"$1\", \"id\": \"$2\",  \"inputTime\": \"$3\", \"frameIndex\": \"1\",   \"x1\": \"0\",  \"y1\": \"0\",  \"x2\": \"100\",  \"y2\": \"100\" }";
+        string json = jsonTmp.Replace("$1", sid).Replace("$2", alarmId).Replace("$3", raiseTime);
+    var result = SinoRail.Common.Utils.HttpUtil.Post(url, json, null);
+    // result.maxTemp 返回最高温度
+
+```
+
+解析并获取fastDFS DLV图像
+```c#
+    string url = "http://192.168.1.251:8091/api/dlv";
+    string imageUrl = "http://192.168.1.251:8091/api/GetImage";
+    string jsonTmp = "{  \"sessionId\": \"$1\",  \"fileName\": \"\",  \"realFileName\": \"$2\",  \"idxFileName\": \"\",  \"available\": true }";
+    string json = jsonTmp.Replace("$1", sid).Replace("$2", scs).Replace("$2", scs);
+    var result = SinoRail.Common.Utils.HttpUtil.Post(url, json, null);
+    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<MvResultInfo>(result);
+    // 生成11张图片
+    for(int i=0;i<obj.FrameCount;i++)
+    {
+        string imgPath = $"{imageUrl}/{sid}/{i}";
+    }
+```
+解析并获取fastDFS MV图像
+```c#
+    string url = "http://192.168.1.251:8091/api/Mv4";
+    string imageUrl = "http://192.168.1.251:8091/api/GetImage";
     string jsonTmp = "{  \"sessionId\": \"$1\",  \"fileName\": \"\",  \"realFileName\": \"$2\",  \"idxFileName\": \"\",  \"available\": true }";
     string json = jsonTmp.Replace("$1", sid).Replace("$2", scs).Replace("$2", scs);
     var result = SinoRail.Common.Utils.HttpUtil.Post(url, json, null);
