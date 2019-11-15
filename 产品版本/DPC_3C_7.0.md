@@ -101,6 +101,10 @@ V7.0.0
     2. PARSER_API_002	AlarmMV2PIC_API	http://192.168.3.193:7001	提图服务api	3C_DataCenter	2019-04-15 15:04:13
     3. PARSER_API_003	AlarmMV3PIC_API	http://192.168.3.193:7001	提图服务api	3C_DataCenter	2019-04-15 15:04:13
     4. PARSER_API_004	AlarmIRVTEMP_API	http://192.168.3.193:7001	提图服务api	3C_DataCenter	2019-04-15 15:04:13
+    5. 屏蔽所有单引号请求： 
+    ``` sql
+    update mis_paramter set value=" and | exec | insert | select | delete | update | chr | mid | master | or | truncate | char | declare | join | execute | count | drop | sitename | net user | xp_cmdshell | script | execute |create | drop | table | from | grant | use | group_concat | column_name | information_schema.columns | table_schema | union | where | order | by | count | like |''|--|*|/*|*/|%%|like''|'" where key='IllegalChar'
+    ```
 2. 数据库结构（见数据库迁移文档）
 
 现场解析服务 - 3CDataInterfaceSite_V4.0
