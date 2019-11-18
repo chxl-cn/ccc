@@ -1,8 +1,9 @@
-3C Version Publish - v7.0.0 
+3C Version Publish - V7.0.0
 =================
   
 版本修订
 -----------------------------------
+
 日期 | 作者 |  说明
 -|-|-
 2019/11/8| author:xuyong| add
@@ -44,6 +45,7 @@ Alarm,ALARM_HIST，ALARM_AUX，ALARM_IMG_DATA，C3_Sms，GETFILETASK_QUEUE，FIL
 ### 版本号
 V7.0.0
 ### 更新内容
+
 1. 检测数据、缺陷库、预警信息
     1. 列表信息展示及更多条件查询功能（不包括查询条件中的去重复）；  
     2. 导出excel、导出excel带图像；  
