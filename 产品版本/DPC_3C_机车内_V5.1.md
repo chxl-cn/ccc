@@ -42,10 +42,19 @@ SPRINT1:2019/11/18-2019/11/21
 1. 版本号
 V5.1.0
 2. 更新内容
-    1. 定位算法V1.0，解决XX线路无LKJ数据的问题。设计见[基于位置数据的定位算法详细设计](..\解析服务\01设计\基于位置数据的定位算法详细设计.md)  
+    1. 定位算法V1.0，解决XX线路无LKJ数据的问题。设计见[基于位置数据的定位算法详细设计](../解析服务/01设计/基于位置数据的定位算法详细设计.md)  
     2. ...
 3. 升级参数脚本
     1. 导入Mis_Location_info基础数据
     2. 参数配置
+
+```xml
+    3C_Parser_loc1	location.MaxQueryRange	5000	最大搜索范围（米）	3C_Parser
+    3C_Parser_loc2	location.MaxValidDiscance	1000	2点计算有效距离	3C_Parser
+    3C_Parser_loc3	location.LocomotiveSettings	[{"locomotive":"SS4B0135","lines":["SHX$00200"]},{"locomotive":"SS4B0136"}]	车辆线路配置，如果不清楚线路配置则是全量扫描，配置了线路采用精准查询匹配	3C_Parser
+```
+
 注意事项/迁移建议
 -----------------------------------
+
+目前只有少量车，该算法问题不大；后续如果基础数据多了，在1KM范围线路重叠的情况下，误差就比较大。
