@@ -108,6 +108,14 @@ CreateDoc_V2.0
 1. 版本号 3CDataTransmitterBroker_V1.5.0
 2. 更新内容
     1. 优化云转发心跳功能，支持通过超时参数来设置超时状态，避免网络心跳频繁造成资源未释放
+    2.  <!--心跳探测模式，0：单独网络探测，1：数据发送状态探测-->
+        <add key="HeartBeat.mode" value="1"/>
+        <!--心跳总级数-->
+        <add key="HeartBeat.grade" value="3"/>
+        <!--心跳重置间隔初始时间-->
+        <add key="HeartBeat.span" value="1"/>
+        <!--心跳重置间隔时间倍数， 间隔时长为：grade*span*multiple-->
+        <add key="HeartBeat.multiple" value="2"/>
 
 注意事项/升级建议
 -----------------------------------
