@@ -81,8 +81,8 @@ DPC_3C_I_V5.12.0
 3CDataInterface_D_5.4.0
 2. 更新内容
     1. 修复图片路径标识问题
-    2. 支持处理OSS异常数据
-    3. 异常报警消息的解析支持（待定）
+    2. 修复报警未解析时写入OSS数据不完整
+    3. 异常报警消息的解析支持：通过json消息写入kafka topic重新解析
     4. 服务启动检查同名的服务，如果有假死服务kill
 3. App.config配置变更
     1. kafka.alarmReparsedTopic = "c3-d-alarmReparsed-dev" // 重新解析消息队列
