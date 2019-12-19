@@ -29,7 +29,7 @@ SPRINT2: 2019/10/18 - 2019/11/30 目前存在一些不影响正常使用、解�
  云转发| 3CDataTransmitterBroker_V1.4.1 | 无 |-
  3C数据接收服务| FileReceiveWeb_V2.1.2 | 无 |-
  现场解析服务| 3CDataInterfaceSite_V4.0 | 有 |加密敏感字段，不支持旧版本升级
- 动机车对外数据终端网站| DPC_3C_O_7.0.0 | 有 |数据保护方案，不支持旧版本升级
+ 动机车对外数据终端网站| DPC_3C_O_7.0.0 | 有 |数据保护方案，不支持旧版本升级（V7.1修复前端Https问题）
  3C缺陷报告生成服务| CreateDoc_V1.7 | 有 |数据保护方案，兼容以前版本升级
  3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.0.0 | 有 |数据保护方案，兼容以前版本升级
  迁移工具| TransData_V1.0.0 | 有 |铁科MySql数据加密迁移，alarm/sms数据通过加密输出csv、脚本文件和批处理文件
