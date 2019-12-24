@@ -38,8 +38,8 @@ SPRINT1:2019/12/16-2019/12/27
  3C主动检测数据解析、转发服务| 3COriDataProc_V1.0.4_SP1 |2019/10/16| 无 |
  3C缺陷报告生成服务| CreateDoc_V2.2 |2019/12/24| 有 |支持删除fastdfs文件
  3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.2.0 |2019/12/13| 有 |增加3C服务状态监控
- AI消息消费服务|AI_MQConsumerService_V2.0|2019/12/24| 无 |
- AI智能机WebAPI| AiWebAPI_V2.0 |2019/12/24| 无 |
+ AI消息消费服务|AI_MQConsumerService_V2.0|2019/12/24| 有 | 添加消息中间处理逻辑
+ AI智能机WebAPI| AiWebAPI_V2.0 |2019/12/24| 有 | 添加alarm数据更新及记录历史数据
  3C解析监控服务| 3CMonoitor_3.1.0|2019/11/16| 无 |
  云转发服务| 3CDataTransmitterBroker_V1.5.0 |2019/12/13| 无 |
 
