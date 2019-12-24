@@ -78,7 +78,7 @@ CreateDoc_V2.1
 2. 更新内容
     1. 服务状态监听接口
 
-AI消息消费服务  - AI_MQConsumerService_V2.0
+AI消息消费服务 - AI_MQConsumerService_V2.0
 -----------------------------------
 
 1. 版本号
@@ -87,7 +87,9 @@ AI_MQConsumerService_V2.0
     1. 更新Kafka接入的消息格式
     2. 增加对消息的中间处理，使之兼容之前的数据格式
 
-AI智能机WebAPI -  AiWebAPI_V2.0
+AI智能机WebAPI - AiWebAPI_V2.0
+-----------------------------------
+
 1. 版本号
 AiWebAPI_V2.0
 2. 更新内容
