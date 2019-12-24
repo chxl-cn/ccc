@@ -81,6 +81,14 @@ CreateDoc_V2.1
 1. 版本号 Parser_WebAPI_V3.2.0
 2. 更新内容
     1. 服务状态监听接口
+    2. 查询时间collecttime统一修改成raisetime,升级时需要初始化raisetime为collecttime
+
+3C解析监控服务 - 3CMonitor_V3.2
+-----------------------------------
+
+1. 版本号 3CMonitor_V3.2
+2. 更新内容
+    1. 增加raisetime记录
 
 AI消息消费服务 - AI_MQConsumerService_V2.0
 -----------------------------------
