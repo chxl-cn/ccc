@@ -99,7 +99,8 @@ AiWebAPI_V2.0
 2. 更新内容
     1. 添加对alarm数据存入历史表逻辑，并更改alarm相关字段
 
-注意事项/升级建议
+升级脚本
 -----------------------------------
 
-/
+1. https://gtjg/svn/DPC/doc/6.版本、配置管理/Oracle/数据库脚本/DB1.65_3C_AI接入.sql
+2. https://gtjg/svn/DPC/doc/6.版本、配置管理/Oracle/数据库脚本/DB1.66.0_V5.13对内动车解析监控数据库脚本.sql
