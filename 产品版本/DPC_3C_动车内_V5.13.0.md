@@ -68,8 +68,9 @@ DPC_3C_I_V5.13.0
 3CDataInterface_D_5.5.0
 2. 更新内容
     1. AI智能机接口2.0规范
-    2. 服务启动和结束时增加状态日志
-3. App.config配置变更
+    2. 增加重要消息接口
+3. mis_parameter
+    1. add ->	C3Parser.Public.011	ServiceStatus.API	http://192.168.1.250:9091	服务状态消息接口	C3Parser.Public
 
 3C缺陷报告生成服务 - CreateDoc_V2.1
 -----------------------------------
@@ -86,6 +87,8 @@ CreateDoc_V2.1
 2. 更新内容
     1. 服务状态监听接口
     2. 查询时间collecttime统一修改成raisetime,升级时需要初始化raisetime为collecttime
+3. 数据库脚本
+    1. 见后：https://gtjg/svn/DPC/doc/6.版本、配置管理/Oracle/数据库脚本/DB1.66.0_V5.13对内动车解析监控数据库脚本.sql
 
 3C解析监控服务 - 3CMonitor_V3.2
 -----------------------------------
