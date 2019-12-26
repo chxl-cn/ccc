@@ -56,6 +56,8 @@ DPC_3C_I_V5.13.0
     1. AI API地址可配置
     2. 报警性能监控图表优化
     3. 增加3C服务监控页面
+    4. 修复报警ID为空值全表查询数据库
+    5. 删除查询alarm时的动态sql条件： SEVERITY IN (SELECT DIC_CODE FROM SYS_DIC WHERE P_CODE = 'SEVERITY')
 
 3. 配置变更
 
