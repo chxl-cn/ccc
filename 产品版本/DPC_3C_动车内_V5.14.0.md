@@ -42,10 +42,9 @@ SPRINT1:2020/02/04-2020/02/21
  3C主动检测数据解析、转发服务| 3COriDataProc_V1.1.0 |2020/02/21| 有 |更新3C公用组件，提供适配
  3C缺陷报告生成服务| CreateDoc_V2.3 |2020/02/21| 有 |更新3C公用组件，提供适配
  3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.2.1 |2020/02/21| 有 |修复BUG
- AI消息消费服务|AI_MQConsumerService_V2.0|2019/12/24| 无 | 添加消息中间处理逻辑
- AI智能机WebAPI| AiWebAPI_V2.0 |2019/12/24| 无 | 添加alarm数据更新及记录历史数据
- AI智能机WebAPI| AiWebAPI_V2.1 |2020/01/16| 无 | 修复AI识别结果对打弓等高危报警覆盖问题
- 3C解析监控服务| 3CMonoitor_3.2.0|2019/12/24| 无 |增加raisetime报警文件时间
+ AI消息消费服务|AI_MQConsumerService_V2.0|2019/12/24| 无 |
+ AI智能机WebAPI| AiWebAPI_V2.1 |2020/01/16| 无 |
+ 3C解析监控服务| 3CMonoitor_3.2.0|2019/12/24| 无 |
  云转发服务| 3CDataTransmitterBroker_V1.5.0 |2019/12/13| 无 |
 
 动车对内数据终端网站 - DPC_3C_I_V5.14.0
@@ -160,6 +159,221 @@ AI智能机WebAPI-AiWebAPI
 
 云转发服务-3CDataTransmitterBroker
 -----------------------------------
+
+/
+
+接口/模型
+-----------------------------------
+
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SinoRail.DPC.Model
+{
+    /// <summary>
+    /// fastDfs alarm file BO
+    /// </summary>
+    [Serializable]
+    public class FastDfsAlarmFileBO
+    {
+        /// <summary>
+        /// id
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
+        /// 报警ID
+        /// </summary>
+        public string AlarmId { get; set; }
+        /// <summary>
+        /// device id
+        /// </summary>
+        public string DeviceId { get; set; }
+        /// <summary>
+        /// raise time
+        /// </summary>
+        public string RaiseTime { get; set; }
+        /// <summary>
+        /// 图片地址类型:0 本地路径 1 fastDfs 2 url路径
+        /// </summary>
+        public int ImageLocation { get; set; } = 1;
+        /// <summary>
+        /// mv2
+        /// </summary>
+        public string[] Mv2Images { get; set; }
+        /// <summary>
+        /// mv3
+        /// </summary>
+        public string[] Mv3Images { get; set; }
+        /// <summary>
+        /// mv4
+        /// </summary>
+        public string[] Mv4Images { get; set; }
+        /// <summary>
+        /// 机车irv,动车dlv生成的红外图片
+        /// </summary>
+        public string[] IrvImages { get; set; }
+        /// <summary>
+        /// 机车irv,动车dlv生成的透视图片
+        /// </summary>
+        public string[] IrvPImages { get; set; }
+        /// <summary>
+        /// 原始文件
+        /// </summary>
+        public List<FastDfsFileInfo> OriginalFiles { get; set; }
+        /// <summary>
+        /// FastDfs alarm file BO
+        /// </summary>
+        public FastDfsAlarmFileBO()
+        {
+            OriginalFiles = new List<Model.FastDfsFileInfo>();
+        }
+        /// <summary>
+        /// 数据对象转换为业务对象
+        /// </summary>
+        /// <param name="dfsFileDO"></param>
+        /// <returns></returns>
+        public static FastDfsAlarmFileBO Parse(FastDfsFileDO dfsFileDO)
+        {
+            Dictionary<string, string> images = new Dictionary<string, string>();
+            Dictionary<string, string> orgFiles = new Dictionary<string, string>();
+            string deviceId = string.Empty;
+            string raiseTime = string.Empty;
+
+            foreach (string column in dfsFileDO.Columns.Keys)
+            {
+                string[] columnArray = column.Split(':');
+                string faimily = columnArray[0]; //族
+                string cellName = columnArray[1];  //列名
+                string cellValue = dfsFileDO.Columns[column];//列值：文件路径
+                switch (faimily)
+                {
+                    case "alarmImgFiles":
+                        images.Add(cellName, cellValue);
+                        break;
+                    case "alarmOrgFiles":
+                        orgFiles.Add(cellName, cellValue);
+                        break;
+                    case "alarmInfo":
+                        switch (cellName)
+                        {
+                            case "deviceID":
+                                deviceId = cellValue;
+                                break;
+                            case "raisedTime":
+                                raiseTime = cellValue;
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            FastDfsAlarmFileBO dfsFileBO = new FastDfsAlarmFileBO();
+            dfsFileBO.Id = dfsFileDO.Id;
+            dfsFileBO.RaiseTime = raiseTime;
+            dfsFileBO.DeviceId = deviceId;
+            dfsFileBO.bindImages(images);
+            dfsFileBO.BindOriginalFiles(orgFiles);
+            return dfsFileBO;
+        }
+
+        /// <summary>
+        /// 绑定原始文件
+        /// </summary>
+        /// <param name="files"></param>
+        protected void BindOriginalFiles(Dictionary<string, string> files)
+        {
+            foreach(string key in files.Keys)
+            {
+                AddOriginalFile(key, files[key]);
+            }
+        }
+
+        /// <summary>
+        /// 绑定数据：将{fileType,fileUrl}数据按类型分组
+        /// </summary>
+        /// <param name="files">columnName,url</param>
+        protected void bindImages(Dictionary<string,string> files)
+        {
+            Dictionary<int, string> _mv2Images = new Dictionary<int, string>();
+            Dictionary<int, string> _mv3Images = new Dictionary<int, string>();
+            Dictionary<int, string> _mv4Images = new Dictionary<int, string>();
+            Dictionary<int, string> _irvImages = new Dictionary<int, string>();
+            Dictionary<int, string> _irvpImages = new Dictionary<int, string>();
+
+            foreach(string key in files.Keys)
+            {
+                string url = files[key];
+                string type = key.Substring(0, 3);
+                int index = 0;
+                #region 分组分类
+                switch (type)
+                {
+                    case "MV2":
+                        index = int.Parse(key.Substring(4));
+                        _mv2Images.Add(index, url);
+                        break;
+                    case "MV3":
+                        index = int.Parse(key.Substring(4));
+                        _mv3Images.Add(index, url);
+                        break;
+                    case "MV4":
+                        index = int.Parse(key.Substring(4));
+                        _mv4Images.Add(index, url);
+                        break;
+                    //case "dlv":
+                    case "IRV":
+                        int pIndex = key.IndexOf("_P");
+                        if (pIndex == -1)
+                        {
+                            index = int.Parse(key.Substring(3));
+                            _irvImages.Add(index, url);
+                        }
+                        else
+                        {
+                            index = int.Parse(key.Substring(3, pIndex - 3));
+                            _irvpImages.Add(index, url);
+                        }
+                        break;
+                }
+                #endregion
+            }
+
+            #region 排序
+            Mv2Images = _mv2Images.OrderBy(o => o.Key).ToDictionary(o => o.Key, o => o.Value).Values.ToArray();
+            Mv3Images = _mv3Images.OrderBy(o => o.Key).ToDictionary(o => o.Key, o => o.Value).Values.ToArray();
+            Mv4Images = _mv4Images.OrderBy(o => o.Key).ToDictionary(o => o.Key, o => o.Value).Values.ToArray();
+            IrvImages = _irvImages.OrderBy(o => o.Key).ToDictionary(o => o.Key, o => o.Value).Values.ToArray();
+            IrvPImages = _irvpImages.OrderBy(o => o.Key).ToDictionary(o => o.Key, o => o.Value).Values.ToArray();
+            _mv2Images = null;
+            _mv3Images = null;
+            _mv4Images = null;
+            _irvImages = null;
+            _irvpImages = null;
+            #endregion
+        }
+
+        private void AddOriginalFile(string fileType, string url)
+        {
+            FastDfsFileInfo dfsFile = new FastDfsFileInfo();
+            dfsFile.FileType = fileType;
+            dfsFile.Url = url;
+            OriginalFiles.Add(dfsFile);
+        }
+
+        private string GetFileType(string url)
+        {
+            int index = url.LastIndexOf('.');
+            string type = url.Substring(index + 1);
+            return type;
+        }
+    }
+}
+```
 
 数据存储的JSON格式规范
 -----------------------------------
