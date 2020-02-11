@@ -67,8 +67,12 @@ DPC_3C_I_V5.14.0
     1. web.config增加图片代理配置，以适配手机APP接口
 
 ```xml
-<!-- 是否开启图片代理：开启后将通过ImageProxyHandler代理下载后再输出 -->
-<add key="EnableImageProxy" value="false" />
+    <!-- 发布模式，默认网站，支持APP（部分功能仅APP可用） -->
+    <add key="publishMode" value="app" />
+    <!-- 是否使用图片代理 -->
+    <add key="imageProxy.enable" value="false" />
+    <!-- 代理模式的图片映射：默认不填通过ImageProxyHandler.ashx接口下载后输出，如果是映射fastdfs地址则填写地址http -->
+    <add key="imageProxy.url" value="" />
 ```
 
 3C辅助工具 - 3CUtil
@@ -242,7 +246,7 @@ namespace SinoRail.DPC.Model
             OriginalFiles = new List<Model.FastDfsFileInfo>();
         }
         /// <summary>
-        /// 数据对象转换为业务对象
+        /// 数据对象转换为业务对象（hbase存储结构）
         /// </summary>
         /// <param name="dfsFileDO"></param>
         /// <returns></returns>
