@@ -34,7 +34,7 @@ SPRINT1:2020/02/04-2020/02/21
  动车对内解析服务| 3CDataInterface_D_5.6.0 |2020/02/21| 有 |更新3C公用组件，提供适配
  车次信息计算服务| traininfo_V1.0 |2019/10/16| 无 |
  车次信息现场接收服务| traininfo-receive_V1.0 |2019/10/16| 无 |
- SYN转发服务| C3SynAPI_V1.1 |2020/02/21| 有 |更新3C公用组件，提供适配
+ SYN转发服务| C3SynAPI_V1.2 |2020/02/21| 有 |更新3C公用组件，提供适配
  转发服务| 3CTransmit_5.9.0 |2020/02/21| 有 |更新3C公用组件，提供适配
  主动检测时间计算服务|GpsTimeParser_V1.1.1 |2019/10/16| 无  |
  生成主动检测请求任务服务| RelayFileTask_V1.3|2019/10/16| 无 |
@@ -63,7 +63,7 @@ DPC_3C_I_V5.14.0
     3. 动车3C手机APP接口：修复APP 手机验证码登录时的BUG，手机登录参数解密；修复报警详情raisetime重复；报警列表APP提供hw缺陷帧图片；APP支持图片代理需config配置；APP详情页增加转发状态；增加批量保存导高拉出值接口；
     4. 解决分布式部署部分功能不可用（比如先由服务器生成地址给前端，再由前端下载）（王政远）
     5. 容器注入由hbase模板修改成oracle db模板:涉及所有原始文件和fastdfs图片功能。（徐勇）
-    6. 修复SYN接口调用接口：由前端修改成后端调用，适配不同终端调用。
+    6. 修复SYN接口调用接口：由前端修改成后端调用，适配不同终端调用，转发目标地址通过参数表配置。
 
 3. 数据库脚本
 
@@ -74,6 +74,14 @@ create table ALARM_FILEINFO
   raisetime DATE,
   fileinfo  CLOB
 )
+insert into mis_paramter
+  (ID, KEY, VALUE, TITILE, CONTEXT)
+values
+  ('976972D3DE11904EB58B2E1FABD980A3A5',
+       'SynUnitCode',
+       'NCJ$J11$NC$CLD',
+       'Syn需要转发的供电段，以分号间隔',
+       '3C_DataCenter');
 ```
 
 4. Web.Config配置变更
@@ -117,9 +125,9 @@ SYN转发服务-C3SynAPI
 -----------------------------------
 
 1. 版本号
-C3SynAPI_V1.1
+C3SynAPI_V1.2
 2. 更新内容
-    1. 更新3C公用组件，提供适配
+    1. 更新3C公用组件
 
 转发服务-3CTransmit
 -----------------------------------
