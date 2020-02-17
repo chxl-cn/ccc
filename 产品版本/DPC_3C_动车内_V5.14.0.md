@@ -56,9 +56,9 @@ SPRINT1:2020/02/04-2020/02/21
 -----------------------------------
 
 后面版本的脚本可以不用更新：  
-https://gtjg/svn/DPC/doc/6.%E7%89%88%E6%9C%AC%E3%80%81%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/Oracle/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%84%9A%E6%9C%AC/DB1.68_for_DPC-3C_V5.14_fastdfs%E8%B7%AF%E5%BE%84%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E8%A1%A8.sql  
+DB1.68_for_DPC-3C_V5.14_fastdfs路径存储数据表.sql 
 
-https://gtjg/svn/DPC/doc/6.%E7%89%88%E6%9C%AC%E3%80%81%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/Oracle/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%84%9A%E6%9C%AC/DB1.69_for_DPC-3C_V5.14_Syn%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E6%9B%B4%E6%96%B0%E5%8F%82%E6%95%B0%E8%A1%A8.sql
+DB1.69_for_DPC-3C_V5.14_Syn文件生成更新参数表.sql
 
 动车对内数据终端网站 - DPC_3C_I_V5.14.0
 -----------------------------------
