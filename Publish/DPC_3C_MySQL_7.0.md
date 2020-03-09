@@ -13,7 +13,7 @@
 目标
 -----------------------------------
 
-基于[加密解密数据保护方案](../安全加固/数据安全加密和解密详细设计.md)  对DPC_3C数据终端进行数据保护，同时实现Oracle版本的安全加固效果和满足性能测试要求。
+基于[加密解密数据保护方案](../OutNext/数据安全加密和解密详细设计.md)  对DPC_3C数据终端进行数据保护，同时实现Oracle版本的安全加固效果和满足性能测试要求。
 
 开发计划
 -----------------------------------
@@ -73,7 +73,7 @@ V1.0.0
 TSYS_ORG，SYS_DIC，MIS_PARAMTER，VIRTUAL_DIR_INFO，LOCOMOTIVE，MIS_BRG_TUN，MIS_LINE，MIS_POSITION，MIS_LKJ
 2. 业务数据加密
 Alarm,ALARM_HIST，ALARM_AUX，ALARM_IMG_DATA，C3_Sms，GETFILETASK_QUEUE，FILETASKDATA  
-详情见附件地址：[数据安全加密和解密详细设计](../安全加固/数据安全加密和解密详细设计.md)  
+详情见附件地址：[数据安全加密和解密详细设计](../OutNext/数据安全加密和解密详细设计.md)  
 
 动机车对外数据终端网站 - DPC_3C_O_7.0.0
 -----------------------------------
