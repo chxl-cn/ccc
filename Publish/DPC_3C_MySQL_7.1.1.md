@@ -33,7 +33,7 @@
  现场解析服务| 3CDataInterfaceSite_V4.0 | 无 |/
  动机车对外数据终端网站| DPC_3C_O_7.1.1 | 有 |修复人员管理密码问题，详情页图片缓存问题
  3C缺陷报告生成服务| CreateDoc_V1.7 | 无 |/
- 3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.0.0 | 无 |/
+ 3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.2.2 | 有 |dlv提图时机车图像不全
  转发服务| 3CTransmit_5.10.1 | 有 |提供支持数据保护的转发
  迁移工具| TransData_V1.1.0 | 有 |oracle迁移mysql工具
 
