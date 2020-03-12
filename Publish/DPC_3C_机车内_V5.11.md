@@ -49,9 +49,9 @@ V5.11.0
     2. 参数配置
 
 ```xml
-    3C_Parser_loc1	location.MaxQueryRange	5000	最大搜索范围（米）	3C_Parser
-    3C_Parser_loc2	location.MaxValidDiscance	1000	2点计算有效距离	3C_Parser
-    3C_Parser_loc3	location.LocomotiveSettings	[{"locomotive":"SS4B0135","lines":["SHX$00200"]},{"locomotive":"SS4B0136"}]	车辆线路配置，如果不清楚线路配置则是全量扫描，配置了线路采用精准查询匹配	3C_Parser
+    3C_Parser_loc1    location.MaxQueryRange    5000    最大搜索范围（米）    3C_Parser
+    3C_Parser_loc2    location.MaxValidDiscance    1000    2点计算有效距离    3C_Parser
+    3C_Parser_loc3    location.LocomotiveSettings    [{"locomotive":"SS4B0135","lines":["SHX$00200"]},{"locomotive":"SS4B0136"}]    车辆线路配置，如果不清楚线路配置则是全量扫描，配置了线路采用精准查询匹配    3C_Parser
 ```
 
 注意事项/迁移建议
