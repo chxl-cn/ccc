@@ -110,3 +110,24 @@
 1. 由楚学亮研究提供
 2. 支持实时库将数据同步至历史库
 3. 历史数据的迁移
+
+SQL脚本
+-----------------------------------
+
+```sql
+create table train6c.xt_dbconfig
+(
+   name                 varchar(31) not null,
+   usetype              int(1) comment '数据库用途：0实时库 1当年库 2历史库',
+   usedays              int comment '使用天数：实时库配置',
+   startdate            date,
+   enddate              date,
+   createtime           datetime,
+   IsEncryptionDb       int(1) comment '是否加密',
+   dbtype               varchar(15) comment '数据库类型:mysql',
+   dbconn               varchar(511) comment '数据库连接串',
+   dbinfo               varchar(511) comment '描述',
+   primary key (name)
+);
+INSERT INTO ``(`name`, `usetype`, `usedays`, `startdate`, `enddate`, `createtime`, `IsEncryptionDb`, `dbtype`, `dbconn`, `dbinfo`) VALUES ('default_db', 0, 366000, NULL, '2040-03-12', '2020-03-12 13:18:17', 0, 'mysql', 'Database=train6c;Data Source=10.2.2.169;User Id=root;Password=123456Aa;CharSet=utf8;port=3306', '实时库');
+```
