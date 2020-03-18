@@ -31,7 +31,7 @@
  云转发| 3CDataTransmitterBroker_V1.4.1 | 无 |-
  3C数据接收服务| FileReceiveWeb_V2.1.2 | 无 |-
  现场解析服务| 3CDataInterfaceSite_V4.0 | 无 |/
- 动机车对外数据终端网站| DPC_3C_O_7.1.1 | 有 |修复人员管理密码问题，详情页图片缓存问题
+ 动机车对外数据终端网站| DPC_3C_O_7.1.1 | 有 |修复人员管理密码问题，详情页图片缓存问题；解决部署时外网IP和内外网互不同问题；
  3C缺陷报告生成服务| CreateDoc_V1.7 | 无 |/
  3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.2.2 | 有 |dlv提图时机车图像不全
  转发服务| 3CTransmit_5.10.1 | 有 |提供支持数据保护的转发
@@ -42,6 +42,7 @@
 
 1. 修复人员管理密码BUG
 2. 详情页图片缓存问题
+3. 解决部署时外网IP和内外网互不同问题：网站和API共用端口部署时，通过外网浏览图片时使用公网IP+myapi/api/getimage,服务器生成报表、excel、gif时使用配置的内网API地址+/api/getImage
 
 转发服务 - 3CTransmit_5.10.1
 -----------------------------------
