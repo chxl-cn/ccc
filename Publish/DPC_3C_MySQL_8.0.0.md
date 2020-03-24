@@ -55,13 +55,116 @@
 -|-|-|-
  云转发| 3CDataTransmitterBroker_V1.4.1 | 无 |-
  3C数据接收服务| FileReceiveWeb_V2.1.2 | 无 |-
- 现场解析服务| 3CDataInterfaceSite_V4.1 | 有 |模型重构
+ 现场解析服务| 3CDataInterfaceSite_V4.1 | 有 |模型重构，提供统一的alarm访问组件
  动机车对外数据终端网站| DPC_3C_O_8.0.0 | 有 |统一模型，读写分离,SQL优化
- 3C缺陷报告生成服务| CreateDoc_V1.9 | 有 |统一模型
+ 3C缺陷报告生成服务| CreateDoc_V1.9 | 有 |统一模型，重构报表的消息通信逻辑
  3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.3.0 | 有|统一模型，读写分离
- 转发服务| 3CTransmit_5.11.0 | 有 |模型重构
- 迁移工具| TransData_V1.2 | 有 |功能优化，方便运维
+ 转发服务| 3CTransmit_5.11.0 | 有 |模型重构，trans_data表优化。
+ 迁移工具| TransData_V1.2 | 有 |功能优化，方便运维；编辑后迁移界面支持增删改单条保存，类似Navicat编辑界面；数据导出支持批量迁移多个SQL数据，生成一个bat文件。
  数据同步工具| - | 有 |DBA工具，支持实时库同步至历史库
+
+开发须知
+-----------------------------------
+
+集成环境：
+
+mysql数据库：Database=dbv711;Data Source=192.168.3.90;User Id=dbv711;Password=123456Aa;CharSet=utf8;port=3306  
+redis:10.2.2.168:6379,password=,connectTimeout=1000,connectRetry=1,syncTimeout=10000  
+提图服务:http://10.2.2.167:9091（需要把原始文件放到对应的虚拟目录）  
+
+公用组件：
+
+关于Parameter和config配置，原则上config除数据库外，其他配置到mis_parameter,公用参数context=public，支持context重写（比如可配置成：public,3c_context），避免运维重复配置
+
+```csharp
+        /// <summary>
+        /// 参数扩展（建议各服务通过扩展方法补充自定义的参数）
+        /// </summary>
+        public static class ParameterExtend
+        {
+            /// <summary>
+            /// 扩展参数列表
+            /// </summary>
+            /// <param name="t"></param>
+            /// <returns></returns>
+            public static string GetP1(this SinoRail.DPC.C3.Globals.ParameterCollection t)
+            {
+                var p = t.GetParameter("dfs.address");
+                return p == null ? "" : p.ParamValue;
+            }
+        }
+
+        [Test]
+        public void GetParameterTest()
+        {
+            // 全局初始化
+            string contexts = "public,3C_DataCenter";
+            SinoRail.DPC.C3.Globals.ParameterCollection.Initiate(contexts.Split(','));
+            // 访问公用参数
+            var address1 = SinoRail.DPC.C3.Globals.ParameterCollection.Current.DlvParserAddress;
+            // 访问自定义扩展参数
+            var p1 = SinoRail.DPC.C3.Globals.ParameterCollection.Current.GetP1();
+        }
+```
+
+分库适配代码：通过公用适配工厂类创建数据库Context或者dbConnection
+
+```csharp
+        /// <summary>
+        /// 通过时间创建dbContext
+        /// </summary>
+        [Test]
+        public void CreateContextTest()
+        {
+            var svr = DataBaseAdapter.Instance;
+            bool succ = false;
+            DateTime start = DateTime.Now.AddDays(-1000);
+            DateTime end = DateTime.Now;
+            using (var context = svr.CreateDataContext(start, end))
+            {
+                if(context.GetConnection().Connection.State == System.Data.ConnectionState.Open)
+                    succ = true;
+            }
+            Assert.IsTrue(succ);
+
+        }
+        /// <summary>
+        /// 通过时间创建dbConnection
+        /// </summary>
+        [Test]
+        public void CreateDefaultConnTest()
+        {
+            var svr = DataBaseAdapter.Instance;
+            bool succ = false;
+            DateTime start = DateTime.Now.AddDays(-1000);
+            DateTime end = DateTime.Now;
+            using (var conn = svr.CreateDbConnection(start, end))
+            {
+                if(conn.State == System.Data.ConnectionState.Open)
+                    succ = true;
+            }
+            Assert.IsTrue(succ);
+        }
+```
+
+数据保护组件使用代码
+
+```csharp
+        /// <summary>
+        /// 获取报警加密信息
+        /// </summary>
+        [Test]
+        public void GetAlarmInfoTest()
+        {
+            var svr = SafeguardManager.Current;
+            SinoRail.DPC.C3.FileStore.FileContext context = new SinoRail.DPC.C3.FileStore.FileContext();
+            string scsName = "20191028142047_9_CRH5G-5215_510_0_B.scs";
+            string id = "Fa7b0d584c21647aab150aba7878dd8d2";
+            DateTime date = context.GetFileInfo(scsName).Item1;
+            var info = svr.GetAlarmInfo(id,date);
+            Assert.IsNotNull(info);
+        }
+```
 
 1.对内解析服务问题/分析/设计/任务
 -----------------------------------
@@ -225,6 +328,21 @@
 1. 由楚学亮研究提供
 2. 支持实时库将数据同步至历史库
 3. 历史数据的迁移
+
+提图服务 - DPC_3C_Parser_WebAPI_V3.3.0
+-----------------------------------
+
+配置变更
+
+```xml
+  // 默认为空，仅单点部署；redis支持分布式部署，分布式部署ImageCacheTimeOut可配置更长时间
+  "ImageCacheStore": "redis",
+```
+
+升级内容：
+
+1. 支持redis分布式部署，提图后的图像以bytes存储到redis，任何提图节点都可以访问
+2. 支持实时库将数据同步至历史库
 
 SQL脚本
 -----------------------------------
