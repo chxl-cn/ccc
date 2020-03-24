@@ -71,6 +71,9 @@
 mysql数据库：Database=dbv711;Data Source=192.168.3.90;User Id=dbv711;Password=123456Aa;CharSet=utf8;port=3306  
 redis:10.2.2.168:6379,password=,connectTimeout=1000,connectRetry=1,syncTimeout=10000  
 提图服务:http://10.2.2.167:9091（需要把原始文件放到对应的虚拟目录）  
+公用组件源代码：http://gitlab.gt.com/3C/public/dpc.git  
+mysql版本项目组：http://gitlab.gt.com/3C/outnext  
+V8.0网站：http://gitlab.gt.com/3C/outnext/dpc_3c_onext_web.git  为了避免开发人员提交bin文件，bin目录被排除了的；第一次编译时将_bin改名成bin或拷贝至bin目录下，再编译  
 
 公用组件：
 
