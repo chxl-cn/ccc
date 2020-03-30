@@ -46,9 +46,7 @@ BEGIN
         THEN
             SELECT
                 d.dic_code
-
                 INTO v_sample_d_code
-
                 FROM
                     sample_afcode_relation s, sys_dic d
                 WHERE
