@@ -36,7 +36,7 @@ BEGIN
 
     SET max_heap_table_size = 17179869184;
 
-
+   /*
     IF i_sample_d_code IS NOT NULL
     THEN
         SET v_sample_d_code := i_sample_d_code;
@@ -48,13 +48,14 @@ BEGIN
                 d.dic_code
                 INTO v_sample_d_code
                 FROM
-                    sample_afcode_relation s, sys_dic d
+                    sample_afcode_relation s
+                    , sys_dic d
                 WHERE
                       s.sample_code = d.dic_code
                   AND s.alarm_code = i_code;
         END IF;
     END IF;
-
+*/
 
     SELECT
         count(*)
@@ -70,8 +71,6 @@ BEGIN
             SET
                 a.aflg_code        = i_aflg_code
               , a.reportwordstatus = 'WAIT'
-
-
                 WHERE a.alarm_id = alarmid;
         ELSE
             UPDATE alarm_aux a
