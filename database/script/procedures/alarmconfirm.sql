@@ -55,7 +55,7 @@ BEGIN
                   AND s.alarm_code = i_code;
         END IF;
     END IF;
-*/
+    */
 
     SELECT
         count(*)
@@ -78,9 +78,7 @@ BEGIN
                 a.aflg_code        = i_aflg_code
               , a.reportwordstatus = NULL
               , a.reportwordurl    = NULL
-
-
-                WHERE a.alarm_id = alarmid;
+WHERE a.alarm_id = alarmid;
         END IF;
     ELSE
         IF btntype = 'btnOk' AND (i_severity = '一类' OR i_severity = '二类' OR i_sample_code = 'DRTFLG_ZHB')
