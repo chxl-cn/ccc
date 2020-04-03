@@ -11,5 +11,4 @@ CREATE EVENT event_tab_parts
     DO
     BEGIN
         CALL p_gen_parts_schd() ;
-
     END//
