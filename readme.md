@@ -4,8 +4,9 @@
 1. Reqirement/需求文档
 2. Plan/计划和项目管理文档
 3. develop/开发文档
-    1. Design/设计
-    2. Interface/接口文档
+    1. DevStandard/开发规范
+    2. Design/设计
+    3. Interface/接口文档
 4. database/数据库相关
 5. Test/测试
 6. Communicate/会议纪要等沟通文档
