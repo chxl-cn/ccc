@@ -9,7 +9,7 @@ CREATE TRIGGER `trg_alarm_loco_lrt`
 trg_body:
 BEGIN
 
-    IF new.raised_time > now() THEN
+    IF new.raised_time > now() OR new.detect_device_code IS NULL THEN
         LEAVE trg_body ;
     END IF;
 
