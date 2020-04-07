@@ -14,7 +14,7 @@ BEGIN
     END IF;
 
     INSERT INTO loco_lrt(locomotive_code, data_sort)
-    VALUES (new.detect_device_code, 2)
+    VALUES (new.detect_device_code, 1)
     ON DUPLICATE KEY
         UPDATE `last_time`   = new.`raised_time`,
                `id`          = new.`id`,
