@@ -40,6 +40,7 @@ CREATE TABLE `c3_sms`
     `backup_file_dir`     VARCHAR(128),
     `relative_path`       VARCHAR(128),
     `log_file_path`       VARCHAR(128),
+    `valid_gps`           TINYINT,
     KEY `id` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
