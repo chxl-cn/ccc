@@ -145,30 +145,36 @@ BEGIN
         SET v_reportwordstatus = 'WAIT' ;
     END IF;
 
-    UPDATE alarm b
-    SET b.severity         = i_severity
-      , b.status           = i_statuscode
-      , b.status_time      = i_statustime
-      , b.data_type        = if(btntype = 'btnOk', 'FAULT', 'ALARM')
-      , b.alarm_analysis   = i_alarm_analysis
-      #, b.remark           = i_remark
-      , b.report_person    = i_report_person
-      , b.report_date      = i_report_date
-      , b.code             = i_code
-      , b.cust_alarm_code  = i_cust_alarm_code
-      , b.reportwordstatus = v_reportwordstatus
-      , aflg_code          = i_aflg_code
-    WHERE b.id = alarmid
-      AND b.raised_time = p_raised_time;
-
-    UPDATE alarm_aux
-    SET remark= i_remark
-    WHERE alarm_id = alarmid
-      AND raised_time_aux = p_raised_time;
+    BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            BEGIN
+                SET results = 0 ;
+            END;
 
 
-    SET results := 1;
+        UPDATE alarm b
+        SET b.severity         = i_severity
+          , b.status           = i_statuscode
+          , b.status_time      = i_statustime
+          , b.data_type        = if(btntype = 'btnOk', 'FAULT', 'ALARM')
+          , b.alarm_analysis   = i_alarm_analysis
+          , b.report_person    = i_report_person
+          , b.report_date      = i_report_date
+          , b.code             = i_code
+          , b.cust_alarm_code  = i_cust_alarm_code
+          , b.reportwordstatus = v_reportwordstatus
+          , aflg_code          = i_aflg_code
+        WHERE b.id = alarmid
+          AND b.raised_time = p_raised_time;
 
-    COMMIT;
+        UPDATE alarm_aux
+        SET remark= i_remark
+        WHERE alarm_id = alarmid
+          AND raised_time_aux = p_raised_time;
+
+        SET results := 1;
+    END;
+
+
 END //
 
