@@ -1,35 +1,36 @@
 DELIMITER  ;
-drop PROCEDURE if EXISTS alarmconfirm;
+DROP PROCEDURE IF EXISTS alarmconfirm;
 
 DELIMITER //
-CREATE PROCEDURE alarmconfirm(IN alarmid tinytext
-                             , IN i_aflg_code tinytext
-                             , IN i_aflg_name tinytext
-                             , IN i_severity tinytext
-                             , IN i_statusname tinytext
-                             , IN i_statuscode tinytext
-                             , IN i_alarm_analysis tinytext
-                             , IN i_proposal tinytext
-                             , IN i_remark tinytext
-                             , IN i_report_person tinytext
-                             , IN i_report_date DATETIME
-                             , IN i_code tinytext
-                             , IN i_cust_alarm_code tinytext
-                             , IN i_code_name tinytext
-                             , IN btntype tinytext
-                             , OUT results INT
-                             , IN i_statustime DATETIME
-                             , IN i_sample_code tinytext
-                             , IN i_sample_name tinytext
-                             , IN i_sample_d_code tinytext
-                             , IN i_sample_d_name tinytext
-                             , IN i_scence_sample_name tinytext
-                             , IN i_scence_sample_code tinytext
-                             , in p_raised_time datetime)
+CREATE PROCEDURE alarmconfirm(IN alarmid               TINYTEXT
+                             , IN i_aflg_code          TINYTEXT
+                             , IN i_aflg_name          TINYTEXT
+                             , IN i_severity           TINYTEXT
+                             , IN i_statusname         TINYTEXT
+                             , IN i_statuscode         TINYTEXT
+                             , IN i_alarm_analysis     TINYTEXT
+                             , IN i_proposal           TINYTEXT
+                             , IN i_remark             TINYTEXT
+                             , IN i_report_person      TINYTEXT
+                             , IN i_report_date        DATETIME
+                             , IN i_code               TINYTEXT
+                             , IN i_cust_alarm_code    TINYTEXT
+                             , IN i_code_name          TINYTEXT
+                             , IN btntype              TINYTEXT
+                             , OUT results             INT
+                             , IN i_statustime         DATETIME
+                             , IN i_sample_code        TINYTEXT
+                             , IN i_sample_name        TINYTEXT
+                             , IN i_sample_d_code      TINYTEXT
+                             , IN i_sample_d_name      TINYTEXT
+                             , IN i_scence_sample_name TINYTEXT
+                             , IN i_scence_sample_code TINYTEXT
+                             , IN p_raised_time        DATETIME
+                             )
 BEGIN
     ##DECLARE v_cnt，v_sample_d_cnt INT;
     #DECLARE v_sample_d_code，v_sample_d_name tinytext;
-    declare v_reportwordstatus tinytext;
+    DECLARE v_reportwordstatus TINYTEXT;
 
 
     SET results := 0;
@@ -140,9 +141,9 @@ BEGIN
     */
 
     IF btntype = 'btnOk' AND (i_severity = '一类' OR i_severity = '二类' OR i_sample_code = 'DRTFLG_ZHB')
-    then
-        set v_reportwordstatus = 'WAIT' ;
-    end if;
+    THEN
+        SET v_reportwordstatus = 'WAIT' ;
+    END IF;
 
     UPDATE alarm b
     SET b.severity         = i_severity
@@ -150,7 +151,7 @@ BEGIN
       , b.status_time      = i_statustime
       , b.data_type        = if(btntype = 'btnOk', 'FAULT', 'ALARM')
       , b.alarm_analysis   = i_alarm_analysis
-      , b.remark           = i_remark
+      #, b.remark           = i_remark
       , b.report_person    = i_report_person
       , b.report_date      = i_report_date
       , b.code             = i_code
@@ -158,7 +159,13 @@ BEGIN
       , b.reportwordstatus = v_reportwordstatus
       , aflg_code          = i_aflg_code
     WHERE b.id = alarmid
-      and b.raised_time = p_raised_time;
+      AND b.raised_time = p_raised_time;
+
+    UPDATE alarm_aux
+    SET remark= i_remark
+    WHERE alarm_id = alarmid
+      AND raised_time_aux = p_raised_time;
+
 
     SET results := 1;
 
