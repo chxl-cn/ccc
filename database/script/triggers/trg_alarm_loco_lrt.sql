@@ -16,10 +16,8 @@ BEGIN
     INSERT INTO loco_lrt(locomotive_code, data_sort)
     VALUES (new.detect_device_code, 1)
     ON DUPLICATE KEY
-        UPDATE `last_time`   = if(last_time < new.`raised_time`, new.`raised_time`, last_time),
-               `id`          = if(last_time < new.`raised_time`, new.`id`, `id`),
-               `g_id`        = if(last_time < new.`raised_time`, if(ifnull(NEW.`valid_gps`, 0), new.`id`, `g_id`), `g_id`),
-               `g_last_time` = if(last_time < new.`raised_time`, if(ifnull(NEW.`valid_gps`, 0), new.`raised_time`, `g_last_time`), `g_last_time`);
-
-
+        UPDATE `last_time`   = if(`last_time` < new.`raised_time`, new.`raised_time`, `last_time`),
+               `id`          = if(`last_time` < new.`raised_time`, new.`id`, `id`),
+               `g_id`        = if(`last_time` < new.`raised_time`, if(ifnull(NEW.`valid_gps`, 0), new.`id`, `g_id`), `g_id`),
+               `g_last_time` = if(`last_time` < new.`raised_time`, if(ifnull(NEW.`valid_gps`, 0), new.`raised_time`, `g_last_time`), `g_last_time`);
 END //
