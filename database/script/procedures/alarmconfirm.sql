@@ -33,7 +33,6 @@ BEGIN
     DECLARE v_reportwordstatus TINYTEXT;
 
 
-    SET results := 0;
 
     SET max_heap_table_size = 17179869184;
 
