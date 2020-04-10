@@ -2,7 +2,7 @@ CREATE TABLE `nos_aa`
 (
     `ID`        varchar(128) NOT NULL,
     `INPUTDATE` datetime COMMENT '' date '',
-    `CONTENT`   text COMMENT '' json '',
+    `CONTENT`   text  ,
     KEY `ID` (`ID`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
