@@ -61,6 +61,9 @@ CREATE TABLE `alarm_aux`
     `power_device_code`  TINYTEXT,
     `power_device_type`  TINYTEXT,
     `substation_code`    TINYTEXT,
+    `map_add_ima`        TINYTEXT,
+    `vi_add_ima`         TINYTEXT,
+    `oa_add_ima`         TINYTEXT,
     KEY `alarm_id` (`alarm_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
