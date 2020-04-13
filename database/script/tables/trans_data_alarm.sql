@@ -13,7 +13,7 @@ CREATE TABLE `trans_data_alarm`
     `trans_info`          text,
     `trans_result`        varchar(20),
     `is_re_syn`           varchar(8) DEFAULT (0),
-    `is_trans_allowed`    tinyint(4) DEFAULT '' 0 '',
+    `is_trans_allowed`    tinyint(4) DEFAULT '0',
     `confidence_level`    tinyint(4),
     `failure_duration`    int(11),
     `retry_times`         int(11),
