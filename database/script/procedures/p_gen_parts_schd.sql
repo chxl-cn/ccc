@@ -21,8 +21,8 @@ BEGIN
          , ('c3_sms_monitor')
          , ('nos_ac')
          , ('stat_alarm_ex')
-         , ('stat_sms_ex');
-
+         , ('stat_sms_ex')
+         , ('alarm_edit');
 
     BEGIN
         DECLARE v_tbn VARCHAR(40);
@@ -46,11 +46,12 @@ BEGIN
             IF v_done THEN
                 LEAVE floop;
             END IF;
+
             SET v_start = now(6);
             CALL p_gen_parts(v_tbn);
             SET v_end = now(6);
             INSERT INTO event_exec_log (event_name, start_time, end_time, stat_code, msg)
-            VALUES ('part_alarm', v_start, v_end, v_CODE, v_msg);
+            VALUES (concat('part:', v_tbn), v_start, v_end, v_CODE, v_msg);
         END;
 
     END;
