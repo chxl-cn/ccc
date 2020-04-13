@@ -5,7 +5,11 @@ CREATE TABLE `alarm_edit`
     `editor`     VARCHAR(10),
     `edittime`   DATETIME,
     `content`    TEXT,
-    KEY (alarmid),
-    KEY (raisedtime)
+    KEY (alarmid)
 ) ENGINE = innodb
-  DEFAULT CHARSET = utf8mb4;
+  DEFAULT CHARSET = utf8mb4
+    PARTITION BY RANGE COLUMNS (raisedtime)
+        (PARTITION p_20180101 VALUES LESS THAN ("2018-01-02")
+
+        )
+;
