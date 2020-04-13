@@ -37,7 +37,7 @@ CREATE TABLE `tsys_user`
     `vcode`            varchar(30),
     `vexpire_time`     datetime,
     `allowmobilelogin` varchar(1),
-    `appmainpage`      double DEFAULT '' 0 '',
+    `appmainpage`      double DEFAULT '0',
     PRIMARY KEY (`loginid`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
