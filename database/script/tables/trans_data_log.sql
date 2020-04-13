@@ -10,7 +10,7 @@ CREATE TABLE `trans_data_log`
     `trans_time`          datetime,
     `use_depot`           tinytext,
     `is_re_syn`           varchar(8)           DEFAULT (0),
-    `is_trans_allowed`    tinyint(4)  NOT NULL DEFAULT '' 0 '',
+    `is_trans_allowed`    tinyint(4)  NOT NULL DEFAULT '0',
     `confidence_level`    tinyint(4),
     `retry_times`         int(11),
     `failure_duration`    int(11),
