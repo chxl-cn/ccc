@@ -5,7 +5,11 @@ DELIMITER //
 CREATE PROCEDURE p_gen_parts_schd(
                                  )
 BEGIN
-    #Routine body goes here...
+    DECLARE v_tbn VARCHAR(40);
+    DECLARE v_done BOOLEAN DEFAULT FALSE;
+    DECLARE cv_tbs CURSOR FOR SELECT tbn FROM wv_tbs;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = TRUE;
+
     DROP TABLE IF EXISTS wv_tbs;
     CREATE TEMPORARY TABLE wv_tbs
     (
@@ -24,29 +28,26 @@ BEGIN
          , ('stat_sms_ex')
          , ('alarm_edit');
 
+    OPEN cv_tbs;
+    floop:
     BEGIN
-        DECLARE v_tbn VARCHAR(40);
-        DECLARE v_CODE VARCHAR(5);
-        DECLARE v_msg TEXT;
-        DECLARE v_start DATETIME(6);
-        DECLARE v_end DATETIME(6);
-        DECLARE v_done BOOLEAN DEFAULT FALSE;
-        DECLARE cv_tbs CURSOR FOR SELECT tbn FROM wv_tbs;
-        DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = TRUE;
-        DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
-            BEGIN
-                GET DIAGNOSTICS CONDITION 1
-                    v_CODE = RETURNED_SQLSTATE,
-                    v_msg = MESSAGE_TEXT;
-            END;
-        OPEN cv_tbs;
-        floop:
-        BEGIN
-            FETCH cv_tbs INTO v_tbn;
-            IF v_done THEN
-                LEAVE floop;
-            END IF;
+        FETCH cv_tbs INTO v_tbn;
+        IF v_done THEN
+            LEAVE floop;
+        END IF;
 
+        BEGIN
+            DECLARE v_start DATETIME(6);
+            DECLARE v_end DATETIME(6);
+            DECLARE v_CODE VARCHAR(5);
+            DECLARE v_msg TEXT;
+
+            DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+                BEGIN
+                    GET DIAGNOSTICS CONDITION 1
+                        v_CODE = RETURNED_SQLSTATE,
+                        v_msg = MESSAGE_TEXT;
+                END;
             SET v_start = now(6);
             CALL p_gen_parts(v_tbn);
             SET v_end = now(6);
@@ -55,6 +56,7 @@ BEGIN
         END;
 
     END;
+
 
 END //
 
