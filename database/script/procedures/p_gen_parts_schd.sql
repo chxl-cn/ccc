@@ -30,7 +30,7 @@ BEGIN
 
     OPEN cv_tbs;
     floop:
-    BEGIN
+    LOOP
         FETCH cv_tbs INTO v_tbn;
         IF v_done THEN
             LEAVE floop;
@@ -55,7 +55,7 @@ BEGIN
             VALUES (concat('part:', v_tbn), v_start, v_end, v_CODE, v_msg);
         END;
 
-    END;
+    END LOOP;
 
 
 END //
