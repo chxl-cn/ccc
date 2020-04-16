@@ -167,9 +167,8 @@
       "DataType": 0
     },
     {
-      "SourceName": "svalue14",
+      "SourceName": "",
       "TargetName": "svalue14",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -323,9 +322,8 @@
       "DataType": 0
     },
     {
-      "SourceName": "summary",
+      "SourceName": "",
       "TargetName": "summary",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -359,15 +357,13 @@
       "DataType": 0
     },
     {
-      "SourceName": "sample_code",
+      "SourceName": "",
       "TargetName": "sample_code",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "scencesample_code",
+      "SourceName": "",
       "TargetName": "scencesample_code",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -381,9 +377,8 @@
       "DataType": 0
     },
     {
-      "SourceName": "aflg_code",
+      "SourceName": "",
       "TargetName": "aflg_code",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -417,57 +412,48 @@
       "DataType": 0
     },
     {
-      "SourceName": "spart_pixel_pct",
+      "SourceName": "",
       "TargetName": "spart_pixel_pct",
-      "DefaultValue": "NULL",
       "DataType": 2
     },
     {
-      "SourceName": "spart_pixels",
+      "SourceName": "",
       "TargetName": "spart_pixels",
-      "DefaultValue": "NULL",
       "DataType": 1
     },
     {
-      "SourceName": "gray_avg_left",
+      "SourceName": "",
       "TargetName": "gray_avg_left",
-      "DefaultValue": "NULL",
       "DataType": 1
     },
     {
-      "SourceName": "gray_avg_right",
+      "SourceName": "",
       "TargetName": "gray_avg_right",
-      "DefaultValue": "NULL",
       "DataType": 1
     },
     {
-      "SourceName": "gray_avg_bow_rect",
+      "SourceName": "",
       "TargetName": "gray_avg_bow_rect",
-      "DefaultValue": "NULL",
       "DataType": 1
     },
     {
-      "SourceName": "spark_shape",
+      "SourceName": "",
       "TargetName": "spark_shape",
-      "DefaultValue": "NULL",
       "DataType": 1
     },
     {
-      "SourceName": "spark_num",
+      "SourceName": "",
       "TargetName": "spark_num",
-      "DefaultValue": "NULL",
       "DataType": 1
     },
     {
-      "SourceName": "device_id",
+      "SourceName": "",
       "TargetName": "device_id",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "eoas_trainno",
+      "SourceName": "",
       "TargetName": "eoas_trainno",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -476,15 +462,13 @@
       "DataType": 1
     },
     {
-      "SourceName": "sample_detail_code",
+      "SourceName": "",
       "TargetName": "sample_detail_code",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "valid_gps",
+      "SourceName": "",
       "TargetName": "valid_gps",
-      "DefaultValue": "NULL",
       "DataType": 1
     }
   ]
