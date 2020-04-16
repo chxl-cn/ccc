@@ -92,9 +92,8 @@
       "DataType": 0
     },
     {
-      "SourceName": "airesult",
+      "SourceName": "",
       "TargetName": "airesult",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -308,21 +307,18 @@
       "DataType": 0
     },
     {
-      "SourceName": "map_add_ima",
+      "SourceName": "",
       "TargetName": "map_add_ima",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "vi_add_ima",
+      "SourceName": "",
       "TargetName": "vi_add_ima",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "oa_add_ima",
+      "SourceName": "",
       "TargetName": "oa_add_ima",
-      "DefaultValue": "NULL",
       "DataType": 0
     }
   ]
