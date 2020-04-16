@@ -237,7 +237,8 @@ BEGIN
            dlevel,
            avg_speed,
            total_rows,
-           alarm_id
+           alarm_id,
+           raised_time_mx
     FROM wv_res
     WHERE length(line_code) > 0
       AND length(direction) > 0
