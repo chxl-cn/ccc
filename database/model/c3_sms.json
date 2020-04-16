@@ -27,27 +27,23 @@
       "DataType": 0
     },
     {
-      "SourceName": "train_no",
+      "SourceName": "",
       "TargetName": "train_no",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "pole_code",
+      "SourceName": "",
       "TargetName": "pole_code",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "pole_no",
+      "SourceName": "",
       "TargetName": "pole_no",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "log_filename",
+      "SourceName": "",
       "TargetName": "log_filename",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -76,9 +72,8 @@
       "DataType": 1
     },
     {
-      "SourceName": "routing_no",
+      "SourceName": "",
       "TargetName": "routing_no",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
@@ -202,15 +197,13 @@
       "DataType": 0
     },
     {
-      "SourceName": "log_file_path",
+      "SourceName": "",
       "TargetName": "log_file_path",
-      "DefaultValue": "NULL",
       "DataType": 0
     },
     {
-      "SourceName": "valid_gps",
+      "SourceName": "",
       "TargetName": "valid_gps",
-      "DefaultValue": "NULL",
       "DataType": 1
     }
   ]
