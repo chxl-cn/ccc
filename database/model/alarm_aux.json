@@ -2,7 +2,7 @@
   "TableName": "alarm_aux",
   "Fields": [
     {
-      "SourceName": "id",
+      "SourceName": "alarm_id",
       "TargetName": "alarm_id",
       "DataType": 0
     },
@@ -52,7 +52,7 @@
       "DataType": 1
     },
     {
-      "SourceName": "raised_time",
+      "SourceName": "raised_time_aux",
       "TargetName": "raised_time_aux",
       "DataType": 3
     },
