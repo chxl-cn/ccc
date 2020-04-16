@@ -555,16 +555,18 @@ INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_sms', 3
 FROM stat_sms_ex
 WHERE running_date = ?
   AND locomotive_code = ?');
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 1, 'CREATE TEMPORARY TABLE wv_spk ENGINE MEMORY
-SELECT cast(line_code AS CHAR(40))                                                                          line_code,
-       cast(direction AS CHAR(20))                                                                          direction,
-       cast(position_code AS CHAR(50))                                                                      position_code,
-       cast(locomotive_code AS CHAR(30))                                                                    locomotive_code,
-       raised_time                                                                                          raised_time,
-       count(DISTINCT id)                                                                                   spark_cnt,
-       sum(spark_elapse)                                                                                    spark_tm,
-       max(spark_elapse)                                                                                    spark_mx,
-       cast(regexp_substr(GROUP_CONCAT(id ORDER BY spark_elapse DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100)) alarm_id
+SELECT cast(line_code AS CHAR(40))                                                                                      line_code,
+       cast(direction AS CHAR(20))                                                                                      direction,
+       cast(position_code AS CHAR(50))                                                                                  position_code,
+       cast(locomotive_code AS CHAR(30))                                                                                locomotive_code,
+       raised_time                                                                                                      raised_time,
+       count(DISTINCT id)                                                                                               spark_cnt,
+       sum(spark_elapse)                                                                                                spark_tm,
+       max(spark_elapse)                                                                                                spark_mx,
+       cast(regexp_substr(GROUP_CONCAT(id ORDER BY spark_elapse DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100))             alarm_id,
+       cast(regexp_substr(GROUP_CONCAT(raised_time_mx ORDER BY spark_elapse DESC SEPARATOR '',''), ''[^,]+'') AS DECIMAL)   raised_time_mx
 FROM (
          SELECT a.line_code,
                 a.direction,
@@ -572,7 +574,8 @@ FROM (
                 a.detect_device_code locomotive_code,
                 date(raised_time)    raised_time,
                 a.id,
-                spark_elapse
+                spark_elapse,
+                a.raised_time   + 0 raised_time_mx
          FROM alarm a
          WHERE length(a.line_code) > 0
            AND length(a.direction) > 0
@@ -585,7 +588,10 @@ GROUP BY direction,
          position_code,
          line_code,
          locomotive_code,
-         raised_time');
+         raised_time
+');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 2, 'CREATE TEMPORARY TABLE wv_sms_ini ENGINE MEMORY
 SELECT dense_rank() OVER (ORDER BY date(detect_time) DESC, line_code, direction) rwno,
        line_code,
