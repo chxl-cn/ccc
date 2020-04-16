@@ -1,0 +1,491 @@
+{
+  "TableName": "alarm",
+  "Fields": [
+    {
+      "SourceName": "id",
+      "TargetName": "id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "vendor",
+      "TargetName": "vendor",
+      "DataType": 0
+    },
+    {
+      "SourceName": "category_code",
+      "TargetName": "category_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "detect_device_code",
+      "TargetName": "detect_device_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "data_type",
+      "TargetName": "data_type",
+      "DataType": 0
+    },
+    {
+      "SourceName": "dvalue1",
+      "TargetName": "dvalue1",
+      "DataType": 3
+    },
+    {
+      "SourceName": "dvalue2",
+      "TargetName": "dvalue2",
+      "DataType": 3
+    },
+    {
+      "SourceName": "dvalue3",
+      "TargetName": "dvalue3",
+      "DataType": 3
+    },
+    {
+      "SourceName": "dvalue4",
+      "TargetName": "dvalue4",
+      "DataType": 3
+    },
+    {
+      "SourceName": "dvalue5",
+      "TargetName": "dvalue5",
+      "DataType": 3
+    },
+    {
+      "SourceName": "nvalue1",
+      "TargetName": "nvalue1",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue2",
+      "TargetName": "nvalue2",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue3",
+      "TargetName": "nvalue3",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue4",
+      "TargetName": "nvalue4",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue5",
+      "TargetName": "nvalue5",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue6",
+      "TargetName": "nvalue6",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue8",
+      "TargetName": "nvalue8",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue13",
+      "TargetName": "nvalue13",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue14",
+      "TargetName": "nvalue14",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue15",
+      "TargetName": "nvalue15",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue16",
+      "TargetName": "nvalue16",
+      "DataType": 1
+    },
+    {
+      "SourceName": "created_time",
+      "TargetName": "created_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "raised_time",
+      "TargetName": "raised_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "report_date",
+      "TargetName": "report_date",
+      "DataType": 3
+    },
+    {
+      "SourceName": "status_time",
+      "TargetName": "status_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "report_person",
+      "TargetName": "report_person",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_typical",
+      "TargetName": "is_typical",
+      "DataType": 0
+    },
+    {
+      "SourceName": "severity",
+      "TargetName": "severity",
+      "DataType": 0
+    },
+    {
+      "SourceName": "status",
+      "TargetName": "status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "code",
+      "TargetName": "code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "cust_alarm_code",
+      "TargetName": "cust_alarm_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "p_org_code",
+      "TargetName": "p_org_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue8",
+      "TargetName": "svalue8",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue14",
+      "TargetName": "svalue14",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue15",
+      "TargetName": "svalue15",
+      "DataType": 0
+    },
+    {
+      "SourceName": "km_mark",
+      "TargetName": "km_mark",
+      "DataType": 1
+    },
+    {
+      "SourceName": "pole_number",
+      "TargetName": "pole_number",
+      "DataType": 0
+    },
+    {
+      "SourceName": "brg_tun_code",
+      "TargetName": "brg_tun_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "position_code",
+      "TargetName": "position_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "direction",
+      "TargetName": "direction",
+      "DataType": 0
+    },
+    {
+      "SourceName": "line_code",
+      "TargetName": "line_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "org_code",
+      "TargetName": "org_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "workshop_code",
+      "TargetName": "workshop_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "power_section_code",
+      "TargetName": "power_section_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "bureau_code",
+      "TargetName": "bureau_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "alarm_analysis",
+      "TargetName": "alarm_analysis",
+      "DataType": 0
+    },
+    {
+      "SourceName": "task_id",
+      "TargetName": "task_id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "tax_monitor_status",
+      "TargetName": "tax_monitor_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "routing_no",
+      "TargetName": "routing_no",
+      "DataType": 1
+    },
+    {
+      "SourceName": "area_no",
+      "TargetName": "area_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "station_no",
+      "TargetName": "station_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "source",
+      "TargetName": "source",
+      "DataType": 0
+    },
+    {
+      "SourceName": "eoas_direction",
+      "TargetName": "eoas_direction",
+      "DataType": 0
+    },
+    {
+      "SourceName": "eoas_km",
+      "TargetName": "eoas_km",
+      "DataType": 1
+    },
+    {
+      "SourceName": "eoas_location",
+      "TargetName": "eoas_location",
+      "DataType": 1
+    },
+    {
+      "SourceName": "eoas_time",
+      "TargetName": "eoas_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "eoas_train_speed",
+      "TargetName": "eoas_train_speed",
+      "DataType": 1
+    },
+    {
+      "SourceName": "raised_time_m",
+      "TargetName": "raised_time_m",
+      "DataType": 1
+    },
+    {
+      "SourceName": "tax_position",
+      "TargetName": "tax_position",
+      "DataType": 0
+    },
+    {
+      "SourceName": "tax_schedule_status",
+      "TargetName": "tax_schedule_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "pos_confirmed",
+      "TargetName": "pos_confirmed",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_customer_ana",
+      "TargetName": "is_customer_ana",
+      "DataType": 0
+    },
+    {
+      "SourceName": "org_file_location",
+      "TargetName": "org_file_location",
+      "DataType": 0
+    },
+    {
+      "SourceName": "pic_file_location",
+      "TargetName": "pic_file_location",
+      "DataType": 0
+    },
+    {
+      "SourceName": "summary",
+      "TargetName": "summary",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "repair_date",
+      "TargetName": "repair_date",
+      "DataType": 3
+    },
+    {
+      "SourceName": "isdayreport",
+      "TargetName": "isdayreport",
+      "DataType": 0
+    },
+    {
+      "SourceName": "isexportreport",
+      "TargetName": "isexportreport",
+      "DataType": 0
+    },
+    {
+      "SourceName": "lock_person_id",
+      "TargetName": "lock_person_id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_trans_allowed",
+      "TargetName": "is_trans_allowed",
+      "DataType": 1
+    },
+    {
+      "SourceName": "acflag_code",
+      "TargetName": "acflag_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "sample_code",
+      "TargetName": "sample_code",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "scencesample_code",
+      "TargetName": "scencesample_code",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "accesscount",
+      "TargetName": "accesscount",
+      "DataType": 1
+    },
+    {
+      "SourceName": "initial_code",
+      "TargetName": "initial_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "aflg_code",
+      "TargetName": "aflg_code",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "algcode",
+      "TargetName": "algcode",
+      "DataType": 0
+    },
+    {
+      "SourceName": "reportwordstatus",
+      "TargetName": "reportwordstatus",
+      "DataType": 0
+    },
+    {
+      "SourceName": "rerun_type",
+      "TargetName": "rerun_type",
+      "DataType": 1
+    },
+    {
+      "SourceName": "spark_elapse",
+      "TargetName": "spark_elapse",
+      "DataType": 1
+    },
+    {
+      "SourceName": "isblackcenter",
+      "TargetName": "isblackcenter",
+      "DataType": 1
+    },
+    {
+      "SourceName": "dev_type_ana",
+      "TargetName": "dev_type_ana",
+      "DataType": 0
+    },
+    {
+      "SourceName": "spart_pixel_pct",
+      "TargetName": "spart_pixel_pct",
+      "DefaultValue": "NULL",
+      "DataType": 2
+    },
+    {
+      "SourceName": "spart_pixels",
+      "TargetName": "spart_pixels",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    },
+    {
+      "SourceName": "gray_avg_left",
+      "TargetName": "gray_avg_left",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    },
+    {
+      "SourceName": "gray_avg_right",
+      "TargetName": "gray_avg_right",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    },
+    {
+      "SourceName": "gray_avg_bow_rect",
+      "TargetName": "gray_avg_bow_rect",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    },
+    {
+      "SourceName": "spark_shape",
+      "TargetName": "spark_shape",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    },
+    {
+      "SourceName": "spark_num",
+      "TargetName": "spark_num",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    },
+    {
+      "SourceName": "device_id",
+      "TargetName": "device_id",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "eoas_trainno",
+      "TargetName": "eoas_trainno",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "alarm_rep_count",
+      "TargetName": "alarm_rep_count",
+      "DataType": 1
+    },
+    {
+      "SourceName": "sample_detail_code",
+      "TargetName": "sample_detail_code",
+      "DefaultValue": "NULL",
+      "DataType": 0
+    },
+    {
+      "SourceName": "valid_gps",
+      "TargetName": "valid_gps",
+      "DefaultValue": "NULL",
+      "DataType": 1
+    }
+  ]
+}
