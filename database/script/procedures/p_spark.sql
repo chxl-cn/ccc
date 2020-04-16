@@ -93,22 +93,21 @@ BEGIN
 
     DROP TABLE IF EXISTS wv_res;
     CREATE TEMPORARY TABLE wv_res ENGINE MEMORY
-    SELECT detect_time                                                                                            raised_time,
+    SELECT detect_time                                                                                       raised_time,
            line_code,
            direction,
            position_code,
            locomotive_code,
-           count(DISTINCT locomotive_code)                                                                        loco_cnt,
-           sum(spark_cnt)                                                                                         spark_cnt,
-           sum(spark_tm)                                                                                          spark_tm,
-           round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5)                                                    spark_rate,
-           sum(msc)                                                                                               msc,
-           max(smx)                                                                                               spark_mx,
-           0                                                                                                      dlevel,
-           round(avg(avg_speed), 0)                                                                               avg_speed,
-           v_total_rows                                                                                           total_rows,
-           cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS CHAR(100))      alarm_id,
-           cast(regexp_substr(GROUP_CONCAT(raised_time_mx ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS DATETIME) raised_time_mx
+           count(DISTINCT locomotive_code)                                                                   loco_cnt,
+           sum(spark_cnt)                                                                                    spark_cnt,
+           sum(spark_tm)                                                                                     spark_tm,
+           round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5)                                               spark_rate,
+           sum(msc)                                                                                          msc,
+           max(smx)                                                                                          spark_mx,
+           0                                                                                                 dlevel,
+           round(avg(avg_speed), 0)                                                                          avg_speed,
+           v_total_rows                                                                                      total_rows,
+           cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS CHAR(100)) alarm_id
     FROM (
              SELECT k.detect_time,
                     k.line_code,
@@ -120,8 +119,7 @@ BEGIN
                     spark_cnt,
                     alarm_id,
                     spark_mx smx,
-                    avg_speed,
-                    raised_time_mx
+                    avg_speed
              FROM wv_spk s
                       RIGHT JOIN wv_sms_01 k
                                  ON s.line_code = k.line_code
@@ -137,22 +135,21 @@ BEGIN
              locomotive_code;
 
     INSERT INTO wv_res
-    SELECT detect_time                                                                          raised_time,
+    SELECT detect_time                                                                    raised_time,
            line_code,
            direction,
            position_code,
-           NULL                                                                                 locomotive_code,
-           count(DISTINCT locomotive_code)                                                      loco_cnt,
-           sum(spark_cnt)                                                                       spark_cnt,
-           sum(spark_tm)                                                                        spark_tm,
-           round(sum(spark_tm) / nullif(sum(msc) * 100, 0), 5)                                  spark_rate,
-           sum(msc)                                                                             msc,
-           max(smx)                                                                             spark_mx,
-           1                                                                                    dlevel,
-           round(avg(avg_speed), 0)                                                             avg_speed,
-           v_total_rows                                                                         total_rows,
-           regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+')       alarm_id,
-           regexp_substr(GROUP_CONCAT(raised_time_mx ORDER BY smx DESC SEPARATOR ','), '[^,]+') raised_time_mx
+           NULL                                                                           locomotive_code,
+           count(DISTINCT locomotive_code)                                                loco_cnt,
+           sum(spark_cnt)                                                                 spark_cnt,
+           sum(spark_tm)                                                                  spark_tm,
+           round(sum(spark_tm) / nullif(sum(msc) * 100, 0), 5)                            spark_rate,
+           sum(msc)                                                                       msc,
+           max(smx)                                                                       spark_mx,
+           1                                                                              dlevel,
+           round(avg(avg_speed), 0)                                                       avg_speed,
+           v_total_rows                                                                   total_rows,
+           regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') alarm_id
     FROM (
              SELECT k.detect_time,
                     k.line_code,
@@ -164,8 +161,7 @@ BEGIN
                     spark_cnt,
                     alarm_id,
                     spark_mx smx,
-                    avg_speed,
-                    raised_time_mx
+                    avg_speed
              FROM wv_spk s
                       RIGHT JOIN wv_sms_01 k
                                  ON s.line_code = k.line_code
@@ -181,22 +177,21 @@ BEGIN
 
 
     INSERT INTO wv_res
-    SELECT detect_time                                                                          raised_time,
+    SELECT detect_time                                                                    raised_time,
            line_code,
            direction,
-           NULL                                                                                 position_code,
-           NULL                                                                                 locomotive_code,
-           count(DISTINCT locomotive_code)                                                      loco_cnt,
-           sum(spark_cnt)                                                                       spark_cnt,
-           sum(spark_tm)                                                                        spark_tm,
-           round(sum(spark_tm) / nullif(sum(msc) * 100, 0), 5)                                  spark_rate,
-           sum(msc)                                                                             msc,
-           max(smx)                                                                             spark_mx,
-           3                                                                                    dlevel,
-           round(avg(avg_speed), 0)                                                             avg_speed,
-           v_total_rows                                                                         total_rows,
-           regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+')       alarm_id,
-           regexp_substr(GROUP_CONCAT(raised_time_mx ORDER BY smx DESC SEPARATOR ','), '[^,]+') raised_time_mx
+           NULL                                                                           position_code,
+           NULL                                                                           locomotive_code,
+           count(DISTINCT locomotive_code)                                                loco_cnt,
+           sum(spark_cnt)                                                                 spark_cnt,
+           sum(spark_tm)                                                                  spark_tm,
+           round(sum(spark_tm) / nullif(sum(msc) * 100, 0), 5)                            spark_rate,
+           sum(msc)                                                                       msc,
+           max(smx)                                                                       spark_mx,
+           3                                                                              dlevel,
+           round(avg(avg_speed), 0)                                                       avg_speed,
+           v_total_rows                                                                   total_rows,
+           regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') alarm_id
     FROM (
              SELECT k.detect_time,
                     k.line_code,
@@ -208,8 +203,7 @@ BEGIN
                     spark_cnt,
                     alarm_id,
                     spark_mx smx,
-                    avg_speed,
-                    raised_time_mx
+                    avg_speed
              FROM wv_spk s
                       RIGHT JOIN wv_sms_01 k
                                  ON s.line_code = k.line_code
