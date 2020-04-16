@@ -565,8 +565,7 @@ SELECT cast(line_code AS CHAR(40))                                              
        count(DISTINCT id)                                                                                               spark_cnt,
        sum(spark_elapse)                                                                                                spark_tm,
        max(spark_elapse)                                                                                                spark_mx,
-       cast(regexp_substr(GROUP_CONCAT(id ORDER BY spark_elapse DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100))             alarm_id,
-       cast(regexp_substr(GROUP_CONCAT(raised_time_mx ORDER BY spark_elapse DESC SEPARATOR '',''), ''[^,]+'') AS DECIMAL)   raised_time_mx
+       cast(regexp_substr(GROUP_CONCAT(id ORDER BY spark_elapse DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100))             alarm_id
 FROM (
          SELECT a.line_code,
                 a.direction,
@@ -574,8 +573,7 @@ FROM (
                 a.detect_device_code locomotive_code,
                 date(raised_time)    raised_time,
                 a.id,
-                spark_elapse,
-                a.raised_time   + 0 raised_time_mx
+                spark_elapse
          FROM alarm a
          WHERE length(a.line_code) > 0
            AND length(a.direction) > 0
