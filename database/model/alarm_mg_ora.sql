@@ -1,4 +1,4 @@
-SELECT /*+ use_hash(d z) use_hash(x a)*/
+SELECT /*+ use_hash(d a) use_hash(x a)*/
        A.ID,
        VENDOR,
        CATEGORY_CODE,
