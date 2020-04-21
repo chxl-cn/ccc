@@ -59,7 +59,7 @@ BEGIN
 
     DROP TABLE IF EXISTS wv_sms_alarm_out;
 
-    CREATE TABLE `wv_sms_alarm_out`
+    CREATE TEMPORARY TABLE `wv_sms_alarm_out`
     (
         `line_code`       VARCHAR(40) NOT NULL,
         `direction`       VARCHAR(20) NOT NULL,
