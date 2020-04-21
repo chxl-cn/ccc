@@ -80,13 +80,14 @@ BEGIN
     FROM wv_sms_alarm a;
 
     SELECT max(rwno) INTO v_total_rows FROM wv_sms_alarm_out;
+    set @v_total_rows = v_total_rows;
 
     DELETE FROM wv_sms_alarm_out k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
 
     CALL p_get_mod_sql('p_spark', 3, v_sql);
     SET @result = v_sql;
     PREPARE stmt_result FROM @result;
-    EXECUTE stmt_result ;
+    EXECUTE stmt_result USING @v_total_rows,@v_total_rows,@v_total_rows ;
     DEALLOCATE PREPARE stmt_result;
 
 
