@@ -46,6 +46,8 @@ from c3_sms s
 where id =?
   and detect_time >=? 
   and detect_time <? + interval 1 day');
+  
+  
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('loco_curr_stat', 2, 'select id,
        detect_time,
        line_height_1,
@@ -82,6 +84,8 @@ from c3_sms_monitor s
 where id =?
   and detect_time >=? 
   and detect_time <? + interval 1 day');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('loco_curr_stat', 3, 'select s.id,
        locomotive_code,
        s.detect_time,
@@ -160,6 +164,8 @@ FROM wv_loco s
          left join wv_sms_mon m
                    on s.id = m.id
 ORDER BY s.detect_time DESC');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('loco_stats', 1, 'select id,
        date_format(detect_time, ''%Y-%m-%d %H:%i'')                                                    detect_time,
        locomotive_code                                                                               locomotive_code,
@@ -185,6 +191,8 @@ INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('loco_stats', 1, 's
 from c3_sms
 where detect_time >=?
   and detect_time <=?');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('loco_stats', 2, 'select id,
        irv_temp_1,
        irv_temp_2,
@@ -212,6 +220,8 @@ from c3_sms_monitor
 where detect_time >=?
   and detect_time <? + interval 1 day
   and id =?');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('loco_stats', 3, 'SELECT l.id
      , detect_time
      , locomotive_code
@@ -263,6 +273,8 @@ FROM wv_loco l
 ORDER BY detect_time DESC
        , locomotive_code
        ');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_alarm_3c_stat', 1, 'CREATE TEMPORARY TABLE t_alarm_3c_stat ENGINE MEMORY
 SELECT cast(detect_device_code as CHAR(40)) detect_device_code,
        date_format(t1.raised_time, ''%Y/%m/%d'') AS                 day,
@@ -292,6 +304,8 @@ WHERE category_code = ''3C''
   AND t1.data_type = ''FAULT''
   AND raised_time BETWEEN ? AND ?
 GROUP BY t1.detect_device_code, day');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_c3_sms_trace_stat', 1, 'CREATE TEMPORARY TABLE twv_sms ENGINE MEMORY
 SELECT bureau_code     AS bureau_code,
        p_org_code      AS p_org_code,
@@ -333,6 +347,8 @@ GROUP BY s.bureau_code,
     running_date,
     direction,
     line_code');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_c3_sms_trace_stat', 2, 'CREATE TEMPORARY TABLE twv_alarm ENGINE MEMORY
 SELECT bureau_code        AS bureau_code,
        p_org_code         AS p_org_code,
@@ -381,6 +397,8 @@ GROUP BY bureau_code,
          running_date,
          direction,
          line_code');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_alarm', 1, 'INSERT INTO stat_alarm_ex(bureau_code,
                           p_org_code,
                           org_code,
@@ -426,6 +444,8 @@ GROUP BY bureau_code,
          running_date,
          direction,
          line_code');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_alarm', 2, 'INSERT INTO stat_alarm_ex(bureau_code,
                           p_org_code,
                           org_code,
@@ -472,10 +492,14 @@ GROUP BY bureau_code,
          running_date,
          direction,
          line_code');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_alarm', 3, 'DELETE
 FROM stat_alarm_ex
 WHERE running_date = ?
   AND locomotive_code = ?');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_sms', 1, 'INSERT INTO stat_sms_ex(bureau_code,
                         p_org_code,
                         org_code,
@@ -513,6 +537,8 @@ GROUP BY bureau_code,
          direction,
          routing_no,
          line_code');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_sms', 2, 'INSERT INTO stat_sms_ex(bureau_code,
                         p_org_code,
                         org_code,
@@ -551,10 +577,13 @@ GROUP BY bureau_code,
          direction,
          routing_no,
          line_code');
+
+
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_gen_stat_sms', 3, 'DELETE
 FROM stat_sms_ex
 WHERE running_date = ?
   AND locomotive_code = ?');
+
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 1, 'CREATE TEMPORARY TABLE wv_spk ENGINE MEMORY
 SELECT cast(line_code AS CHAR(40))                                                                                      line_code,
@@ -590,21 +619,20 @@ GROUP BY direction,
 ');
 
 
-INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 2, 'CREATE TEMPORARY TABLE wv_sms_ini ENGINE MEMORY
-SELECT dense_rank() OVER (ORDER BY date(detect_time) DESC, line_code, direction) rwno,
-       line_code,
+INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 2, 'CREATE TEMPORARY TABLE wv_sms_alarm ENGINE MEMORY
+SELECT line_code,
        direction,
        position_code,
        locomotive_code,
        date(detect_time)                                                         detect_time,
-       sum(msc) * 60000                                                          msc,
+       sum(msc) * 1000                                                           msc,
        avg(avg_speed)                                                            avg_speed
 FROM (SELECT line_code,
              direction,
              position_code,
              locomotive_code,
              date_format(detect_time, ''%Y-%m-%d %H'')                   detect_time,
-             TIMESTAMPDIFF(MINUTE, min(detect_time), max(detect_time)) msc,
+             TIMESTAMPDIFF(second, min(detect_time), max(detect_time)) msc,
              avg(speed)                                                avg_speed
       FROM c3_sms s
       WHERE length(line_code) > 0
@@ -617,10 +645,79 @@ FROM (SELECT line_code,
                direction,
                position_code,
                locomotive_code,
-               detect_time
+               date_format(detect_time, ''%Y-%m-%d %H'')
      ) s
 GROUP BY line_code,
          direction,
          position_code,
          locomotive_code,
-         detect_time');
+         date(detect_time)');
+
+
+INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 3, 'SELECT detect_time                                                                                            raised_time,
+       line_code                                                                                              line_code,
+       direction                                                                                              direction,
+       position_code                                                                                          position_code,
+       locomotive_code                                                                                        locomotive_code,
+       count(DISTINCT locomotive_code)                                                                        loco_cnt,
+       sum(spark_cnt)                                                                                         spark_cnt,
+       sum(spark_tm)                                                                                          spark_tm,
+       round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5)                                                    spark_rate,
+       sum(msc)                                                                                               msc,
+       max(spark_mx)                                                                                          spark_mx,
+       0                                                                                                      dlevel,
+       round(avg(avg_speed), 0)                                                                               avg_speed,
+       ?                                                                                                      total_rows,
+       cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY spark_mx DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100)) alarm_id
+FROM wv_sms_alarm_out a
+GROUP BY detect_time,
+         line_code,
+         direction,
+         position_code,
+         locomotive_code
+UNION ALL
+SELECT detect_time                                                                                            raised_time,
+       line_code                                                                                              line_code,
+       direction                                                                                              direction,
+       position_code                                                                                          position_code,
+       NULL                                                                                                   locomotive_code,
+       count(DISTINCT locomotive_code)                                                                        loco_cnt,
+       sum(spark_cnt)                                                                                         spark_cnt,
+       sum(spark_tm)                                                                                          spark_tm,
+       round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5)                                                    spark_rate,
+       sum(msc)                                                                                               msc,
+       max(spark_mx)                                                                                          spark_mx,
+       1                                                                                                      dlevel,
+       round(avg(avg_speed), 0)                                                                               avg_speed,
+       ?                                                                                                      total_rows,
+       cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY spark_mx DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100)) alarm_id
+FROM wv_sms_alarm_out a
+GROUP BY detect_time,
+         line_code,
+         direction,
+         position_code
+UNION ALL
+SELECT detect_time                                                                                            raised_time,
+       line_code                                                                                              line_code,
+       direction                                                                                              direction,
+       NULL                                                                                                   position_code,
+       NULL                                                                                                   locomotive_code,
+       count(DISTINCT locomotive_code)                                                                        loco_cnt,
+       sum(spark_cnt)                                                                                         spark_cnt,
+       sum(spark_tm)                                                                                          spark_tm,
+       round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5)                                                    spark_rate,
+       sum(msc)                                                                                               msc,
+       max(spark_mx)                                                                                          spark_mx,
+       3                                                                                                      dlevel,
+       round(avg(avg_speed), 0)                                                                               avg_speed,
+       ?                                                                                                      total_rows,
+       cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY spark_mx DESC SEPARATOR '',''), ''[^,]+'') AS CHAR(100)) alarm_id
+FROM wv_sms_alarm_out a
+GROUP BY detect_time,
+         line_code,
+         direction
+ORDER BY raised_time DESC,
+         line_code,
+         direction,
+         position_code,
+         dlevel DESC;');
