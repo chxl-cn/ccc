@@ -57,23 +57,26 @@ BEGIN
     ON DUPLICATE KEY
         UPDATE spark_cnt=k.spark_cnt, spark_tm=k.spark_tm, spark_mx=k.spark_mx, alarm_id=k.alarm_id;
 
+    DROP TABLE IF EXISTS wv_sms_alarm_out;
+    CREATE TABLE wv_sms_alarm_out LIKE wv_sms_alarm;
+
+    ALTER TABLE wv_sms_alarm_out
+        ENGINE MEMORY;
+
+    ALTER TABLE wv_sms_alarm_out
+        ADD rwno INT;
+
+    ALTER TABLE wv_sms_alarm_out
+        ADD KEY (rwno);
+
+    INSERT INTO wv_sms_alarm_out
+    SELECT a.*, dense_rank() OVER (ORDER BY detect_time DESC, line_code, direction) rwno
+    FROM wv_sms_alarm a;
 
 
-    INSERT INTO wv_sms
-    SELECT dense_rank() OVER (ORDER BY detect_time DESC, line_code, direction) rwno,
-           line_code,
-           direction,
-           position_code,
-           locomotive_code,
-           detect_time,
-           msc,
-           avg_speed
-    FROM wv_sms_ini;
+    SELECT max(rwno) INTO v_total_rows FROM wv_sms_alarm;
 
 
-    SELECT max(rwno) INTO v_total_rows FROM wv_sms;
-
-    DROP TABLE IF EXISTS wv_sms_alarm;
     CREATE TEMPORARY TABLE wv_sms_alarm ENGINE MEMORY
     SELECT * FROM wv_sms k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
 
