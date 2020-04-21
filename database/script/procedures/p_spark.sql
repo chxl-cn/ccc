@@ -100,7 +100,7 @@ BEGIN
                      , locomotive_code) dlevel
                      , round(avg(avg_speed), 0) avg_speed,
                  v_total_rows total_rows,
-                 cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS CHAR (100)) alarm_id
+                 cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY spark_mx DESC SEPARATOR ','), '[^,]+') AS CHAR (100)) alarm_id
              FROM wv_sms_alarm_out a
              GROUP BY detect_time,
                  line_code,
