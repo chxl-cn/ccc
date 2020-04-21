@@ -89,11 +89,11 @@ BEGIN
 
     SELECT max(rwno) INTO v_total_rows FROM wv_sms;
 
-    DROP TABLE IF EXISTS wv_sms_01;
-    CREATE TEMPORARY TABLE wv_sms_01 ENGINE MEMORY
+    DROP TABLE IF EXISTS wv_sms_alarm;
+    CREATE TEMPORARY TABLE wv_sms_alarm ENGINE MEMORY
     SELECT * FROM wv_sms k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
 
-    ALTER TABLE wv_sms_01
+    ALTER TABLE wv_sms_alarm
         ADD KEY (detect_time, locomotive_code, direction );
 
 
@@ -131,7 +131,7 @@ BEGIN
                              spark_mx smx,
                              avg_speed
                       FROM wv_spk s
-                               RIGHT JOIN wv_sms_01 k
+                               RIGHT JOIN wv_sms_alarm k
                                           ON s.line_code = k.line_code
                                               AND s.locomotive_code = k.locomotive_code
                                               AND s.direction = k.direction
