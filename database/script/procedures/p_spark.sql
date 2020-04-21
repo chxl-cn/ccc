@@ -83,6 +83,11 @@ BEGIN
     SET @v_total_rows = v_total_rows;
 
     DELETE FROM wv_sms_alarm_out k WHERE NOT (rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size);
+    drop TABLE if EXISTS wv_sms_alarm_out1 ;
+    CREATE TEMPORARY TABLE wv_sms_alarm_out1 select * from wv_sms_alarm_out ;
+
+    drop TABLE if EXISTS wv_sms_alarm_out2 ;
+    CREATE TEMPORARY TABLE wv_sms_alarm_out2 select * from wv_sms_alarm_out ;
 
     CALL p_get_mod_sql('p_spark', 3, v_sql);
     SET @result = v_sql;
