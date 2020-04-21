@@ -28,7 +28,7 @@ BEGIN
 
 
     DROP TABLE IF EXISTS wv_spk;
-    DROP TABLE IF EXISTS wv_sms_ini;
+    DROP TABLE IF EXISTS wv_sms_alarm;
 
     SET @st = p_start_time;
     SET @et = p_end_time;
@@ -45,34 +45,18 @@ BEGIN
     EXECUTE smstmt USING @st,@et;
     DEALLOCATE PREPARE smstmt;
 
-    DROP TABLE IF EXISTS wv_sms_ini__;
-    DROP TABLE IF EXISTS wv_sms;
+    ALTER TABLE wv_sms_alarm
+        ADD ( spark_cnt INT ,spark_tm DECIMAL,spark_mx DECIMAL,alarm_id VARCHAR(50));
 
+    ALTER TABLE wv_sms_alarm
+        ADD PRIMARY KEY (detect_time, locomotive_code, position_code, direction, line_code);
 
-    CREATE TEMPORARY TABLE wv_sms LIKE wv_sms_ini;
-    CREATE TEMPORARY TABLE wv_sms_ini__ LIKE wv_sms_ini;
-
-    INSERT INTO wv_sms_ini__
-    SELECT *
-    FROM wv_sms_ini;
-
-    ALTER TABLE wv_sms_ini__
-        ADD KEY (detect_time, locomotive_code, direction );
-
-    INSERT INTO wv_sms_ini(line_code, direction, position_code, detect_time, locomotive_code)
-    SELECT line_code, direction, position_code, raised_time, locomotive_code
+    INSERT INTO wv_sms_alarm(detect_time, locomotive_code, position_code, direction, line_code)
+    SELECT raised_time, locomotive_code, position_code, direction, line_code
     FROM wv_spk k
-    WHERE NOT exists
-        (
-            SELECT NULL
-            FROM wv_sms_ini__ i
-            WHERE i.line_code = k.line_code
-              AND i.direction = k.direction
-              AND i.position_code = k.position_code
-              AND i.detect_time = k.raised_time
-              AND i.locomotive_code = k.locomotive_code
-        )
-    GROUP BY line_code, direction, position_code, raised_time, locomotive_code;
+    ON DUPLICATE KEY
+        UPDATE spark_cnt=k.spark_cnt, spark_tm=k.spark_tm, spark_mx=k.spark_mx, alarm_id=k.alarm_id;
+
 
 
     INSERT INTO wv_sms
@@ -94,68 +78,68 @@ BEGIN
     SELECT * FROM wv_sms k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
 
     ALTER TABLE wv_sms_alarm
-        ADD KEY (detect_time, locomotive_code, direction );
+        ADD KEY (detect_time, locomotive_code, direction);
 
 
     SELECT *
     FROM (
-             SELECT detect_time                                                                                       raised_time,
-                    line_code                                                                                         line_code,
-                    direction                                                                                         direction,
-                    position_code                                                                                     position_code,
-                    locomotive_code                                                                                   locomotive_code,
-                    count(DISTINCT locomotive_code)                                                                   loco_cnt,
-                    sum(spark_cnt)                                                                                    spark_cnt,
-                    sum(spark_tm)                                                                                     spark_tm,
-                    round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5)                                               spark_rate,
-                    sum(msc)                                                                                          msc,
-                    max(smx)                                                                                          spark_mx,
-                    GROUPING (detect_time
+             SELECT detect_time                                         raised_time,
+                    line_code                                           line_code,
+                    direction                                           direction,
+                    position_code                                       position_code,
+                    locomotive_code                                     locomotive_code,
+                    count(DISTINCT locomotive_code)                     loco_cnt,
+                    sum(spark_cnt)                                      spark_cnt,
+                    sum(spark_tm)                                       spark_tm,
+                    round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5) spark_rate,
+                    sum(msc)                                            msc,
+                    max(smx)                                            spark_mx,
+                 GROUPING (detect_time
                      , line_code
                      , direction
                      , position_code
-                     , locomotive_code)                                                                               dlevel
-                     ,round(avg(avg_speed), 0)                                                                        avg_speed,
-                    v_total_rows                                                                                      total_rows,
-                    cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS CHAR(100)) alarm_id
+                     , locomotive_code) dlevel
+                     , round(avg(avg_speed), 0) avg_speed,
+                 v_total_rows total_rows,
+                 cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS CHAR (100)) alarm_id
              FROM (
-                      SELECT k.detect_time,
-                             k.line_code,
-                             k.direction,
-                             k.position_code,
-                             k.locomotive_code,
-                             msc,
-                             spark_tm,
-                             spark_cnt,
-                             alarm_id,
-                             spark_mx smx,
-                             avg_speed
-                      FROM wv_spk s
-                               RIGHT JOIN wv_sms_alarm k
-                                          ON s.line_code = k.line_code
-                                              AND s.locomotive_code = k.locomotive_code
-                                              AND s.direction = k.direction
-                                              AND s.position_code = k.position_code
-                                              AND s.raised_time = k.detect_time
-                  ) a
+                 SELECT k.detect_time,
+                 k.line_code,
+                 k.direction,
+                 k.position_code,
+                 k.locomotive_code,
+                 msc,
+                 spark_tm,
+                 spark_cnt,
+                 alarm_id,
+                 spark_mx smx,
+                 avg_speed
+                 FROM wv_spk s
+                 RIGHT JOIN wv_sms_alarm k
+                 ON s.line_code = k.line_code
+                 AND s.locomotive_code = k.locomotive_code
+                 AND s.direction = k.direction
+                 AND s.position_code = k.position_code
+                 AND s.raised_time = k.detect_time
+                 ) a
              GROUP BY detect_time,
-                      line_code,
-                      direction,
-                      position_code,
-                      locomotive_code
+                 line_code,
+                 direction,
+                 position_code,
+                 locomotive_code
              WITH ROLLUP
-             having GROUPING (detect_time
-                     , line_code
-                     , direction
-                     , position_code
-                     , locomotive_code)  < 7
+             HAVING GROUPING (detect_time
+                  , line_code
+                  , direction
+                  , position_code
+                  , locomotive_code)
+                  < 7
          ) s
     ORDER BY raised_time DESC,
              line_code,
              direction,
              position_code,
              dlevel DESC;
-
 
 
 END //
