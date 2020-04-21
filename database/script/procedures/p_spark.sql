@@ -58,16 +58,22 @@ BEGIN
         UPDATE spark_cnt=k.spark_cnt, spark_tm=k.spark_tm, spark_mx=k.spark_mx, alarm_id=k.alarm_id;
 
     DROP TABLE IF EXISTS wv_sms_alarm_out;
-    CREATE TABLE wv_sms_alarm_out LIKE wv_sms_alarm;
 
-    ALTER TABLE wv_sms_alarm_out
-        ENGINE MEMORY;
-
-    ALTER TABLE wv_sms_alarm_out
-        ADD rwno INT;
-
-    ALTER TABLE wv_sms_alarm_out
-        ADD KEY (rwno);
+    CREATE TABLE `wv_sms_alarm_out`
+    (
+        `line_code`       VARCHAR(40) NOT NULL,
+        `direction`       VARCHAR(20) NOT NULL,
+        `position_code`   VARCHAR(40) NOT NULL,
+        `locomotive_code` VARCHAR(30) NOT NULL,
+        `detect_time`     DATE        NOT NULL,
+        `msc`             DECIMAL(46, 0),
+        `avg_speed`       DECIMAL(18, 8),
+        `spark_cnt`       INT(11),
+        `spark_tm`        DECIMAL(10, 0),
+        `spark_mx`        DECIMAL(10, 0),
+        `alarm_id`        VARCHAR(50),
+        `rwno`            INT(11)
+    ) ENGINE = MEMORY;
 
     INSERT INTO wv_sms_alarm_out
     SELECT a.*, dense_rank() OVER (ORDER BY detect_time DESC, line_code, direction) rwno
