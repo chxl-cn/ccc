@@ -74,11 +74,10 @@ BEGIN
     FROM wv_sms_alarm a;
 
 
-    SELECT max(rwno) INTO v_total_rows FROM wv_sms_alarm;
+    SELECT max(rwno) INTO v_total_rows FROM wv_sms_alarm_out;
 
 
-    CREATE TEMPORARY TABLE wv_sms_alarm_out ENGINE MEMORY
-    SELECT * FROM wv_sms k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
+    DELETE FROM wv_sms_alarm_out k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
 
 
     SELECT *
@@ -93,7 +92,7 @@ BEGIN
                     sum(spark_tm)                                       spark_tm,
                     round(sum(spark_tm) / nullif(sum(msc), 0) * 100, 5) spark_rate,
                     sum(msc)                                            msc,
-                    max(smx)                                            spark_mx,
+                    max(spark_mx)                                       spark_mx,
                  GROUPING (detect_time
                      , line_code
                      , direction
