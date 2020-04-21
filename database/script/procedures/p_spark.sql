@@ -77,11 +77,8 @@ BEGIN
     SELECT max(rwno) INTO v_total_rows FROM wv_sms_alarm;
 
 
-    CREATE TEMPORARY TABLE wv_sms_alarm ENGINE MEMORY
+    CREATE TEMPORARY TABLE wv_sms_alarm_out ENGINE MEMORY
     SELECT * FROM wv_sms k WHERE rwno > (p_curr_page - 1) * p_page_size AND rwno <= p_curr_page * p_page_size;
-
-    ALTER TABLE wv_sms_alarm
-        ADD KEY (detect_time, locomotive_code, direction);
 
 
     SELECT *
@@ -105,26 +102,7 @@ BEGIN
                      , round(avg(avg_speed), 0) avg_speed,
                  v_total_rows total_rows,
                  cast(regexp_substr(GROUP_CONCAT(alarm_id ORDER BY smx DESC SEPARATOR ','), '[^,]+') AS CHAR (100)) alarm_id
-             FROM (
-                 SELECT k.detect_time,
-                 k.line_code,
-                 k.direction,
-                 k.position_code,
-                 k.locomotive_code,
-                 msc,
-                 spark_tm,
-                 spark_cnt,
-                 alarm_id,
-                 spark_mx smx,
-                 avg_speed
-                 FROM wv_spk s
-                 RIGHT JOIN wv_sms_alarm k
-                 ON s.line_code = k.line_code
-                 AND s.locomotive_code = k.locomotive_code
-                 AND s.direction = k.direction
-                 AND s.position_code = k.position_code
-                 AND s.raised_time = k.detect_time
-                 ) a
+             FROM wv_sms_alarm_out a
              GROUP BY detect_time,
                  line_code,
                  direction,
