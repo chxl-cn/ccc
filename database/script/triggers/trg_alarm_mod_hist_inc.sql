@@ -15,6 +15,6 @@ BEGIN
 
 
     REPLACE alarm_hist_inc
-    SET running_date=date(new.old.raised_time),
+    SET running_date=date(new.raised_time),
         locomotive_code=new.detect_device_code;
 END //
