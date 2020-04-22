@@ -33,7 +33,10 @@ BEGIN
         DEALLOCATE PREPARE fullstmt;
 
 
-        DELETE FROM alarm_hist_inc WHERE running_date >= v_start AND running_date < v_end;
+        DELETE
+        FROM alarm_hist_inc
+        WHERE running_date >= v_start
+          AND running_date < v_end;
     END;
 
     incstat:
@@ -45,7 +48,8 @@ BEGIN
                                    FROM alarm_hist_inc c
                                    GROUP BY c.running_date, c.locomotive_code
                                    ORDER BY 1, 2;
-        DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = TRUE;
+        DECLARE CONTINUE HANDLER FOR NOT FOUND
+            SET v_done = TRUE;
 
 
         CALL p_get_mod_sql('p_gen_stat_alarm', 2, v_sql);
@@ -71,7 +75,10 @@ BEGIN
             EXECUTE delstmt USING @i_dt,@i_lc;
             EXECUTE incstmt USING @i_dt,@i_dt,@i_lc;
 
-            DELETE FROM alarm_hist_inc WHERE running_date = v_rundate AND locomotive_code = v_loco;
+            DELETE
+            FROM alarm_hist_inc
+            WHERE running_date = v_rundate
+              AND locomotive_code = v_loco;
         END LOOP;
 
         CLOSE cur_inc;
