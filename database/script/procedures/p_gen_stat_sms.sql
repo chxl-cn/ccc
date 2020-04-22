@@ -69,11 +69,12 @@ BEGIN
                 LEAVE fetch_loop;
             END IF;
 
-            SET @i_dt = v_rundate;
+            SET @i_st = v_rundate;
+            SET @i_et = v_rundate + INTERVAL 1 DAY;
             SET @i_lc = v_lococode;
 
-            EXECUTE delstmt USING @i_dt,@i_lc;
-            EXECUTE incstmt USING @i_dt,@i_dt,@i_lc;
+            EXECUTE delstmt USING @i_st,@i_lc;
+            EXECUTE incstmt USING @i_st,@i_et,@i_lc;
 
             DELETE
             FROM c3_sms_hist_inc
