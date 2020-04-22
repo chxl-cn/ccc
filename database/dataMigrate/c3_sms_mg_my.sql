@@ -35,10 +35,10 @@ SELECT ID,
        TRANS_INFO,
        DRIVER_NO,
        FILE_LOCATION,
-       BACKUP_FILE_DIR,
+       replace(BACKUP_FILE_DIR, char(92), '\\\\') BACKUP_FILE_DIR,
        RELATIVE_PATH,
        LOG_FILE_PATH,
-       NULL VALID_GPS,
+       NULL                                       VALID_GPS,
        DEVICE_GROUP_NO,
        DEVICE_VERSION,
        TEMP_SENSOR_STATUS,
@@ -83,5 +83,5 @@ SELECT ID,
        STATION_NO,
        STATION_NAME
 FROM C3_SMS S
-WHERE S.DETECT_TIME >= '{0}' AND
-       S.DETECT_TIME < '{1}'
+WHERE S.DETECT_TIME >= '{0}'
+  AND S.DETECT_TIME < '{1}'
