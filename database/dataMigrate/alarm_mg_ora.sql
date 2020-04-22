@@ -1,4 +1,4 @@
-SELECT /*+ use_hash(d a) use_hash(x a)*/
+SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     A.ID,
     VENDOR,
     CATEGORY_CODE,
@@ -65,7 +65,7 @@ SELECT /*+ use_hash(d a) use_hash(x a)*/
     PIC_FILE_LOCATION,
     SUMMARY,
     REPAIR_DATE,
-    ISDAYREPORT,
+    NULL ISDAYREPORT,
     ISEXPORTREPORT,
     LOCK_PERSON_ID,
     IS_TRANS_ALLOWED,
@@ -111,7 +111,7 @@ SELECT /*+ use_hash(d a) use_hash(x a)*/
     SVALUE12,
     SVALUE13,
     ALARM_REASON,
-    AIRESULT,
+    NULL AIRESULT,
     REMARK,
     TRANS_INFO,
     DEV_NAME,
@@ -195,9 +195,9 @@ FROM ALARM A
                    ON A.ID = D.ALARM_ID
          LEFT JOIN ALARM_AUX X
                    ON A.ID = X.ALARM_ID
-WHERE A.RAISED_TIME >= :1 AND
-       A.RAISED_TIME < :2 AND
-       D.RAISE_TIME >= :1 AND
-       D.RAISE_TIME < :2 AND
-       X.RAISED_TIME_AUX >= :1 AND
-       X.RAISED_TIME_AUX < :2
+WHERE A.RAISED_TIME >= to_date('{0}','yyyy/mm/dd') AND
+       A.RAISED_TIME < to_date('{1}','yyyy/mm/dd') AND
+       D.RAISE_TIME >= to_date('{0}','yyyy/mm/dd') AND
+       D.RAISE_TIME < to_date('{1}','yyyy/mm/dd') AND
+       X.RAISED_TIME_AUX >= to_date('{0}','yyyy/mm/dd') AND
+       X.RAISED_TIME_AUX < to_date('{1}','yyyy/mm/dd')

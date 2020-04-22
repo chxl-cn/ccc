@@ -83,5 +83,5 @@ SELECT ID,
        STATION_NO,
        STATION_NAME
 FROM C3_SMS S
-WHERE S.DETECT_TIME >= :1 AND
-       S.DETECT_TIME < :2
+WHERE S.DETECT_TIME >= to_date('{0}','yyyy/mm/dd hh24:mi:ss') AND
+       S.DETECT_TIME < to_date('{1}','yyyy/mm/dd hh24:mi:ss')

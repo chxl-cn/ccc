@@ -195,9 +195,9 @@ FROM ALARM A
                    ON A.ID = D.ALARM_ID
          LEFT JOIN ALARM_AUX X
                    ON A.ID = X.ALARM_ID
-WHERE A.RAISED_TIME >= ? AND
-       A.RAISED_TIME < ? AND
-       D.RAISE_TIME >= ? AND
-       D.RAISE_TIME < ? AND
-       X.RAISED_TIME_AUX >= ? AND
-       X.RAISED_TIME_AUX < ?
+WHERE A.RAISED_TIME >= '{0}' AND
+       A.RAISED_TIME < '{1}' AND
+       D.RAISE_TIME >= '{0}' AND
+       D.RAISE_TIME < '{1}' AND
+       X.RAISED_TIME_AUX >= '{0}' AND
+       X.RAISED_TIME_AUX < '{1}'
