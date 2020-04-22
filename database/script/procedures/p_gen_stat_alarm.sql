@@ -33,7 +33,7 @@ BEGIN
         DEALLOCATE PREPARE fullstmt;
 
 
-        DELETE FROM alarm_hist_inc WHERE running_date BETWEEN v_start AND v_end;
+        DELETE FROM alarm_hist_inc WHERE running_date >= v_start AND running_date < v_end;
     END;
 
     incstat:
