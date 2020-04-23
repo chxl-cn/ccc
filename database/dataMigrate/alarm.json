@@ -470,6 +470,11 @@
       "SourceName": "",
       "TargetName": "valid_gps",
       "DataType": 1
+    },
+    {
+      "SourceName": "initial_severity",
+      "TargetName": "initial_severity",
+      "DataType": 0
     }
   ]
 }
