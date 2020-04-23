@@ -24,8 +24,7 @@ BEGIN
 
     CALL p_get_mod_sql('p_alarm_3c_stat', 1, v_sql);
 
-    SET v_sql = concat(v_sql, v_where);
-    SET @sql = v_sql;
+    SET @sql = replace(v_sql, '<<:filter:>>', v_where);
 
 
     PREPARE stmt FROM @sql;
