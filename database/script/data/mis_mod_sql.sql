@@ -276,9 +276,9 @@ ORDER BY detect_time DESC
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_alarm_3c_stat', 1, 'CREATE TEMPORARY TABLE t_alarm_3c_stat ENGINE MEMORY
-SELECT cast(detect_device_code as CHAR(40)) detect_device_code,
+SELECT cast(detect_device_code AS CHAR(40))                       detect_device_code,
        date_format(t1.raised_time, ''%Y/%m/%d'') AS                 day,
-       CASE WHEN count(*) = 0 THEN ''正常'' ELSE ''异常'' END             status,
+       CASE WHEN count(*) = 0 THEN ''正常'' ELSE ''异常'' END          status,
        count(*)                                                   count,
        sum(CASE WHEN severity = ''一类'' THEN 1 ELSE 0 END)           yl,
        sum(CASE WHEN severity = ''二类'' THEN 1 ELSE 0 END)           el,
@@ -303,7 +303,9 @@ WHERE category_code = ''3C''
   AND status != ''AFSTATUS02''
   AND t1.data_type = ''FAULT''
   AND raised_time BETWEEN ? AND ?
-GROUP BY t1.detect_device_code, day');
+  <<:filter:>>
+GROUP BY detect_device_code,
+        date_format(t1.raised_time, ''%Y/%m/%d'')');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_c3_sms_trace_stat', 1, 'CREATE TEMPORARY TABLE twv_sms ENGINE MEMORY
