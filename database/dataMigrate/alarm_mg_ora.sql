@@ -92,7 +92,7 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     EOAS_TRAINNO,
     ALARM_REP_COUNT,
     SAMPLE_DETAIL_CODE,
-    NULL        VALID_GPS,
+    1           VALID_GPS,
     A.ID        ALARM_ID,
     BMI_FILE_NAME,
     RPT_FILE_NAME,
