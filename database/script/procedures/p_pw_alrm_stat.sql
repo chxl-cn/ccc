@@ -21,8 +21,8 @@ BEGIN
     CALL p_get_mod_sql('p_pw_alrm_stat', 1, v_sql);
 
     SET v_where = " ";
-    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, " and sup_org_code='", p_bureau_code, "'", " "));
-    SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, " and sup_org_code='", org_code, "'", " "));
+    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, concat("and sup_org_code='", p_bureau_code, "'"), " "));
+    SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, concat("and sup_org_code='", org_code, "'"), " "));
 
     SET @org = replace(v_sql, "<<:filter:>>", v_where);
     PREPARE stmt_org FROM @org;
