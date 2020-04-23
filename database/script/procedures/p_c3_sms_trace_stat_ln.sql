@@ -1,5 +1,5 @@
 DELIMITER  ;
-drop PROCEDURE IF EXISTS p_c3_sms_trace_stat_ln ;
+DROP PROCEDURE IF EXISTS p_c3_sms_trace_stat_ln;
 
 DELIMITER  //
 CREATE PROCEDURE p_c3_sms_trace_stat_ln(IN p_line_code        VARCHAR(60)
@@ -144,13 +144,13 @@ BEGIN
            running_date,
            direction,
            line_code,
-           min(begin_time)         begin_time,
-           max(end_time)           end_time,
-           sum(faultalarmcntoflv1) faultalarmcntoflv1,
-           sum(faultalarmcntoflv2) faultalarmcntoflv2,
-           sum(faultalarmcntoflv3) faultalarmcntoflv3,
-           0                       grpl,
-           0                       loco_count
+           min(begin_time)                 AS begin_time,
+           max(end_time)                   AS end_time,
+           sum(faultalarmcntoflv1)         AS faultalarmcntoflv1,
+           sum(faultalarmcntoflv2)         AS faultalarmcntoflv2,
+           sum(faultalarmcntoflv3)         AS faultalarmcntoflv3,
+           0                               AS grpl,
+           count(DISTINCT locomotive_code) AS loco_count
     FROM wv_sms_alarm
     GROUP BY locomotive_code,
              running_date,
