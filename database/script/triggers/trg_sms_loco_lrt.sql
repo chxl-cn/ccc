@@ -12,6 +12,7 @@ BEGIN
         LEAVE trg_body;
     END IF;
 
+    CALL p_loco_lrt_ins(new.locomotive_code, 2, new.id, new.detect_time, new.valid_gps);
 
 
 END //
