@@ -43,3 +43,21 @@ CREATE TABLE `alarm_aux_mg_part`
         PARTITION p_20180101 VALUES LESS THAN ("2018-01-02")
         );
 
+CREATE TABLE `alarm_img_data_mg_part`
+(
+    `alarm_id`          VARCHAR(40) NOT NULL,
+    `spart_pixels`      INT(11),
+    `gray_avg_left`     INT(11),
+    `gray_avg_right`    INT(11),
+    `gray_avg_bow_rect` INT(11),
+    `spart_pixel_pct`   DECIMAL(5, 2),
+    `spark_shape`       INT(11),
+    `spark_num`         INT(11),
+    `spark_elapse`      INT(11),
+    `isblackcenter`     INT(11),
+    `raise_time`        DATETIME,
+    `dev_type_ana`      VARCHAR(40)
+) PARTITION BY RANGE COLUMNS (raise_time)
+    (
+    PARTITION p_20180101 VALUES LESS THAN ("2018-01-02")
+    );
