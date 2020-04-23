@@ -13,22 +13,5 @@ BEGIN
     END IF;
 
 
-    INSERT INTO loco_lrt( locomotive_code
-                        , data_sort
-                        , last_time
-                        , id
-                        , g_id
-                        , g_last_time)
-    VALUES ( new.locomotive_code
-           , 2
-           , new.detect_time
-           , new.id
-           , if(ifnull(new.valid_gps, 0) = 1, new.id, NULL)
-           , if(ifnull(new.valid_gps, 0) = 1, new.detect_time, NULL))
-    ON DUPLICATE KEY
-        UPDATE `last_time`   = if(`last_time` < new.`detect_time`, new.`detect_time`, `last_time`),
-               `id`          = if(`last_time` < new.`detect_time`, new.`id`, `id`),
-               `g_id`        = if(`last_time` < new.`detect_time`, if(ifnull(NEW.`valid_gps`, 0) = 1, new.`id`, `g_id`), `g_id`),
-               `g_last_time` = if(`last_time` < new.`detect_time`, if(ifnull(NEW.`valid_gps`, 0) = 1, new.`detect_time`, `g_last_time`), `g_last_time`);
 
 END //
