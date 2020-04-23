@@ -94,6 +94,7 @@ CREATE TABLE `alarm`
     `alarm_rep_count`     INT(11),
     `sample_detail_code`  VARCHAR(40),
     `valid_gps`           TINYINT,
+     `initial_severity`	  tinytext,
     KEY `id` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
