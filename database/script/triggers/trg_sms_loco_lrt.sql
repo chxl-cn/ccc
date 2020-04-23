@@ -8,7 +8,7 @@ CREATE TRIGGER `trg_sms_loco_lrt`
     FOR EACH ROW
 trg_body:
 BEGIN
-    IF new.detect_time > now() THEN
+    IF new.locomotive_code IS NULL OR new.detect_time > now() THEN
         LEAVE trg_body;
     END IF;
 
