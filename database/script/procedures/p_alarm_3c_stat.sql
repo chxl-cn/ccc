@@ -7,7 +7,7 @@ CREATE PROCEDURE p_alarm_3c_stat(IN p_bureau_code         VARCHAR(100)
                                 , IN p_detect_device_code VARCHAR(100)
                                 , IN p_start_date         DATETIME
                                 , IN p_end_date           DATETIME
-                                , IN p_data_perm          VARCHAR(1000)
+                                , IN p_data_perm          TEXT
                                 )
 BEGIN
     DECLARE v_sql,v_where TEXT;
@@ -16,21 +16,23 @@ BEGIN
     SET max_heap_table_size = 17179869184;
 
     SET v_where = v_space;
-    SET v_where = concat(v_where, char(10), if(p_bureau_code is not null, concat("and p_org_code LIKE '", p_bureau_code, "%'"), v_space));
-    SET v_where = concat(v_where, char(10), if(p_p_org_code is not null, concat("and p_org_code = '", p_p_org_code, "'"), v_space));
-    SET v_where = concat(v_where, char(10), if(p_detect_device_code is not null, concat("and detect_device_code = '", p_detect_device_code, "'"), v_space));
-    SET v_where = concat(v_where, char(10), if(p_data_perm is not null, concat("and ", p_data_perm), v_space));
+    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, concat("and p_org_code LIKE '", p_bureau_code, "%'"), v_space));
+    SET v_where = concat(v_where, char(10), if(p_p_org_code IS NOT NULL, concat("and p_org_code = '", p_p_org_code, "'"), v_space));
+    SET v_where = concat(v_where, char(10), if(p_detect_device_code IS NOT NULL, concat("and detect_device_code = '", p_detect_device_code, "'"), v_space));
+    SET v_where = concat(v_where, char(10), if(p_data_perm IS NOT NULL, concat("and ", p_data_perm), v_space));
 
 
-    DROP TABLE IF EXISTS t_alarm_3c_stat;
     CALL p_get_mod_sql('p_alarm_3c_stat', 1, v_sql);
-    SET v_sql = concat(v_sql, v_where);
 
+    SET v_sql = concat(v_sql, v_where);
     SET @sql = v_sql;
+
 
     PREPARE stmt FROM @sql;
     SET @d1 = p_start_date;
     SET @d2 = p_end_date;
+
+    DROP TABLE IF EXISTS t_alarm_3c_stat;
     EXECUTE stmt USING @d1,@d2;
     DEALLOCATE PREPARE stmt;
 
