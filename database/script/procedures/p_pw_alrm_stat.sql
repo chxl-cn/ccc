@@ -10,7 +10,7 @@ CREATE PROCEDURE p_pw_alrm_stat(IN p_bureau_code VARCHAR(100)
                                , IN p_data_perm  VARCHAR(100)
                                )
 BEGIN
-    DECLARE v_sql TEXT;
+    DECLARE v_sql,v_where TEXT;
 
     SET max_heap_table_size = 17179869184;
 
@@ -18,16 +18,17 @@ BEGIN
 
     DROP TABLE IF EXISTS wv_org;
 
-    CREATE TEMPORARY TABLE wv_org
-        ENGINE MEMORY
-    SELECT o.sup_org_code,
-           cast(NULL AS CHAR(40)) sup_org_name,
-           o.org_code,
-           cast(NULL AS CHAR(40)) org_name
-    FROM tsys_org o
-    WHERE o.org_type LIKE 'GD%'
-      AND (p_bureau_code IS NULL OR o.sup_org_code = p_bureau_code)
-      AND (p_org_code IS NULL OR o.org_code = p_org_code);
+    CALL p_get_mod_sql('p_pw_alrm_stat', 1, v_sql);
+
+    SET v_where = " ";
+    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, " and sup_org_code='", p_bureau_code, "'", " "));
+    SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, " and sup_org_code='", org_code, "'", " "));
+
+    SET @org = replace(v_sql, "<<:filter:>>", v_where);
+    PREPARE stmt_org FROM @org;
+    EXECUTE stmt_org;
+    DEALLOCATE PREPARE stmt_org;
+
 
     DROP TABLE IF EXISTS wv_alt;
 
@@ -36,83 +37,35 @@ BEGIN
     FROM sys_dic d
     WHERE p_code IN ('AFBOWNET', 'AFJHCS', 'AFOCL');
 
+
     DROP TABLE IF EXISTS wv_sms;
 
-    SET v_sql =
-            "CREATE TEMPORARY TABLE wv_sms
-             ENGINE memory
-             SELECT s.locomotive_code,
-                    line_code,
-                    s.org_code,
-                    detect_time
-             FROM c3_sms s
-             WHERE s.detect_time BETWEEN :p_start_date AND :p_end_date AND s.speed > 0
-             ";
 
-    SET v_sql = replace(v_sql, ':p_start_date', p_start_date + 0);
-    SET v_sql = replace(v_sql, ':p_end_date', p_end_date + 0);
+    CALL p_get_mod_sql('p_pw_alrm_stat', 2, v_sql);
 
-    IF p_bureau_code IS NOT NULL
-    THEN
-        SET v_sql = concat(v_sql, " and org_code like '", p_bureau_code, "%'");
-    END IF;
+    SET v_where = " ";
 
-    IF p_org_code IS NOT NULL
-    THEN
-        SET v_sql = concat(v_sql, " and org_code = '", p_org_code, "'");
-    END IF;
+    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, concat("and org_code like '", p_bureau_code, "%'"), " "));
+    SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, concat("and org_code = '", p_org_code, "'"), " "));
+    SET v_where = concat(v_where, char(10), if(p_data_perm IS NOT NULL, concat("and ", p_data_perm), " "));
+    SET @sms = replace(v_sql, "<<:filter:>>", v_where);
 
-    IF p_data_perm IS NOT NULL
-    THEN
-        SET v_sql = concat(v_sql, " and ", p_data_perm);
-    END IF;
+    PREPARE stmt_sms FROM @sms;
+    SET @sd = p_start_date;
+    SET @ed = p_end_date;
+    EXECUTE stmt_sms USING @sd,@ed;
+    DEALLOCATE PREPARE stmt_sms;
 
-    SET @sql = v_sql;
-
-    PREPARE stmt FROM @sql;
-
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
 
     DROP TABLE IF EXISTS wv_alarm;
 
-    SET v_sql =
-            "
-             CREATE TEMPORARY TABLE wv_alarm
-             ENGINE memory
-             SELECT a.org_code,
-                    a.detect_device_code,
-                    a.status,
-                    line_code,
-                    a.code
-             FROM alarm a
-             WHERE a.raised_time BETWEEN :p_start_date AND :p_end_date
-             ";
+    CALL p_get_mod_sql('p_pw_alrm_stat', 3, v_sql);
 
-    SET v_sql = replace(v_sql, ':p_start_date', p_start_date + 0);
-    SET v_sql = replace(v_sql, ':p_end_date', p_end_date + 0);
+    SET @alarm = replace(v_sql, "<<:filter:>>", v_where);
 
-    IF p_bureau_code IS NOT NULL
-    THEN
-        SET v_sql = concat(v_sql, " and org_code like '", p_bureau_code, "%'");
-    END IF;
-
-    IF p_org_code IS NOT NULL
-    THEN
-        SET v_sql = concat(v_sql, " and org_code = '", p_org_code, "'");
-    END IF;
-
-    IF p_data_perm IS NOT NULL
-    THEN
-        SET v_sql = concat(v_sql, " and ", p_data_perm);
-    END IF;
-
-    SET @sql = v_sql;
-
-    PREPARE stmt FROM @sql;
-
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+    PREPARE stmt_alarm FROM @alarm;
+    EXECUTE stmt_alarm USING @sd,@ed;
+    DEALLOCATE PREPARE stmt_alarm;
 
 
     SELECT sup_org_code,
