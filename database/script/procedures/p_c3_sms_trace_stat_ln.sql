@@ -237,5 +237,4 @@ BEGIN
       AND grpl != 1
     ORDER BY locomotive_code, running_date DESC;
 
-    select * from wv_agg_sms_alarm;
 END //
