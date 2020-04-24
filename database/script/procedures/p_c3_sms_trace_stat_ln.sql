@@ -91,21 +91,23 @@ BEGIN
                              line_code,
                              begin_time,
                              end_time)
-    SELECT locomotive_code,
-           running_date,
-           direction,
-           routing_no,
-           line_code,
-           min(begin_time) st,
-           max(end_time)   et
-    FROM twv_sms
-    GROUP BY locomotive_code,
-             running_date,
-             direction,
-             routing_no,
-             line_code
-    ON DUPLICATE KEY UPDATE begin_time = if(st < begin_time, st, begin_time),
-                            end_time   = if(et > end_time, et, end_time);
+    SELECT *
+    FROM (SELECT locomotive_code,
+                 running_date,
+                 direction,
+                 routing_no,
+                 line_code,
+                 min(begin_time) st,
+                 max(end_time)   et
+          FROM twv_sms
+          GROUP BY locomotive_code,
+                   running_date,
+                   direction,
+                   routing_no,
+                   line_code) t
+    ON DUPLICATE KEY
+        UPDATE begin_time = IF(st < begin_time, st, begin_time),
+               end_time   = IF(et > end_time, et, end_time);
 
 
     DROP TABLE IF EXISTS wv_agg_sms_alarm;
@@ -139,6 +141,7 @@ BEGIN
                                  faultalarmcntoflv3,
                                  grpl,
                                  loco_count, locomotive_code)
+
     SELECT running_date,
            direction,
            line_code,
