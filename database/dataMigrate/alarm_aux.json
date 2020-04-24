@@ -157,11 +157,6 @@
       "DataType": 0
     },
     {
-      "SourceName": "process_status",
-      "TargetName": "process_status",
-      "DataType": 0
-    },
-    {
       "SourceName": "process_type",
       "TargetName": "process_type",
       "DataType": 0
