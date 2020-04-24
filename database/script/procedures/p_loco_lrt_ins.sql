@@ -23,7 +23,7 @@ BEGIN
             `id`          = p_id,
             `g_id`        = if(ifnull(p_pgs, 0) = 1, p_id, `g_id`),
             `g_last_time` = if(ifnull(p_pgs, 0) = 1, p_dt, `g_last_time`)
-        WHERE locomotive_code = p_sort
+        WHERE locomotive_code = p_loco
           AND data_sort = p_sort
           AND last_time < p_dt;
     ELSE
