@@ -475,6 +475,11 @@
       "SourceName": "initial_severity",
       "TargetName": "initial_severity",
       "DataType": 0
+    },
+    {
+      "SourceName": "process_status",
+      "TargetName": "process_status",
+      "DataType": 0
     }
   ]
 }
