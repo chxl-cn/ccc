@@ -191,8 +191,8 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     SVALUE4,
     SVALUE5,
     severity initial_severity
-FROM ALARM A
-         LEFT JOIN ALARM_IMG_DATA D ON A.ID = D.ALARM_ID and D.RAISE_TIME >= to_date('{0}','yyyy/mm/dd') AND   D.RAISE_TIME < to_date('{1}','yyyy/mm/dd') 
-         LEFT JOIN ALARM_AUX X ON A.ID = X.ALARM_ID and X.RAISED_TIME_AUX >= to_date('{0}','yyyy/mm/dd') AND X.RAISED_TIME_AUX < to_date('{1}','yyyy/mm/dd')
+FROM ALARM_mg_part A
+         LEFT JOIN ALARM_IMG_DATA_mg_part D ON A.ID = D.ALARM_ID and D.RAISE_TIME >= to_date('{0}','yyyy/mm/dd') AND   D.RAISE_TIME < to_date('{1}','yyyy/mm/dd')
+         LEFT JOIN ALARM_AUX_mg_part X ON A.ID = X.ALARM_ID and X.RAISED_TIME_AUX >= to_date('{0}','yyyy/mm/dd') AND X.RAISED_TIME_AUX < to_date('{1}','yyyy/mm/dd')
 WHERE A.RAISED_TIME >= to_date('{0}','yyyy/mm/dd') AND
        A.RAISED_TIME < to_date('{1}','yyyy/mm/dd')
