@@ -13,8 +13,8 @@ CREATE TABLE alarm_mg_part
     PARTITION VALUES LESS THAN (to_date('20010101', 'yyyymmdd'))
 )
 AS
-SELECT *
-FROM alarm
+SELECT /*+ full(a) */ *
+FROM alarm a
 where raised_time < to_date('xxxxxxxx', 'yyyymmdd')
 ;
 
@@ -25,8 +25,8 @@ CREATE TABLE alarm_aux_mg_part
     PARTITION VALUES LESS THAN (to_date('20010101', 'yyyymmdd'))
 )
 AS
-SELECT *
-FROM alarm_aux
+SELECT /*+ full(a) */  *
+FROM alarm_aux a
 WHERE raised_time_aux < to_date('xxxxxxxx', 'yyyymmdd')
 ;
 
@@ -38,8 +38,8 @@ CREATE TABLE alarm_img_data_mg_part
     PARTITION VALUES LESS THAN (to_date('20010101', 'yyyymmdd'))
 )
 AS
-SELECT *
-FROM alarm_img_data
+SELECT /*+ full(a) */  *
+FROM alarm_img_data a
 WHERE raise_time < to_date('xxxxxxxx', 'yyyymmdd')
 ;
 
@@ -51,6 +51,6 @@ CREATE TABLE c3_sms_mg_part
     PARTITION VALUES LESS THAN (to_date('20010101', 'yyyymmdd'))
 )
 AS
-SELECT *
-FROM c3_sms
+SELECT /*+ full(s) */  *
+FROM c3_sms s
 WHERE detect_time < to_date('xxxxxxxx', 'yyyymmdd');
