@@ -16,7 +16,7 @@ DECLARE
     v_dyn_date date;
 BEGIN
     v_old_date := to_date('xxxxxxxx', 'yyyymmdd');
-    FOR P IN (SELECT PARTITION_NAME, p.HIGH_VALUE FROM USER_TAB_PARTITIONS P WHERE P.TABLE_NAME = 'ALARM_AUX' ORDER BY P.PARTITION_POSITION DESC)
+    FOR P IN (SELECT PARTITION_NAME, p.HIGH_VALUE FROM USER_TAB_PARTITIONS P WHERE P.TABLE_NAME = 'ALARM_AUX_MG_PART' ORDER BY P.PARTITION_POSITION DESC)
         LOOP
             execute immediate 'select ' || p.HIGH_VALUE || ' from dual ' into v_dyn_date;
             continue when v_dyn_date >= v_old_date;
@@ -30,7 +30,7 @@ BEGIN
 
                 FOR R IN VIDS.FIRST .. VIDS.LAST
                     LOOP
-                        EXECUTE IMMEDIATE 'delete from alarm_aux partition (' || P.PARTITION_NAME || ') where alarm_id=''' || VIDS(R).AID || '''and rowid !=''' || VRDS(R).RID || '''';
+                        EXECUTE IMMEDIATE 'delete from ALARM_AUX_MG_PART partition (' || P.PARTITION_NAME || ') where alarm_id=''' || VIDS(R).AID || '''and rowid !=''' || VRDS(R).RID || '''';
                     END LOOP;
 
                 COMMIT;
