@@ -1,5 +1,5 @@
 DELIMITER  ;
-drop PROCEDURE IF EXISTS p_c3_sms_trace_stat_ln ;
+DROP PROCEDURE IF EXISTS p_c3_sms_trace_stat_ln;
 
 DELIMITER  //
 CREATE PROCEDURE p_c3_sms_trace_stat_ln(IN p_line_code        VARCHAR(60)
@@ -54,27 +54,9 @@ BEGIN
     DEALLOCATE PREPARE stmt_alarm;
 
 
-    DROP TABLE IF EXISTS wv_sms;
+    DROP TABLE IF EXISTS wv_sms_alarm;
 
-    CREATE TEMPORARY TABLE wv_sms
-        ENGINE MEMORY
-    SELECT locomotive_code,
-           running_date,
-           direction,
-           routing_no,
-           line_code,
-           min(begin_time) begin_time,
-           max(end_time)   end_time
-    FROM twv_sms
-    GROUP BY locomotive_code,
-             running_date,
-             direction,
-             routing_no,
-             line_code;
-
-    DROP TABLE IF EXISTS wv_alarm;
-
-    CREATE TEMPORARY TABLE wv_alarm
+    CREATE TEMPORARY TABLE wv_sms_alarm
         ENGINE MEMORY
     SELECT locomotive_code,
            running_date,
@@ -93,21 +75,6 @@ BEGIN
              routing_no,
              line_code;
 
-    DROP TABLE IF EXISTS wv_sms_alarm;
-
-    CREATE TEMPORARY TABLE wv_sms_alarm
-        ENGINE MEMORY
-    SELECT locomotive_code,
-           running_date,
-           direction,
-           routing_no,
-           line_code,
-           begin_time,
-           end_time,
-           faultalarmcntoflv1,
-           faultalarmcntoflv2,
-           faultalarmcntoflv3
-    FROM wv_alarm;
 
     ALTER TABLE wv_sms_alarm
         ADD CONSTRAINT ix_p PRIMARY KEY
@@ -130,11 +97,18 @@ BEGIN
                  direction,
                  routing_no,
                  line_code,
-                 begin_time st,
-                 end_time   et
-          FROM wv_sms) AS t
-    ON DUPLICATE KEY UPDATE begin_time = if(st < begin_time, st, begin_time),
-                            end_time   = if(et > end_time, et, end_time);
+                 min(begin_time) st,
+                 max(end_time)   et
+          FROM twv_sms
+          GROUP BY locomotive_code,
+                   running_date,
+                   direction,
+                   routing_no,
+                   line_code) t
+    ON DUPLICATE KEY
+        UPDATE begin_time = IF(st < begin_time, st, begin_time),
+               end_time   = IF(et > end_time, et, end_time);
+
 
     DROP TABLE IF EXISTS wv_agg_sms_alarm;
 
@@ -144,13 +118,13 @@ BEGIN
            running_date,
            direction,
            line_code,
-           min(begin_time)         begin_time,
-           max(end_time)           end_time,
-           sum(faultalarmcntoflv1) faultalarmcntoflv1,
-           sum(faultalarmcntoflv2) faultalarmcntoflv2,
-           sum(faultalarmcntoflv3) faultalarmcntoflv3,
-           0                       grpl,
-           0                       loco_count
+           min(begin_time)                 AS begin_time,
+           max(end_time)                   AS end_time,
+           sum(faultalarmcntoflv1)         AS faultalarmcntoflv1,
+           sum(faultalarmcntoflv2)         AS faultalarmcntoflv2,
+           sum(faultalarmcntoflv3)         AS faultalarmcntoflv3,
+           0                               AS grpl,
+           count(DISTINCT locomotive_code) AS loco_count
     FROM wv_sms_alarm
     GROUP BY locomotive_code,
              running_date,
@@ -166,7 +140,8 @@ BEGIN
                                  faultalarmcntoflv2,
                                  faultalarmcntoflv3,
                                  grpl,
-                                 locomotive_code)
+                                 loco_count, locomotive_code)
+
     SELECT running_date,
            direction,
            line_code,
@@ -176,7 +151,8 @@ BEGIN
            sum(faultalarmcntoflv2)         faultalarmcntoflv2,
            sum(faultalarmcntoflv3)         faultalarmcntoflv3,
            1                               grpl,
-           count(DISTINCT locomotive_code) loco_count
+           count(DISTINCT locomotive_code) loco_count,
+           " "                             locomotive_code
     FROM wv_sms_alarm
     GROUP BY running_date, direction, line_code;
 
@@ -236,4 +212,5 @@ BEGIN
       AND rown <= p_currpage * p_pagesize
       AND grpl != 1
     ORDER BY locomotive_code, running_date DESC;
+
 END //

@@ -31,7 +31,6 @@ CREATE TABLE `alarm_aux`
     `process_details`    TINYTEXT,
     `process_overdue`    TINYTEXT,
     `process_person`     TINYTEXT,
-    `process_status`     TINYTEXT,
     `process_type`       TINYTEXT,
     `profession_type`    TINYTEXT,
     `repaired_pic`       TINYTEXT,

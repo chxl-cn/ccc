@@ -1,14 +1,14 @@
-SELECT /*+ use_hash(d a) use_hash(x a)*/
+SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     A.ID,
     VENDOR,
     CATEGORY_CODE,
     DETECT_DEVICE_CODE,
     DATA_TYPE,
-    DVALUE1,
-    DVALUE2,
-    DVALUE3,
-    DVALUE4,
-    DVALUE5,
+    case when DVALUE1 < to_date('20000101','yyyymmdd') then null else DVALUE1 end DVALUE1,
+    case when DVALUE2 < to_date('20000101','yyyymmdd') then null else DVALUE2 end DVALUE2,
+    case when DVALUE3 < to_date('20000101','yyyymmdd') then null else DVALUE3 end DVALUE3,
+    case when DVALUE4 < to_date('20000101','yyyymmdd') then null else DVALUE4 end DVALUE4,
+    case when DVALUE5 < to_date('20000101','yyyymmdd') then null else DVALUE5 end DVALUE5,
     NVALUE1,
     NVALUE2,
     NVALUE3,
@@ -65,7 +65,7 @@ SELECT /*+ use_hash(d a) use_hash(x a)*/
     PIC_FILE_LOCATION,
     SUMMARY,
     REPAIR_DATE,
-    ISDAYREPORT,
+    NULL ISDAYREPORT,
     ISEXPORTREPORT,
     LOCK_PERSON_ID,
     IS_TRANS_ALLOWED,
@@ -92,7 +92,7 @@ SELECT /*+ use_hash(d a) use_hash(x a)*/
     EOAS_TRAINNO,
     ALARM_REP_COUNT,
     SAMPLE_DETAIL_CODE,
-    NULL        VALID_GPS,
+    1           VALID_GPS,
     A.ID        ALARM_ID,
     BMI_FILE_NAME,
     RPT_FILE_NAME,
@@ -111,7 +111,7 @@ SELECT /*+ use_hash(d a) use_hash(x a)*/
     SVALUE12,
     SVALUE13,
     ALARM_REASON,
-    AIRESULT,
+    NULL AIRESULT,
     REMARK,
     TRANS_INFO,
     DEV_NAME,
@@ -189,15 +189,10 @@ SELECT /*+ use_hash(d a) use_hash(x a)*/
     SVALUE2,
     SVALUE3,
     SVALUE4,
-    SVALUE5
+    SVALUE5,
+    severity initial_severity
 FROM ALARM A
-         LEFT JOIN ALARM_IMG_DATA D
-                   ON A.ID = D.ALARM_ID
-         LEFT JOIN ALARM_AUX X
-                   ON A.ID = X.ALARM_ID
-WHERE A.RAISED_TIME >= :1 AND
-       A.RAISED_TIME < :2 AND
-       D.RAISE_TIME >= :1 AND
-       D.RAISE_TIME < :2 AND
-       X.RAISED_TIME_AUX >= :1 AND
-       X.RAISED_TIME_AUX < :2
+         LEFT JOIN ALARM_IMG_DATA D ON A.ID = D.ALARM_ID and D.RAISE_TIME >= to_date('{0}','yyyy/mm/dd') AND   D.RAISE_TIME < to_date('{1}','yyyy/mm/dd') 
+         LEFT JOIN ALARM_AUX X ON A.ID = X.ALARM_ID and X.RAISED_TIME_AUX >= to_date('{0}','yyyy/mm/dd') AND X.RAISED_TIME_AUX < to_date('{1}','yyyy/mm/dd')
+WHERE A.RAISED_TIME >= to_date('{0}','yyyy/mm/dd') AND
+       A.RAISED_TIME < to_date('{1}','yyyy/mm/dd')
