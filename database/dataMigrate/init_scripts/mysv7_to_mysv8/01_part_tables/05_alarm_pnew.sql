@@ -1,4 +1,4 @@
-CREATE TABLE `alarm`
+CREATE TABLE `alarm_pnew`
 (
     `id`                  VARCHAR(40) NOT NULL,
     `vendor`              TINYTEXT,
