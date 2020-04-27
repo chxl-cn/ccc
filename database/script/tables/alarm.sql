@@ -95,7 +95,7 @@ CREATE TABLE `alarm`
     `sample_detail_code`  VARCHAR(40),
     `valid_gps`           TINYINT,
     `initial_severity`	  tinytext,
-    `process_status`      TINYTEXT
+    `process_status`      TINYTEXT,
     KEY `id` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
