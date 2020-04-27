@@ -19,7 +19,6 @@ BEGIN
     INSERT INTO wv_tbs(tbn)
     VALUES ('alarm')
          , ('alarm_aux')
-         , ('alarm_others')
          , ('nos_aa')
          , ('c3_sms')
          , ('c3_sms_monitor')
