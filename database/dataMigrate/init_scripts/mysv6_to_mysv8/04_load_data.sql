@@ -80,7 +80,7 @@ FROM (
                 scencesample_name,
                 is_abnormal,
                 algcodename,
-                rank() OVER (PARTITION BY alarm_id ORDER BY raised_time_aux DESC ) cnt
+                row_number() OVER (partition by alarm_id order by raised_time_aux desc ) cnt
          FROM alarm_aux x
          WHERE x.raised_time_aux < 'xxxxxxxx') t
 WHERE cnt = 1;
