@@ -59,11 +59,29 @@ BEGIN
     DECLARE _cpu1 INT;
     DECLARE _cpu2 INT;
     DECLARE v_done BOOLEAN;
-    DECLARE v_loco VARCHAR(40) ;
+    DECLARE v_loco VARCHAR(40);
 
 
     DECLARE cv_mon CURSOR FOR SELECT * FROM wv_mon;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = TRUE;
+
+    DROP TABLE IF EXISTS wv_loco_ports;
+    CREATE TEMPORARY TABLE wv_loco_ports
+        ENGINE MEMORY
+    SELECT locomotive_code,
+           regexp_substr(p1, '[[:digit:]]+', 1, 1) g1p1,
+           regexp_substr(p1, '[[:digit:]]+', 1, 2) g1p2,
+           regexp_substr(p2, '[[:digit:]]+', 1, 1) g2p1,
+           regexp_substr(p2, '[[:digit:]]+', 1, 2) g2p2
+    FROM (
+             SELECT locomotive_code,
+                    regexp_substr(l.device_bow_relations, '[[:digit:]]+,[[:digit:]]+', 1, 1) p1,
+                    regexp_substr(l.device_bow_relations, '[[:digit:]]+,[[:digit:]]+', 1, 2) p2
+             FROM locomotive l
+         ) t;
+
+    ALTER TABLE wv_loco_ports
+        ADD PRIMARY KEY (locomotive_code);
 
     OPEN cv_mon;
     SET v_done := FALSE;
@@ -110,16 +128,27 @@ BEGIN
                 SET v_portn1 := 'A端';
                 SET v_portn2 := 'B端';
             ELSE
-                IF v_device_group_no IS NOT NULL
-                THEN
-                    SELECT min(device_bow_relations) INTO v_dev_bow FROM locomotive WHERE locomotive_code = v_loco;
-                END IF;
-
-                IF v_dev_bow IS NULL
-                THEN
+                lb_getport:
+                BEGIN
                     SET v_portn1 := '4';
                     SET v_portn2 := '6';
-                END IF;
+                    IF v_device_group_no IS NULL THEN
+                        LEAVE lb_getport;
+                    END IF;
+
+                    IF v_device_group_no = 1 THEN
+                        SELECT g1p1, g1p2
+                        INTO v_portn1,v_portn2
+                        FROM wv_loco_ports
+                        WHERE locomotive_code = v_loco;
+                    ELSE
+                        SELECT g2p1, g2p2
+                        INTO v_portn1,v_portn2
+                        FROM wv_loco_ports
+                        WHERE locomotive_code = v_loco;
+                    END IF;
+                END;
+
             END IF;
 
             SET v_high_1 := NULL;
