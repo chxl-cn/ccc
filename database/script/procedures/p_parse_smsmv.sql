@@ -60,6 +60,7 @@ BEGIN
     DECLARE _cpu2 INT;
     DECLARE v_done BOOLEAN;
     DECLARE v_loco VARCHAR(40);
+    DECLARE v_port1,v_port2 VARCHAR(10);
 
 
     DECLARE cv_mon CURSOR FOR SELECT * FROM wv_mon;
@@ -110,15 +111,12 @@ BEGIN
                 SET v_portn1 := 'A端';
                 SET v_portn2 := 'B端';
             ELSE
-                IF v_device_group_no IS NOT NULL
-                THEN
-                    SELECT min(device_bow_relations) INTO v_dev_bow FROM locomotive WHERE locomotive_code = v_loco;
-                END IF;
+                CALL p_loco_port(v_loco, v_device_group_no, v_port1, v_port2);
 
-                IF v_dev_bow IS NULL
+                IF v_port1 IS NULL
                 THEN
-                    SET v_portn1 := '4';
-                    SET v_portn2 := '6';
+                    SET v_port1 := '4';
+                    SET v_port2 := '6';
                 END IF;
             END IF;
 
@@ -141,7 +139,7 @@ BEGIN
 
             SET _line_height_x = ifnull(ifnull(nullif(v_line_height_1, -1000), v_line_height_2), -1000);
             SET _pulling_value_x = ifnull(ifnull(nullif(v_pulling_value_1, -1000), v_pulling_value_2), -1000);
-            SET _port_number = if(v_dev_bow is not null , regexp_substr(regexp_substr(v_dev_bow, '[[:digit:]]+,[[:digit:]]+', 1, v_device_group_no), '[[:digit:]]+', 1, 1), v_portn1);
+            SET _port_number = v_port1;
             SET _irv_temp = ifnull(v_irv_temp_1, -1000);
             SET _env_temp = ifnull(v_env_temp_1, -1000);
             SET _line_height = ifnull(v_high_1, -1000);
@@ -207,7 +205,7 @@ BEGIN
                     _cpu2);
 
 
-            SET _port_number = if(v_dev_bow is not null , regexp_substr(regexp_substr(v_dev_bow, '[[:digit:]]+,[[:digit:]]+', 1, v_device_group_no), '[[:digit:]]+', 1, 2), v_portn2);
+            SET _port_number = v_port2;
             SET _irv_temp = ifnull(v_irv_temp_2, -1000);
             SET _env_temp = ifnull(v_env_temp_2, -1000);
             SET _line_height = ifnull(v_high_2, -1000);
