@@ -55,8 +55,6 @@ BEGIN
 
     END IF;
 
-    LOOP
-        ;
-    END LOOP ;
+
 
 END //
