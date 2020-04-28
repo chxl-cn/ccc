@@ -21,5 +21,25 @@ BEGIN
     SET v_aa_sql = concat("INSERT INTO nos_aa_pnew  SELECT * FROM nos_aa a WHERE a.INPUTDATE  ", v_opt, v_dt);
     SET v_ac_sql = concat("INSERT INTO nos_ac_pnew SELECT * FROM nos_ac c WHERE c.INPUTDATE  ", v_opt, v_dt);
 
+    SET @stmt = v_aux_sql;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SET @stmt = v_img_sql;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SET @stmt = v_aa_sql;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SET @stmt = v_ac_sql;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
 
 END //
