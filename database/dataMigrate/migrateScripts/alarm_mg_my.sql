@@ -192,9 +192,9 @@ SELECT /*+ use_hash(d z) use_hash(x a)*/
     SVALUE5,
     severity initial_severity
 FROM ALARM A
-         LEFT JOIN ALARM_IMG_DATA D
+         LEFT JOIN alarm_img_data_mg_part D
                    ON A.ID = D.ALARM_ID
-         LEFT JOIN ALARM_AUX X
+         LEFT JOIN alarm_aux_mg_part X
                    ON A.ID = X.ALARM_ID
 WHERE A.RAISED_TIME >= '{0}' AND
        A.RAISED_TIME < '{1}' AND
