@@ -82,6 +82,6 @@ SELECT ID,
        AREA_NO,
        STATION_NO,
        STATION_NAME
-FROM C3_SMS S
+FROM c3_sms S
 WHERE S.DETECT_TIME >= '{0}'
   AND S.DETECT_TIME < '{1}'

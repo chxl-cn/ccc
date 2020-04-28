@@ -191,7 +191,7 @@ SELECT /*+ use_hash(d z) use_hash(x a)*/
     SVALUE4,
     SVALUE5,
     severity initial_severity
-FROM ALARM A
+FROM alarm A
          LEFT JOIN alarm_img_data_mg_part D
                    ON A.ID = D.ALARM_ID
          LEFT JOIN alarm_aux_mg_part X
