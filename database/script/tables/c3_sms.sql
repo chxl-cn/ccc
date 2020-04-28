@@ -29,7 +29,7 @@ CREATE TABLE `c3_sms`
     `eoas_location`       INT(11),
     `eoas_time`           DATETIME,
     `pos_confirmed`       VARCHAR(1),
-    `tax_monitor_status`  VARCHAR(8),
+    `tax_monitor_status`  VARCHAR(16),
     `tax_position`        VARCHAR(10),
     `tax_schedule_status` VARCHAR(10),
     `version`             VARCHAR(8),
