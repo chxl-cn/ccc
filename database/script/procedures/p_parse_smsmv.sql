@@ -59,7 +59,7 @@ BEGIN
     DECLARE _cpu1 INT;
     DECLARE _cpu2 INT;
     DECLARE v_done BOOLEAN;
-    DECLARE v_loco VARCHAR(40);
+    #DECLARE v_loco VARCHAR(40);
 
 
     DECLARE cv_mon CURSOR FOR SELECT * FROM wv_mon;
@@ -172,7 +172,6 @@ BEGIN
             SET _line_height_x = ifnull(ifnull(nullif(v_line_height_1, -1000), v_line_height_2), -1000);
             SET _pulling_value_x = ifnull(ifnull(nullif(v_pulling_value_1, -1000), v_pulling_value_2), -1000);
             SET _port_number = v_portn1;
-            #if(v_dev_bow, regexp_substr(regexp_substr(v_dev_bow, '[[:digit:]]+,[[:digit:]]+', 1, v_device_group_no), '[[:digit:]]+', 1, 1), v_portn1);
             SET _irv_temp = ifnull(v_irv_temp_1, -1000);
             SET _env_temp = ifnull(v_env_temp_1, -1000);
             SET _line_height = ifnull(v_high_1, -1000);
@@ -239,7 +238,6 @@ BEGIN
 
 
             SET _port_number = v_portn2;
-            #if(v_dev_bow, regexp_substr(regexp_substr(v_dev_bow, '[[:digit:]]+,[[:digit:]]+', 1, v_device_group_no), '[[:digit:]]+', 1, 2), v_portn2);
             SET _irv_temp = ifnull(v_irv_temp_2, -1000);
             SET _env_temp = ifnull(v_env_temp_2, -1000);
             SET _line_height = ifnull(v_high_2, -1000);
