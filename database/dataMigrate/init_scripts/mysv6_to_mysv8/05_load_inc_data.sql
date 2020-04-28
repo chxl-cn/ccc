@@ -82,10 +82,13 @@ FROM (
                 algcodename,
                 rank() OVER (PARTITION BY alarm_id ORDER BY raised_time_aux DESC ) cnt
          FROM alarm_aux x
-         WHERE x.raised_time_aux < 'xxxxxxxx') t
+         WHERE x.raised_time_aux >= 'xxxxxxxx') t
 WHERE cnt = 1;
 
 INSERT INTO alarm_img_data_mg_part
 SELECT *
 FROM alarm_img_data d
-WHERE d.raise_time < 'xxxxxxxx';
+WHERE d.raise_time >= 'xxxxxxxx'
+;
+
+
