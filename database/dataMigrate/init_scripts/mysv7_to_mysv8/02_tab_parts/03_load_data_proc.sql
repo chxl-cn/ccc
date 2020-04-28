@@ -233,18 +233,16 @@ BEGIN
             SET v_ed = p_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
         ELSE
-            SET v_ed = p_date;
+            SET v_ed = "2018-01-02";
             SET v_sd = "2015-01-01";
 
         END IF;
 
         IF p_sort = 1 THEN
             SET v_sd = p_date;
-            lb_alarm_inc :
+            lb_alarm :
             LOOP
-                IF v_sd > current_date + INTERVAL 1 DAY THEN
-                    LEAVE lb_alarm_inc;
-                END IF;
+
 
                 TRUNCATE TABLE tmp_mg_alarm;
                 SET v_ed := v_sd + INTERVAL 1 DAY;
@@ -255,6 +253,16 @@ BEGIN
 
 
                 SET v_sd = v_ed;
+                IF p_sort = 1 THEN
+                    IF v_sd > current_date THEN
+                        LEAVE lb_alarm;
+                    END IF;
+                ELSE
+                    IF v_ed > p_date THEN
+                        LEAVE lb_alarm;
+                    END IF;
+                END IF;
+
                 SET v_ed = v_ed + INTERVAL 1 DAY;
             END LOOP;
         ELSE
