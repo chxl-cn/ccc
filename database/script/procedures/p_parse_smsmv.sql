@@ -133,7 +133,7 @@ BEGIN
                     SET v_portn1 := '4';
                     SET v_portn2 := '6';
 
-                    IF v_device_group_no IS NULL OR NOT exists(SELECT NULL FROM wv_loco_ports WHERE locomotive_code = v_loco) THEN
+                    IF v_device_group_no IS NULL OR NOT exists(SELECT NULL FROM wv_loco_ports WHERE locomotive_code = v_loco_code) THEN
                         LEAVE lb_getport ;
                     END IF;
 
@@ -141,12 +141,12 @@ BEGIN
                         SELECT g1p1, g1p2
                         INTO v_portn1,v_portn2
                         FROM wv_loco_ports
-                        WHERE locomotive_code = v_loco;
+                        WHERE locomotive_code = v_loco_code;
                     ELSE
                         SELECT g2p1, g2p2
                         INTO v_portn1,v_portn2
                         FROM wv_loco_ports
-                        WHERE locomotive_code = v_loco;
+                        WHERE locomotive_code = v_loco_code;
                     END IF;
                 END;
 
