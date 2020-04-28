@@ -59,8 +59,7 @@ BEGIN
     DECLARE _cpu1 INT;
     DECLARE _cpu2 INT;
     DECLARE v_done BOOLEAN;
-    DECLARE v_loco VARCHAR(40);
-    DECLARE v_port1,v_port2 VARCHAR(10);
+    DECLARE v_loco VARCHAR(40) ;
 
 
     DECLARE cv_mon CURSOR FOR SELECT * FROM wv_mon;
@@ -111,12 +110,15 @@ BEGIN
                 SET v_portn1 := 'A端';
                 SET v_portn2 := 'B端';
             ELSE
-                CALL p_loco_port(v_loco, v_device_group_no, v_port1, v_port2);
-
-                IF v_port1 IS NULL
+                IF v_device_group_no IS NOT NULL
                 THEN
-                    SET v_port1 := '4';
-                    SET v_port2 := '6';
+                    SELECT min(device_bow_relations) INTO v_dev_bow FROM locomotive WHERE locomotive_code = v_loco;
+                END IF;
+
+                IF v_dev_bow IS NULL
+                THEN
+                    SET v_portn1 := '4';
+                    SET v_portn2 := '6';
                 END IF;
             END IF;
 
@@ -139,19 +141,19 @@ BEGIN
 
             SET _line_height_x = ifnull(ifnull(nullif(v_line_height_1, -1000), v_line_height_2), -1000);
             SET _pulling_value_x = ifnull(ifnull(nullif(v_pulling_value_1, -1000), v_pulling_value_2), -1000);
-            SET _port_number = v_port1;
+            SET _port_number = if(v_dev_bow, regexp_substr(regexp_substr(v_dev_bow, '[[:digit:]]+,[[:digit:]]+', 1, v_device_group_no), '[[:digit:]]+', 1, 1), v_portn1);
             SET _irv_temp = ifnull(v_irv_temp_1, -1000);
             SET _env_temp = ifnull(v_env_temp_1, -1000);
             SET _line_height = ifnull(v_high_1, -1000);
             SET _pulling_value = ifnull(v_pull_1, -1000);
-            SET _is_con_ir = if(v_is_con_ir, if(v_is_con_ir & 2, '正常', '异常'), '异常');
-            SET _is_rec_ir = if(v_is_rec_ir, if(v_is_rec_ir & 2, '正常', '异常'), '异常');
-            SET _is_con_vi = if(v_is_con_vi, if(v_is_con_vi & 2, '正常', '异常'), '异常');
-            SET _is_rec_vi = if(v_is_rec_vi, if(v_is_rec_vi & 2, '正常', '异常'), '异常');
-            SET _is_con_ov = if(v_is_con_ov, if(v_is_con_ov & 2, '正常', '异常'), '异常');
-            SET _is_rec_ov = if(v_is_rec_ov, if(v_is_rec_ov & 2, '正常', '异常'), '异常');
-            SET _is_con_fz = if(v_is_con_fz, if(v_is_con_fz & 2, '正常', '异常'), '异常');
-            SET _is_rec_fz = if(v_is_rec_fz AND v_is_gport, if(v_is_rec_fz & 2, '正常', '异常'), '异常');
+            SET _is_con_ir = if(v_is_con_ir, if(v_is_con_ir & 2, '正常', '异常'), NULL);
+            SET _is_rec_ir = if(v_is_rec_ir, if(v_is_rec_ir & 2, '正常', '异常'), NULL);
+            SET _is_con_vi = if(v_is_con_vi, if(v_is_con_vi & 2, '正常', '异常'), NULL);
+            SET _is_rec_vi = if(v_is_rec_vi, if(v_is_rec_vi & 2, '正常', '异常'), NULL);
+            SET _is_con_ov = if(v_is_con_ov, if(v_is_con_ov & 2, '正常', '异常'), NULL);
+            SET _is_rec_ov = if(v_is_rec_ov, if(v_is_rec_ov & 2, '正常', '异常'), NULL);
+            SET _is_con_fz = if(v_is_con_fz, if(v_is_con_fz & 2, '正常', '异常'), NULL);
+            SET _is_rec_fz = if(v_is_rec_fz AND v_is_gport, if(v_is_rec_fz & 2, '正常', '异常'), NULL);
             SET _bow_updown_status = if(v_bow_updown_status & 2, '升', NULL);
             SET _temp_sensor_status = if(v_temp_sensor_status & 2, '升', NULL);
             SET _socket1 = regexp_substr(regexp_substr(v_extra_info, 'SocketStatus[^,]+'), '[[:digit:]]+', 1, 1);
@@ -205,19 +207,19 @@ BEGIN
                     _cpu2);
 
 
-            SET _port_number = v_port2;
+            SET _port_number = if(v_dev_bow, regexp_substr(regexp_substr(v_dev_bow, '[[:digit:]]+,[[:digit:]]+', 1, v_device_group_no), '[[:digit:]]+', 1, 2), v_portn2);
             SET _irv_temp = ifnull(v_irv_temp_2, -1000);
             SET _env_temp = ifnull(v_env_temp_2, -1000);
             SET _line_height = ifnull(v_high_2, -1000);
             SET _pulling_value = ifnull(v_pull_2, -1000);
-            SET _is_con_ir = if(v_is_con_ir, IF(v_is_con_ir & 1, '正常', '异常'), '异常');
-            SET _is_rec_ir = if(v_is_rec_ir, IF(v_is_rec_ir & 1, '正常', '异常'), '异常');
-            SET _is_con_vi = if(v_is_con_vi, IF(v_is_con_vi & 1, '正常', '异常'), '异常');
-            SET _is_rec_vi = if(v_is_rec_vi, IF(v_is_rec_vi & 1, '正常', '异常'), '异常');
-            SET _is_con_ov = if(v_is_con_ov, IF(v_is_con_ov & 1, '正常', '异常'), '异常');
-            SET _is_rec_ov = if(v_is_rec_ov, IF(v_is_rec_ov & 1, '正常', '异常'), '异常');
-            SET _is_con_fz = if(v_is_con_fz, IF(v_is_con_fz & 1, '正常', '异常'), '异常');
-            SET _is_rec_fz = if(v_is_rec_fz AND v_is_gport, IF(v_is_rec_fz & 1, '正常', '异常'), '异常');
+            SET _is_con_ir = if(v_is_con_ir, IF(v_is_con_ir & 1, '正常', '异常'), NULL);
+            SET _is_rec_ir = if(v_is_rec_ir, IF(v_is_rec_ir & 1, '正常', '异常'), NULL);
+            SET _is_con_vi = if(v_is_con_vi, IF(v_is_con_vi & 1, '正常', '异常'), NULL);
+            SET _is_rec_vi = if(v_is_rec_vi, IF(v_is_rec_vi & 1, '正常', '异常'), NULL);
+            SET _is_con_ov = if(v_is_con_ov, IF(v_is_con_ov & 1, '正常', '异常'), NULL);
+            SET _is_rec_ov = if(v_is_rec_ov, IF(v_is_rec_ov & 1, '正常', '异常'), NULL);
+            SET _is_con_fz = if(v_is_con_fz, IF(v_is_con_fz & 1, '正常', '异常'), NULL);
+            SET _is_rec_fz = if(v_is_rec_fz AND v_is_gport, IF(v_is_rec_fz & 1, '正常', '异常'), NULL);
             SET _bow_updown_status = IF(v_bow_updown_status & 1, '升', NULL);
             SET _temp_sensor_status = IF(v_temp_sensor_status & 1, '升', NULL);
             SET _socket1 = regexp_substr(regexp_substr(v_extra_info, 'SocketStatus[^,]+'), '[[:digit:]]+', 1, 3);
@@ -283,10 +285,10 @@ BEGIN
             SET _pulling_value = ifnull(v_pulling_value_1, -1000);
             SET _line_height_x = ifnull(v_line_height_1, -1000);
             SET _pulling_value_x = ifnull(v_pulling_value_1, -1000);
-            SET _is_con_ir = if(v_is_con_ir, IF(v_is_con_ir, '正常', '异常'), '异常');
-            SET _is_rec_ir = if(v_is_rec_ir, IF(v_is_rec_ir, '正常', '异常'), '异常');
-            SET _is_con_vi = if(v_is_con_vi, IF(v_is_con_vi, '正常', '异常'), '异常');
-            SET _is_rec_vi = if(v_is_rec_vi, IF(v_is_rec_vi, '正常', '异常'), '异常');
+            SET _is_con_ir = if(v_is_con_ir, IF(v_is_con_ir, '正常', '异常'), NULL);
+            SET _is_rec_ir = if(v_is_rec_ir, IF(v_is_rec_ir, '正常', '异常'), NULL);
+            SET _is_con_vi = if(v_is_con_vi, IF(v_is_con_vi, '正常', '异常'), NULL);
+            SET _is_rec_vi = if(v_is_rec_vi, IF(v_is_rec_vi, '正常', '异常'), NULL);
             SET _is_con_ov = if(regexp_like(v_device_version, 'PS(3|3B)'), NULL, if(v_is_rec_vi, IF(v_is_rec_vi, '正常', '异常'), NULL));
             SET _is_rec_ov = if(regexp_like(v_device_version, 'PS(3|3B)'), NULL, if(v_is_rec_vi, IF(v_is_rec_vi, '正常', '异常'), NULL));
             SET _temp_sensor_status = IF(v_temp_sensor_status, '正常', NULL);
