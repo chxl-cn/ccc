@@ -45,6 +45,7 @@ BEGIN
         DECLARE v_alarm_sql TEXT;
         DECLARE v_sd DATETIME;
         DECLARE v_ed DATETIME;
+        DECLARE v_ov DATETIME;
         SET v_alarm_sql =
                 "
                 SELECT a.id          id,
@@ -232,24 +233,19 @@ BEGIN
         IF p_sort = 1 THEN
             SET v_ed = p_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
+            SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
             SET v_ed = "2018-01-02";
             SET v_sd = "2015-01-01";
-
+            SET v_ov = p_date;
         END IF;
 
         lb_alarm :
         LOOP
-
-            IF p_sort = 1 THEN
-                IF v_sd > current_date THEN
-                    LEAVE lb_alarm;
-                END IF;
-            ELSE
-                IF v_ed > p_date THEN
-                    LEAVE lb_alarm;
-                END IF;
+            IF v_sd >= v_ov THEN
+                LEAVE lb_alarm;
             END IF;
+
 
             TRUNCATE TABLE tmp_mg_alarm;
             SET @sd = v_sd;
@@ -592,6 +588,7 @@ BEGIN
     BEGIN
         DECLARE v_ed DATETIME;
         DECLARE v_sd DATETIME;
+        DECLARE v_ov DATETIME;
         DECLARE v_sms,v_monitor TEXT;
 
         SET v_sms =
@@ -754,29 +751,26 @@ BEGIN
             WHERE detect_time >= ?
               AND detect_time < ?
             ";
+
         IF p_sort = 1 THEN
             SET v_ed = p_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
+            SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
             SET v_ed = "2018-01-02";
             SET v_sd = "2015-01-01";
-
+            SET v_ov = p_date;
         END IF;
 
         SET @stmt_sms = v_sms;
         SET @stmt_monitor = v_monitor;
         PREPARE stmt_sms FROM @stmt_sms;
         PREPARE stmt_monitor FROM @stmt_monitor;
+
         lb_sms :
         LOOP
-            IF p_sort = 1 THEN
-                IF v_sd > current_date THEN
-                    LEAVE lb_sms;
-                END IF;
-            ELSE
-                IF v_ed > p_date THEN
-                    LEAVE lb_sms;
-                END IF;
+            IF v_sd >= v_ov THEN
+                LEAVE lb_sms;
             END IF;
 
             SET @sd = v_sd;
