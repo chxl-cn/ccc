@@ -22,7 +22,8 @@ CREATE TABLE `alarm_aux_pold`
     `confidence_level`   INT(11)       DEFAULT NULL,
     `rerun_type`         INT(11)       DEFAULT NULL,
     `raised_time_aux`    DATETIME      DEFAULT NULL,
-    `is_abnormal`        VARCHAR(10)   DEFAULT NULL
+    `is_abnormal`        VARCHAR(10)   DEFAULT NULL,
+    `audit_status`       VARCHAR(30)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci
