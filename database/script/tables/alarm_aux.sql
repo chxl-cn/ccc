@@ -63,6 +63,7 @@ CREATE TABLE `alarm_aux`
     `map_add_ima`        TINYTEXT,
     `vi_add_ima`         TINYTEXT,
     `oa_add_ima`         TINYTEXT,
+    `audit_status`       VARCHAR(20),
     KEY `alarm_id` (`alarm_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
