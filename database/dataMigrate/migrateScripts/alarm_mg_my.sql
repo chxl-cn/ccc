@@ -190,7 +190,8 @@ SELECT /*+ use_hash(d z) use_hash(x a)*/
     SVALUE3,
     SVALUE4,
     SVALUE5,
-    severity initial_severity
+    severity initial_severity,
+    null audit_status
 FROM alarm A
          LEFT JOIN alarm_img_data_mg_part D
                    ON A.ID = D.ALARM_ID
