@@ -1,5 +1,5 @@
 SELECT /*+ use_hash(d z) use_hash(x a)*/
-   A.ID,
+    A.ID,
     VENDOR,
     CATEGORY_CODE,
     DETECT_DEVICE_CODE,
@@ -65,7 +65,7 @@ SELECT /*+ use_hash(d z) use_hash(x a)*/
     PIC_FILE_LOCATION,
     SUMMARY,
     REPAIR_DATE,
-    null ISDAYREPORT,
+    NULL        ISDAYREPORT,
     ISEXPORTREPORT,
     LOCK_PERSON_ID,
     IS_TRANS_ALLOWED,
@@ -111,7 +111,7 @@ SELECT /*+ use_hash(d z) use_hash(x a)*/
     SVALUE12,
     SVALUE13,
     ALARM_REASON,
-    null AIRESULT,
+    NULL        AIRESULT,
     REMARK,
     TRANS_INFO,
     DEV_NAME,
@@ -190,16 +190,16 @@ SELECT /*+ use_hash(d z) use_hash(x a)*/
     SVALUE3,
     SVALUE4,
     SVALUE5,
-    severity initial_severity,
-    null audit_status
+    severity    initial_severity,
+    NULL        audit_status
 FROM alarm A
          LEFT JOIN alarm_img_data_mg_part D
                    ON A.ID = D.ALARM_ID
+                       AND D.RAISE_TIME >= '{0}'
+                       AND D.RAISE_TIME < '{1}'
          LEFT JOIN alarm_aux_mg_part X
                    ON A.ID = X.ALARM_ID
-WHERE A.RAISED_TIME >= '{0}' AND
-       A.RAISED_TIME < '{1}' AND
-       D.RAISE_TIME >= '{0}' AND
-       D.RAISE_TIME < '{1}' AND
-       X.RAISED_TIME_AUX >= '{0}' AND
-       X.RAISED_TIME_AUX < '{1}'
+                       AND X.RAISED_TIME_AUX >= '{0}'
+                       AND X.RAISED_TIME_AUX < '{1}'
+WHERE A.RAISED_TIME >= '{0}'
+  AND A.RAISED_TIME < '{1}'
