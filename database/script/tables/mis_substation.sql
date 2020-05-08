@@ -5,8 +5,8 @@ CREATE TABLE `mis_substation`
     `substation_name`    VARCHAR(200),
     `substation_type`    VARCHAR(200),
     `substation_no`      VARCHAR(200),
-    `gis_lat`            DECIMAL(10, 0),
-    `gis_lon`            DECIMAL(10, 0),
+    `gis_lat`            DECIMAL(16, 6),
+    `gis_lon`            DECIMAL(16, 6),
     `monitor_place`      VARCHAR(200),
     `icon_path`          VARCHAR(200),
     `km_mark_sx`         DECIMAL(16, 0),
@@ -74,11 +74,12 @@ CREATE TABLE `mis_substation`
     `stdrt`              VARCHAR(60),
     `inpfpcd`            VARCHAR(60),
     `inpspcd`            VARCHAR(60),
-    `gis_lon_o`          DECIMAL(10, 0),
-    `gis_lat_o`          DECIMAL(10, 0),
+    `gis_lon_o`          DECIMAL(16, 6),
+    `gis_lat_o`          DECIMAL(16, 6),
     `direction`          VARCHAR(20),
     `dev_url`            VARCHAR(200),
-    `subst_idno`         VARCHAR(30)
+    `subst_idno`         VARCHAR(30),
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
