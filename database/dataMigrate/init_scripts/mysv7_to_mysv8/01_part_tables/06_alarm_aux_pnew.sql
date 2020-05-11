@@ -1,4 +1,4 @@
-CREATE TABLE `alarm_aux`
+CREATE TABLE `alarm_aux_pnew`
 (
     `alarm_id`           VARCHAR(40) NOT NULL,
     `bmi_file_name`      TINYTEXT,
@@ -63,7 +63,7 @@ CREATE TABLE `alarm_aux`
     `map_add_ima`        TINYTEXT,
     `vi_add_ima`         TINYTEXT,
     `oa_add_ima`         TINYTEXT,
-    `audit_status`       VARCHAR(20),
+    `audit_status`       VARCHAR(30),
     KEY `alarm_id` (`alarm_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

@@ -1,8 +1,8 @@
-CREATE TABLE `nos_aa`
+CREATE TABLE `nos_ac_pnew`
 (
-    `ID`        varchar(128) NOT NULL,
-    `INPUTDATE` datetime ,
-    `CONTENT`   text  ,
+    `ID`        VARCHAR(128) NOT NULL,
+    `INPUTDATE` DATETIME,
+    `CONTENT`   TEXT,
     KEY `ID` (`ID`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

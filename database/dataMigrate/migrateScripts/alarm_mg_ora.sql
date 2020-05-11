@@ -4,11 +4,11 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     CATEGORY_CODE,
     DETECT_DEVICE_CODE,
     DATA_TYPE,
-    case when DVALUE1 < to_date('20000101','yyyymmdd') then null else DVALUE1 end DVALUE1,
-    case when DVALUE2 < to_date('20000101','yyyymmdd') then null else DVALUE2 end DVALUE2,
-    case when DVALUE3 < to_date('20000101','yyyymmdd') then null else DVALUE3 end DVALUE3,
-    case when DVALUE4 < to_date('20000101','yyyymmdd') then null else DVALUE4 end DVALUE4,
-    case when DVALUE5 < to_date('20000101','yyyymmdd') then null else DVALUE5 end DVALUE5,
+    CASE WHEN DVALUE1 < to_date('20000101', 'yyyymmdd') THEN NULL ELSE DVALUE1 END DVALUE1,
+    CASE WHEN DVALUE2 < to_date('20000101', 'yyyymmdd') THEN NULL ELSE DVALUE2 END DVALUE2,
+    CASE WHEN DVALUE3 < to_date('20000101', 'yyyymmdd') THEN NULL ELSE DVALUE3 END DVALUE3,
+    CASE WHEN DVALUE4 < to_date('20000101', 'yyyymmdd') THEN NULL ELSE DVALUE4 END DVALUE4,
+    CASE WHEN DVALUE5 < to_date('20000101', 'yyyymmdd') THEN NULL ELSE DVALUE5 END DVALUE5,
     NVALUE1,
     NVALUE2,
     NVALUE3,
@@ -65,7 +65,7 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     PIC_FILE_LOCATION,
     SUMMARY,
     REPAIR_DATE,
-    NULL ISDAYREPORT,
+    NULL                                                                           ISDAYREPORT,
     ISEXPORTREPORT,
     LOCK_PERSON_ID,
     IS_TRANS_ALLOWED,
@@ -92,8 +92,8 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     EOAS_TRAINNO,
     ALARM_REP_COUNT,
     SAMPLE_DETAIL_CODE,
-    1           VALID_GPS,
-    A.ID        ALARM_ID,
+    1                                                                              VALID_GPS,
+    A.ID                                                                           ALARM_ID,
     BMI_FILE_NAME,
     RPT_FILE_NAME,
     BOW_OFFSET,
@@ -103,7 +103,7 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     LOCK_PERSON_NAME,
     LOCK_TIME,
     CONFIDENCE_LEVEL,
-    RAISED_TIME RAISED_TIME_AUX,
+    RAISED_TIME                                                                    RAISED_TIME_AUX,
     IS_ABNORMAL,
     SVALUE6,
     SVALUE7,
@@ -111,7 +111,7 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     SVALUE12,
     SVALUE13,
     ALARM_REASON,
-    NULL AIRESULT,
+    NULL                                                                           AIRESULT,
     REMARK,
     TRANS_INFO,
     DEV_NAME,
@@ -190,9 +190,10 @@ SELECT /*+ use_SELECT /*+ use_hash(d a) use_hash(x a)*/
     SVALUE3,
     SVALUE4,
     SVALUE5,
-    severity initial_severity
-FROM ALARM A
-         LEFT JOIN ALARM_IMG_DATA D ON A.ID = D.ALARM_ID and D.RAISE_TIME >= to_date('{0}','yyyy/mm/dd') AND   D.RAISE_TIME < to_date('{1}','yyyy/mm/dd') 
-         LEFT JOIN ALARM_AUX X ON A.ID = X.ALARM_ID and X.RAISED_TIME_AUX >= to_date('{0}','yyyy/mm/dd') AND X.RAISED_TIME_AUX < to_date('{1}','yyyy/mm/dd')
-WHERE A.RAISED_TIME >= to_date('{0}','yyyy/mm/dd') AND
-       A.RAISED_TIME < to_date('{1}','yyyy/mm/dd')
+    severity                                                                       initial_severity,
+    NULL                                                                           audit_status
+FROM ALARM_mg_part A
+         LEFT JOIN ALARM_IMG_DATA_mg_part D ON A.ID = D.ALARM_ID AND D.RAISE_TIME >= to_date('{0}', 'yyyy/mm/dd') AND D.RAISE_TIME < to_date('{1}', 'yyyy/mm/dd')
+         LEFT JOIN ALARM_AUX_mg_part X ON A.ID = X.ALARM_ID AND X.RAISED_TIME_AUX >= to_date('{0}', 'yyyy/mm/dd') AND X.RAISED_TIME_AUX < to_date('{1}', 'yyyy/mm/dd')
+WHERE A.RAISED_TIME >= to_date('{0}', 'yyyy/mm/dd')
+  AND A.RAISED_TIME < to_date('{1}', 'yyyy/mm/dd')

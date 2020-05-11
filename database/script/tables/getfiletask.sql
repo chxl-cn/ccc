@@ -22,6 +22,7 @@ CREATE TABLE `getfiletask`
     `bowposition`    varchar(50),
     `rolling_num`    varchar(2),
     `source`         varchar(500),
+    `alarm_raised_time` DATETIME,
     PRIMARY KEY (`taskid`),
     UNIQUE KEY `taskid` (`taskid`),
     KEY `ix_task_create_time` (`createdatetime`)
