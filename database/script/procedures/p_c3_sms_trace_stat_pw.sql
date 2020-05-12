@@ -11,7 +11,8 @@ CREATE PROCEDURE p_c3_sms_trace_stat_pw(IN p_bureau_code      VARCHAR(60)
                                        , IN p_currpage        INT
                                        , OUT p_total_recs     INT
                                        , OUT p_total_pages    INT
-                                       , IN p_data_perm       VARCHAR(2048)
+                                       , IN p_data_perm       TEXT
+                                       , IN p_alarm_perm      TEXT
                                        )
 BEGIN
     DECLARE v_sql, v_filter TEXT;
@@ -46,6 +47,7 @@ BEGIN
     DEALLOCATE PREPARE stmt_sms;
 
 
+    SET v_filter = concat(v_filter, char(10), if(p_alarm_perm IS NOT NULL, concat("and ", p_alarm_perm), v_space));
     DROP TABLE IF EXISTS twv_alarm;
     CALL p_get_mod_sql('p_c3_sms_trace_stat', 2, v_sql);
     SET v_sql = replace(v_sql, '<:filter1:>', v_filter);
