@@ -272,6 +272,7 @@ FROM wv_loco l
                    ON l.id = v.id
 ORDER BY detect_time DESC
        , locomotive_code
+       , port_number
        ');
 
 
