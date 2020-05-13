@@ -212,7 +212,8 @@ BEGIN
                                  , socket1
                                  , socket2
                                  , cpu1
-                                 , cpu2)
+                                 , cpu2,
+                                   grp)
             VALUES (v_id,
                     _irv_temp,
                     _env_temp,
@@ -234,7 +235,8 @@ BEGIN
                     _socket1,
                     _socket2,
                     _cpu1,
-                    _cpu2);
+                    _cpu2,
+                    v_device_group_no);
 
 
             SET _port_number = v_portn2;
@@ -279,7 +281,7 @@ BEGIN
                                  , socket1
                                  , socket2
                                  , cpu1
-                                 , cpu2)
+                                 , cpu2, grp)
             VALUES (v_id,
                     _irv_temp,
                     _env_temp,
@@ -301,7 +303,8 @@ BEGIN
                     _socket1,
                     _socket2,
                     _cpu1,
-                    _cpu2);
+                    _cpu2,
+                    v_device_group_no);
             ITERATE iterate_mon;
         END;
 

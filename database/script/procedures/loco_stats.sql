@@ -31,7 +31,7 @@ BEGIN
 
     CALL p_get_mod_sql('loco_stats', 1, v_sql);
 
-    set v_where = " " ;
+    SET v_where = " ";
     SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, CONCAT("and bureau_code = '", p_bureau_code, "'"), v_space));
     SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, CONCAT("and org_code = '", p_org_code, "'"), v_space));
     SET v_where = concat(v_where, char(10), if(p_p_org_code IS NOT NULL, CONCAT("and p_org_code = '", p_p_org_code, "'"), v_space));
@@ -137,7 +137,8 @@ BEGIN
         socket1            VARCHAR(6),
         socket2            VARCHAR(6),
         cpu1               INT,
-        cpu2               INT
+        cpu2               INT,
+        grp                TINYINT
     ) ENGINE MEMORY;
 
     CALL p_parse_smsmv();

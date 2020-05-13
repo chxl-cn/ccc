@@ -131,7 +131,8 @@ BEGIN
         socket1            VARCHAR(6),
         socket2            VARCHAR(6),
         cpu1               INT,
-        cpu2               INT
+        cpu2               INT,
+        grp                TINYINT
     ) ENGINE MEMORY;
 
     CALL p_parse_smsmv();
