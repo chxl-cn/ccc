@@ -272,8 +272,8 @@ FROM wv_loco l
                    ON l.id = v.id
 ORDER BY detect_time DESC
        , locomotive_code
-       , port_number
-       ');
+       , grp
+       , port_number');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_alarm_3c_stat', 1, 'CREATE TEMPORARY TABLE t_alarm_3c_stat ENGINE MEMORY
