@@ -303,6 +303,7 @@ FROM alarm t1
 WHERE category_code = ''3C''
   AND status != ''AFSTATUS02''
   AND t1.data_type = ''FAULT''
+  AND severity != ''三类''
   AND raised_time BETWEEN ? AND ?
   <<:filter:>>
 GROUP BY detect_device_code,
