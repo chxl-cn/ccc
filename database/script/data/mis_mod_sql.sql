@@ -647,6 +647,7 @@ WHERE a.raised_time BETWEEN ? AND ?
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 4, 'SELECT sup_org_code,
        cast(NULL AS CHAR(40)) sup_org_name,
+       l.org_code,
        cast(NULL AS CHAR(40)) org_name,
        l.locomotive_code,
        l.line_code,
