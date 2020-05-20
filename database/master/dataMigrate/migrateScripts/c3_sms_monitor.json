@@ -1,0 +1,165 @@
+{
+  "TableName": "c3_sms_monitor",
+  "Fields": [
+    {
+      "SourceName": "id",
+      "TargetName": "id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "detect_time",
+      "TargetName": "detect_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "device_group_no",
+      "TargetName": "device_group_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "device_version",
+      "TargetName": "device_version",
+      "DataType": 0
+    },
+    {
+      "SourceName": "temp_sensor_status",
+      "TargetName": "temp_sensor_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "bow_updown_status",
+      "TargetName": "bow_updown_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "parallel_span",
+      "TargetName": "parallel_span",
+      "DataType": 1
+    },
+    {
+      "SourceName": "env_temp_1",
+      "TargetName": "env_temp_1",
+      "DataType": 2
+    },
+    {
+      "SourceName": "env_temp_2",
+      "TargetName": "env_temp_2",
+      "DataType": 2
+    },
+    {
+      "SourceName": "env_temp_3",
+      "TargetName": "env_temp_3",
+      "DataType": 2
+    },
+    {
+      "SourceName": "env_temp_4",
+      "TargetName": "env_temp_4",
+      "DataType": 2
+    },
+    {
+      "SourceName": "line_height_1",
+      "TargetName": "line_height_1",
+      "DataType": 1
+    },
+    {
+      "SourceName": "line_height_2",
+      "TargetName": "line_height_2",
+      "DataType": 1
+    },
+    {
+      "SourceName": "line_height_3",
+      "TargetName": "line_height_3",
+      "DataType": 1
+    },
+    {
+      "SourceName": "line_height_4",
+      "TargetName": "line_height_4",
+      "DataType": 1
+    },
+    {
+      "SourceName": "irv_temp_1",
+      "TargetName": "irv_temp_1",
+      "DataType": 2
+    },
+    {
+      "SourceName": "irv_temp_2",
+      "TargetName": "irv_temp_2",
+      "DataType": 2
+    },
+    {
+      "SourceName": "irv_temp_3",
+      "TargetName": "irv_temp_3",
+      "DataType": 2
+    },
+    {
+      "SourceName": "irv_temp_4",
+      "TargetName": "irv_temp_4",
+      "DataType": 2
+    },
+    {
+      "SourceName": "pulling_value_1",
+      "TargetName": "pulling_value_1",
+      "DataType": 1
+    },
+    {
+      "SourceName": "pulling_value_2",
+      "TargetName": "pulling_value_2",
+      "DataType": 1
+    },
+    {
+      "SourceName": "pulling_value_3",
+      "TargetName": "pulling_value_3",
+      "DataType": 1
+    },
+    {
+      "SourceName": "pulling_value_4",
+      "TargetName": "pulling_value_4",
+      "DataType": 1
+    },
+    {
+      "SourceName": "is_con_fz",
+      "TargetName": "is_con_fz",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_con_ir",
+      "TargetName": "is_con_ir",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_con_ov",
+      "TargetName": "is_con_ov",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_con_vi",
+      "TargetName": "is_con_vi",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_rec_fz",
+      "TargetName": "is_rec_fz",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_rec_ir",
+      "TargetName": "is_rec_ir",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_rec_ov",
+      "TargetName": "is_rec_ov",
+      "DataType": 0
+    },
+    {
+      "SourceName": "is_rec_vi",
+      "TargetName": "is_rec_vi",
+      "DataType": 0
+    },
+    {
+      "SourceName": "extra_info",
+      "TargetName": "extra_info",
+      "DataType": 0
+    }
+  ]
+}
