@@ -7,7 +7,7 @@ CREATE PROCEDURE p_pw_alrm_stat(IN p_bureau_code VARCHAR(100)
                                , IN p_org_code   VARCHAR(100)
                                , IN p_start_date DATETIME
                                , IN p_end_date   DATETIME
-                               , IN p_data_perm  VARCHAR(100)
+                               , IN p_data_perm_org_code  VARCHAR(100)
                                )
 BEGIN
     DECLARE v_sql,v_where TEXT;
