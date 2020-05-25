@@ -612,111 +612,84 @@ WHERE running_date = ?
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 1, 'CREATE TEMPORARY TABLE wv_org
     ENGINE MEMORY
-SELECT o.sup_org_code,
-       cast(NULL AS CHAR(40)) sup_org_name,
-       o.org_code,
-       cast(NULL AS CHAR(40)) org_name
-FROM tsys_org o
-WHERE o.org_type LIKE ''GD%''
-  <<:filter:>>');
+    SELECT o.sup_org_code
+         , cast(NULL AS CHAR(40)) AS sup_org_name
+         , o.org_code
+         , cast(NULL AS CHAR(40)) AS org_name
+         , locomotive_code
+        FROM tsys_org                  o
+                 INNER JOIN locomotive l
+                            ON o.org_code = l.org_code
+        WHERE o.org_type LIKE ''GD%''
+          <<:filter:>>');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 2, 'CREATE TEMPORARY TABLE wv_sms
     ENGINE MEMORY
-SELECT s.locomotive_code,
-       line_code,
-       s.org_code,
-       detect_time
-FROM c3_sms s
-WHERE s.detect_time BETWEEN ? AND ?
-  AND s.speed > 0
-  <<:filter:>>');
+    SELECT s.locomotive_code
+         , line_code
+         , detect_time
+        FROM c3_sms s
+        WHERE s.detect_time BETWEEN ? AND ?
+          AND s.speed > 0
+          AND exists(SELECT NULL FROM wv_org o WHERE s.locomotive_code = o.locomotive_code)
+          <<:filter:>>');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 3, 'CREATE TEMPORARY TABLE wv_alarm
     ENGINE MEMORY
-SELECT cast(a.org_code AS CHAR(60))           org_code,
-       cast(a.detect_device_code AS CHAR(60)) detect_device_code,
-       cast(a.status AS CHAR(20))             status,
-       cast(line_code AS CHAR(40))            line_code,
-       cast(a.code AS CHAR(40))               code
-FROM alarm a
-WHERE a.raised_time BETWEEN ? AND ?
-<<:filter:>>');
+    SELECT cast(a.detect_device_code AS CHAR(60)) AS detect_device_code
+         , cast(a.status AS CHAR(20))             AS status
+         , cast(line_code AS CHAR(40))            AS line_code
+         , cast(a.code AS CHAR(40))               AS code
+        FROM alarm a
+        WHERE a.raised_time BETWEEN ? AND ?
+          AND exists(SELECT NULL FROM wv_org o WHERE a.detect_device_code = o.locomotive_code)
+          <<:filter:>>');
 
 
-INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 4, 'SELECT sup_org_code,
-       cast(NULL AS CHAR(40)) sup_org_name,
-       l.org_code,
-       cast(NULL AS CHAR(40)) org_name,
-       l.locomotive_code,
-       l.line_code,
-       cast(NULL AS CHAR(40)) line_name,
-       l.rtds,
-       ifnull(acnt, 0)        acnt,
-       ifnull(scnt, 0)        scnt
-FROM (
-         SELECT l.sup_org_code,
-                l.org_code,
-                s.locomotive_code,
-                s.line_code,
-                rtds
-         FROM wv_org l
-                  LEFT JOIN
-              (
-                  SELECT locomotive_code,
-                         org_code,
-                         rtds,
-                         group_concat(line_code) line_code
-                  FROM (
-                           SELECT locomotive_code,
-                                  line_code,
-                                  org_code,
-                                  rtds
-                           FROM (
-                                    SELECT locomotive_code,
-
-                                           line_code,
-                                           org_code,
-                                           count(concat(locomotive_code, org_code, rd)) OVER w_rds AS rtds
-                                    FROM (
-                                             SELECT s.locomotive_code,
-                                                    line_code,
-                                                    s.org_code,
-                                                    date_format(s.detect_time, ''%Y%m%d'') rd
-                                             FROM wv_sms s
-                                             GROUP BY date_format(s.detect_time, ''%Y%m%d''),
-                                                      s.org_code,
-                                                      s.locomotive_code,
-                                                      line_code
-                                         ) v_1
-                                        WINDOW w_rds AS ( PARTITION BY locomotive_code,org_code)
-                                ) v_2
-                           GROUP BY locomotive_code,
-                                    line_code,
-                                    org_code,
-                                    rtds
-                       ) v_3
-                  GROUP BY locomotive_code, org_code, rtds
-              ) s
-              ON l.org_code = s.org_code
-     ) l
-         LEFT JOIN
-     (
-         SELECT a.org_code,
-                a.detect_device_code,
-                count(*)                                                         acnt,
-                count(if(a.status NOT IN (''AFSTATUS01'', ''AFSTATUS02''), 1, NULL)) scnt
-         FROM wv_alarm a
-         WHERE EXISTS
-                   (SELECT NULL
-                    FROM wv_alt t
-                    WHERE a.code = t.dic_code)
-         GROUP BY a.org_code, a.detect_device_code
-     ) a
-     ON l.org_code = a.org_code
-         AND l.locomotive_code = detect_device_code
-ORDER BY 1, 2, 3;');
+INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 4, 'SELECT sup_org_code
+     , cast(NULL AS CHAR(40)) AS sup_org_name
+     , l.org_code
+     , cast(NULL AS CHAR(40)) AS org_name
+     , l.locomotive_code
+     , l.line_code
+     , cast(NULL AS CHAR(40)) AS line_name
+     , l.rtds
+     , ifnull(acnt, 0)        AS acnt
+     , ifnull(scnt, 0)        AS scnt
+    FROM (
+         SELECT l.sup_org_code
+              , l.org_code
+              , s.locomotive_code
+              , s.line_code
+              , rtds
+             FROM wv_org l
+                      LEFT JOIN
+                  (
+                  SELECT rl.locomotive_code, rl.line_code, rd.rtds
+                      FROM wv_sms_ds rd
+                         , wv_sms_ln rl
+                      WHERE rd.locomotive_code = rl.locomotive_code
+                  )      s
+                  ON l.locomotive_code = s.locomotive_code
+         ) l
+             LEFT JOIN
+         (
+         SELECT a.detect_device_code
+              , count(*)                                                            AS acnt
+              , count(if(a.status NOT IN ( ''AFSTATUS01'' , ''AFSTATUS02'' ), 1, NULL)) AS scnt
+             FROM wv_alarm a
+             WHERE EXISTS
+                       (SELECT NULL
+                            FROM wv_alt t
+                            WHERE a.code = t.dic_code)
+             GROUP BY a.detect_device_code
+         ) a
+         ON l.locomotive_code = detect_device_code
+    ORDER BY 1
+           , 2
+           , 3');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 5, 'SELECT CASE
@@ -745,7 +718,7 @@ FROM (
                             ON l.dic_code = a.code
          GROUP BY p_code, detect_device_code
      ) d
-GROUP BY p_code;');
+GROUP BY p_code');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 6, 'SELECT cast(NULL AS CHAR(40))                                     line_name,
@@ -763,7 +736,7 @@ FROM (
               WHERE l.dic_code = a.code)
          GROUP BY line_code, detect_device_code
      ) a
-GROUP BY line_code;');
+GROUP BY line_code');
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_spark', 1, 'CREATE TEMPORARY TABLE wv_spk ENGINE MEMORY
