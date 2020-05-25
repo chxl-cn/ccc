@@ -80,7 +80,8 @@ BEGIN
                      FROM wv_sms
                      GROUP BY locomotive_code
                             , date(detect_time)
-                 ) tt;
+                 ) tt
+            GROUP BY locomotive_code;
 
     CREATE TABLE wv_sms_ln
         ENGINE MEMORY
@@ -90,7 +91,8 @@ BEGIN
                      FROM wv_sms
                      GROUP BY locomotive_code
                             , line_code
-                 ) tt;
+                 ) tt
+            GROUP BY locomotive_code;
 
 
     CALL p_get_mod_sql('p_pw_alrm_stat', 4, V_SQL);
