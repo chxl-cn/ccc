@@ -25,7 +25,7 @@ BEGIN
     SET V_WHERE = " ";
     SET V_WHERE = concat(V_WHERE, char(10), if(P_BUREAU_CODE IS NOT NULL, concat("AND SUP_ORG_CODE='", P_BUREAU_CODE, "'"), " "));
     SET V_WHERE = concat(V_WHERE, char(10), if(P_ORG_CODE IS NOT NULL, concat("AND ORG_CODE='", P_ORG_CODE, "'"), " "));
-    SET V_WHERE = concat(V_WHERE, char(10), if(P_DATA_PERM_ORG_CODE IS NOT NULL, concat("AND ORG_CODE like '", P_DATA_PERM_ORG_CODE, "%'"), " "));
+    SET V_WHERE = concat(V_WHERE, char(10), if(P_DATA_PERM_ORG_CODE IS NOT NULL, concat("AND o.ORG_CODE like '", P_DATA_PERM_ORG_CODE, "%'"), " "));
 
 
     SET @ORG = replace(V_SQL, "<<:filter:>>", V_WHERE);
@@ -50,7 +50,6 @@ BEGIN
     SET V_WHERE = " ";
     SET V_WHERE = concat(V_WHERE, char(10), if(P_BUREAU_CODE IS NOT NULL, concat("AND ORG_CODE LIKE '", P_BUREAU_CODE, "%'"), " "));
     SET V_WHERE = concat(V_WHERE, char(10), if(P_ORG_CODE IS NOT NULL, concat("AND ORG_CODE = '", P_ORG_CODE, "'"), " "));
-    SET V_WHERE = concat(V_WHERE, char(10), if(P_DATA_PERM_ORG_CODE IS NOT NULL, concat("AND org_code like '", P_DATA_PERM_ORG_CODE, "%'"), " "));
     SET @SMS = replace(V_SQL, "<<:filter:>>", V_WHERE);
 
     DROP TABLE IF EXISTS WV_SMS;
