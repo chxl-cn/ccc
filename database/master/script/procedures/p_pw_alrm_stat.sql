@@ -69,6 +69,29 @@ BEGIN
     DEALLOCATE PREPARE STMT_ALARM;
 
     #4
+    DROP TABLE IF EXISTS wv_sms_ds;
+    DROP TABLE IF EXISTS wv_sms_ln;
+
+    CREATE TABLE wv_sms_ds
+        ENGINE MEMORY
+        SELECT locomotive_code, count(*) AS rtds
+            FROM (
+                 SELECT locomotive_code, date(detect_time) AS rt
+                     FROM wv_sms
+                     GROUP BY locomotive_code
+                            , date(detect_time)
+                 ) tt;
+
+    CREATE TABLE wv_sms_ln
+        ENGINE MEMORY
+        SELECT locomotive_code, group_concat(line_code) AS line_code
+            FROM (
+                 SELECT locomotive_code, line_code AS line_code
+                     FROM wv_sms
+                     GROUP BY locomotive_code
+                            , line_code
+                 ) tt;
+
 
     CALL p_get_mod_sql('p_pw_alrm_stat', 4, V_SQL);
     SET @ST1 = V_SQL;
