@@ -85,7 +85,7 @@ BEGIN
 
     CREATE TABLE wv_sms_ln
         ENGINE MEMORY
-        SELECT locomotive_code, group_concat(line_code) AS line_code
+        SELECT locomotive_code, cast(group_concat(line_code) as CHAR(1000)) AS line_code
             FROM (
                  SELECT locomotive_code, line_code AS line_code
                      FROM wv_sms
