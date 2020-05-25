@@ -1,89 +1,92 @@
 DELIMITER  ;
-DROP PROCEDURE IF EXISTS p_pw_alrm_stat;
+DROP PROCEDURE IF EXISTS `P_PW_ALRM_STAT`;
 
 DELIMITER //
 
-CREATE PROCEDURE p_pw_alrm_stat(IN p_bureau_code VARCHAR(100)
-                               , IN p_org_code   VARCHAR(100)
-                               , IN p_start_date DATETIME
-                               , IN p_end_date   DATETIME
-                               , IN p_data_perm_org_code  VARCHAR(100)
-                               )
+CREATE PROCEDURE `P_PW_ALRM_STAT`
+    (
+        IN `P_BUREAU_CODE`        VARCHAR(100)
+    ,   IN `P_ORG_CODE`           VARCHAR(100)
+    ,   IN `P_START_DATE`         DATETIME
+    ,   IN `P_END_DATE`           DATETIME
+    ,   IN `P_DATA_PERM_ORG_CODE` VARCHAR(100)
+    )
 BEGIN
-    DECLARE v_sql,v_where TEXT;
+    DECLARE `V_SQL`,`V_WHERE` TEXT;
 
     SET max_heap_table_size = 17179869184;
 
     SET group_concat_max_len = 10240;
 
-    DROP TABLE IF EXISTS wv_org;
+    DROP TABLE IF EXISTS `WV_ORG`;
 
-    CALL p_get_mod_sql('p_pw_alrm_stat', 1, v_sql);
+    CALL p_get_mod_sql('p_pw_alrm_stat', 1, `V_SQL`);
 
-    SET v_where = " ";
-    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, concat("and sup_org_code='", p_bureau_code, "'"), " "));
-    SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, concat("and org_code='", p_org_code, "'"), " "));
+    SET `V_WHERE` = " ";
+    SET `V_WHERE` = concat(`V_WHERE`, char(10), if(`P_BUREAU_CODE` IS NOT NULL, concat("AND SUP_ORG_CODE='", `P_BUREAU_CODE`, "'"), " "));
+    SET `V_WHERE` = concat(`V_WHERE`, char(10), if(`P_ORG_CODE` IS NOT NULL, concat("AND ORG_CODE='", `P_ORG_CODE`, "'"), " "));
 
-    SET @org = replace(v_sql, "<<:filter:>>", v_where);
-    PREPARE stmt_org FROM @org;
-    EXECUTE stmt_org;
-    DEALLOCATE PREPARE stmt_org;
-
-
-    DROP TABLE IF EXISTS wv_alt;
-
-    CREATE TEMPORARY TABLE wv_alt ENGINE MEMORY
-    SELECT dic_code, if(dic_code = 'AFTEMPDIFF', 'AFOCL', p_code) p_code
-    FROM sys_dic d
-    WHERE p_code IN ('AFBOWNET', 'AFJHCS', 'AFOCL');
+    SET @`ORG` = replace(`V_SQL`, "<<:FILTER:>>", `V_WHERE`);
+    PREPARE `STMT_ORG` FROM @`ORG`;
+    EXECUTE `STMT_ORG`;
+    DEALLOCATE PREPARE `STMT_ORG`;
 
 
-    SET @sd = p_start_date;
-    SET @ed = p_end_date;
+    DROP TABLE IF EXISTS `WV_ALT`;
 
-    CALL p_get_mod_sql('p_pw_alrm_stat', 2, v_sql);
-    SET v_where = " ";
-    SET v_where = concat(v_where, char(10), if(p_bureau_code IS NOT NULL, concat("and org_code like '", p_bureau_code, "%'"), " "));
-    SET v_where = concat(v_where, char(10), if(p_org_code IS NOT NULL, concat("and org_code = '", p_org_code, "'"), " "));
-    SET v_where = concat(v_where, char(10), if(p_data_perm IS NOT NULL, concat("and ", p_data_perm), " "));
-    SET @sms = replace(v_sql, "<<:filter:>>", v_where);
-
-    DROP TABLE IF EXISTS wv_sms;
-    PREPARE stmt_sms FROM @sms;
-    EXECUTE stmt_sms USING @sd,@ed;
-    DEALLOCATE PREPARE stmt_sms;
+    CREATE TEMPORARY TABLE `WV_ALT`
+        ENGINE MEMORY
+        SELECT `DIC_CODE`, if(`DIC_CODE` = 'AFTEMPDIFF', 'AFOCL', `P_CODE`) AS `P_CODE`
+            FROM `SYS_DIC` `D`
+            WHERE `P_CODE` IN ( 'AFBOWNET' , 'AFJHCS' , 'AFOCL' );
 
 
-    CALL p_get_mod_sql('p_pw_alrm_stat', 3, v_sql);
-    SET @alarm = replace(v_sql, "<<:filter:>>", v_where);
+    SET @`SD` = `P_START_DATE`;
+    SET @`ED` = `P_END_DATE`;
 
-    DROP TABLE IF EXISTS wv_alarm;
-    PREPARE stmt_alarm FROM @alarm;
-    EXECUTE stmt_alarm USING @sd,@ed;
-    DEALLOCATE PREPARE stmt_alarm;
+    CALL p_get_mod_sql('p_pw_alrm_stat', 2, `V_SQL`);
+    SET `V_WHERE` = " ";
+    SET `V_WHERE` = concat(`V_WHERE`, char(10), if(`P_BUREAU_CODE` IS NOT NULL, concat("AND ORG_CODE LIKE '", `P_BUREAU_CODE`, "%'"), " "));
+    SET `V_WHERE` = concat(`V_WHERE`, char(10), if(`P_ORG_CODE` IS NOT NULL, concat("AND ORG_CODE = '", `P_ORG_CODE`, "'"), " "));
+    SET `V_WHERE` = concat(`V_WHERE`, char(10), if(`P_DATA_PERM` IS NOT NULL, concat("AND ", `P_DATA_PERM`), " "));
+    SET @`SMS` = replace(`V_SQL`, "<<:FILTER:>>", `V_WHERE`);
+
+    DROP TABLE IF EXISTS `WV_SMS`;
+    PREPARE `STMT_SMS` FROM @`SMS`;
+    EXECUTE `STMT_SMS` USING @`SD`,@`ED`;
+    DEALLOCATE PREPARE `STMT_SMS`;
+
+
+    CALL p_get_mod_sql('p_pw_alrm_stat', 3, `V_SQL`);
+    SET @`ALARM` = replace(`V_SQL`, "<<:FILTER:>>", `V_WHERE`);
+
+    DROP TABLE IF EXISTS `WV_ALARM`;
+    PREPARE `STMT_ALARM` FROM @`ALARM`;
+    EXECUTE `STMT_ALARM` USING @`SD`,@`ED`;
+    DEALLOCATE PREPARE `STMT_ALARM`;
 
     #4
 
-    CALL p_get_mod_sql('p_pw_alrm_stat', 4, v_sql);
-    SET @st1 = v_sql;
-    PREPARE stmt_st1 FROM @st1;
-    EXECUTE stmt_st1;
-    DEALLOCATE PREPARE stmt_st1;
+    CALL p_get_mod_sql('p_pw_alrm_stat', 4, `V_SQL`);
+    SET @`ST1` = `V_SQL`;
+    PREPARE `STMT_ST1` FROM @`ST1`;
+    EXECUTE `STMT_ST1`;
+    DEALLOCATE PREPARE `STMT_ST1`;
 
     #5
-    CALL p_get_mod_sql('p_pw_alrm_stat', 5, v_sql);
-    SET @st2 = v_sql;
-    PREPARE stmt_st2 FROM @st2;
-    EXECUTE stmt_st2;
-    DEALLOCATE PREPARE stmt_st2;
+    CALL p_get_mod_sql('p_pw_alrm_stat', 5, `V_SQL`);
+    SET @`ST2` = `V_SQL`;
+    PREPARE `STMT_ST2` FROM @`ST2`;
+    EXECUTE `STMT_ST2`;
+    DEALLOCATE PREPARE `STMT_ST2`;
 
 
     #6
-    CALL p_get_mod_sql('p_pw_alrm_stat', 6, v_sql);
-    SET @st3 = v_sql;
-    PREPARE stmt_st3 FROM @st3;
-    EXECUTE stmt_st3;
-    DEALLOCATE PREPARE stmt_st3;
+    CALL p_get_mod_sql('p_pw_alrm_stat', 6, `V_SQL`);
+    SET @`ST3` = `V_SQL`;
+    PREPARE `STMT_ST3` FROM @`ST3`;
+    EXECUTE `STMT_ST3`;
+    DEALLOCATE PREPARE `STMT_ST3`;
 
 END //
 
