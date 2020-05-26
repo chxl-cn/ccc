@@ -277,33 +277,32 @@ ORDER BY detect_time DESC
 
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_alarm_3c_stat', 1, 'CREATE TEMPORARY TABLE t_alarm_3c_stat ENGINE MEMORY
-SELECT cast(detect_device_code AS CHAR(40))                                  detect_device_code,
-       date_format(t1.raised_time, ''%Y/%m/%d'') AS                            day,
-       if(count(*) = 0 , ''正常'' , ''异常'')                                    status,
-       count(*)                                                              count,
-       sum(if(severity = ''一类'', 1, 0))                                      yl,
-       sum(if(severity = ''二类'', 1, 0))                                      el,
-       sum(if(severity = ''三类'', 1, 0))                                      sl,
-       sum(if(t1.code = ''JUDGING'', 1, 0))                                    dpd,
-       sum(if(t1.code = ''AFBOWHOT'', 1, 0))                                   sdgfr,
-       sum(if(t1.code = ''AFELINKHOT'', 1, 0))                                 dljxfr,
-       sum(if(t1.code = ''AFBOWERROR'', 1, 0))                                 sdgyc,
-       sum(if(t1.code = ''AFSOFTLINKHOT'', 1, 0))                              rljxfr,
-       sum(if(t1.code = ''AFDXHOT'', 1, 0))                                    dxfr,
-       sum(if(t1.code = ''AFJUZHOT'', 1, 0))                                   jyzfr,
-       sum(if(t1.code = ''AFXJHOT'', 1, 0))                                    xjfr,
-       sum(if(t1.code = ''AFHLXHOT'', 1, 0))                                   hlxfr,
-       sum(if(t1.code = ''AFJZXHOT'', 1, 0))                                   jcxfr,
-       sum(if(t1.code = ''AFLF'', 1, 0))                                       lh,
-       sum(if(t1.code = ''AFGDWDLF'', 1, 0))                                   gdwdslh,
-       sum(if(t1.code = ''YSGJYQLF'', 1, 0))                                   gjyqslh,
-       sum(if(t1.code IN (''AFGDWDLF'', ''YSGJYQLF'', ''AFGXJLF'', ''AFLF''), 1, 0)) gwqx,
-       sum(if(t1.code = ''AFGXJLF'', 1, 0))                                    gxjslh
+SELECT cast(detect_device_code AS CHAR(40))                       detect_device_code,
+       date_format(t1.raised_time, ''%Y/%m/%d'') AS                 day,
+       CASE WHEN count(*) = 0 THEN ''正常'' ELSE ''异常'' END          status,
+       count(*)                                                   count,
+       sum(CASE WHEN severity = ''一类'' THEN 1 ELSE 0 END)           yl,
+       sum(CASE WHEN severity = ''二类'' THEN 1 ELSE 0 END)           el,
+       sum(CASE WHEN severity = ''三类'' THEN 1 ELSE 0 END)           sl,
+       sum(CASE WHEN t1.code = ''JUDGING'' THEN 1 ELSE 0 END)       dpd,
+       sum(CASE WHEN t1.code = ''AFBOWHOT'' THEN 1 ELSE 0 END)      sdgfr,
+       sum(CASE WHEN t1.code = ''AFELINKHOT'' THEN 1 ELSE 0 END)    dljxfr,
+       sum(CASE WHEN t1.code = ''AFBOWERROR'' THEN 1 ELSE 0 END)    sdgyc,
+       sum(CASE WHEN t1.code = ''AFSOFTLINKHOT'' THEN 1 ELSE 0 END) rljxfr,
+       sum(CASE WHEN t1.code = ''AFDXHOT'' THEN 1 ELSE 0 END)       dxfr,
+       sum(CASE WHEN t1.code = ''AFJUZHOT'' THEN 1 ELSE 0 END)      jyzfr,
+       sum(CASE WHEN t1.code = ''AFXJHOT'' THEN 1 ELSE 0 END)       xjfr,
+       sum(CASE WHEN t1.code = ''AFHLXHOT'' THEN 1 ELSE 0 END)      hlxfr,
+       sum(CASE WHEN t1.code = ''AFJZXHOT'' THEN 1 ELSE 0 END)      jcxfr,
+       sum(CASE WHEN t1.code = ''AFLF'' THEN 1 ELSE 0 END)          lh,
+       sum(CASE WHEN t1.code = ''AFGDWDLF'' THEN 1 ELSE 0 END)      gdwdslh,
+       sum(CASE WHEN t1.code = ''YSGJYQLF'' THEN 1 ELSE 0 END)      gjyqslh,
+       sum(CASE WHEN t1.code = ''弓网缺陷'' THEN 1 ELSE 0 END)          gwqx,
+       sum(CASE WHEN t1.code = ''AFGXJLF'' THEN 1 ELSE 0 END)       gxjslh
 FROM alarm t1
 WHERE category_code = ''3C''
   AND status != ''AFSTATUS02''
   AND t1.data_type = ''FAULT''
-  AND severity != ''三类''
   AND raised_time BETWEEN ? AND ?
   <<:filter:>>
 GROUP BY detect_device_code,
@@ -647,7 +646,6 @@ WHERE a.raised_time BETWEEN ? AND ?
 
 INSERT INTO mis_mod_sql (mod_name, sql_no, sql_text) VALUES ('p_pw_alrm_stat', 4, 'SELECT sup_org_code,
        cast(NULL AS CHAR(40)) sup_org_name,
-       l.org_code,
        cast(NULL AS CHAR(40)) org_name,
        l.locomotive_code,
        l.line_code,
