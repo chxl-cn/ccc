@@ -54,15 +54,12 @@ BEGIN
            ifnull(sum(el), 0)
     FROM t_alarm_3c_stat;
 
-    /*
     INSERT INTO t_alarm_3c_stat_lvl
     SELECT '三类',
            3,
            ifnull(sum(sl), 0)
     FROM t_alarm_3c_stat;
 
-
-     */
     SELECT *
     FROM (SELECT jbmc,
                  cnt,
