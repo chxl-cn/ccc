@@ -1,0 +1,3 @@
+﻿INSERT INTO `xt_dbconfig` VALUES ('2019_db', 2, NULL, '2005-01-01 00:00:00', '2120-12-31 23:59:59', '2020-05-07 11:27:00', 0, 'mysql', 'Database=train6c;Data Source=192.168.100.101;User Id=nhs3c;Password=EzW3Ngh8mH3d;CharSet=utf8;port=3306', '2018历史库', 2);
+INSERT INTO `xt_dbconfig` VALUES ('2020_db', 2, NULL, '2005-01-01 00:00:00', '2120-12-31 23:59:59', '2020-05-07 11:27:00', 0, 'mysql', 'Database=train6c;Data Source=192.168.100.101;User Id=nhs3c;Password=EzW3Ngh8mH3d;CharSet=utf8;port=3306', '2019历史库', 1);
+INSERT INTO `xt_dbconfig` VALUES ('default_db', 0, 100, NULL, NULL, '2020-05-07 11:27:00', 0, 'mysql', 'Database=train6c;Data Source=192.168.100.101;User Id=nhs3c;Password=EzW3Ngh8mH3d;CharSet=utf8;port=3306', '实时库', 0);
