@@ -1,4 +1,4 @@
-CREATE TABLE `xt_dbconfig`
+﻿CREATE TABLE `xt_dbconfig`
 (
     `name`           varchar(31) NOT NULL,
     `usetype`        int(11) COMMENT '数据库用途：0仅读 1仅写 2读写，一般实时库仅写，历史库仅读，特殊情况下实时库可以读写',
