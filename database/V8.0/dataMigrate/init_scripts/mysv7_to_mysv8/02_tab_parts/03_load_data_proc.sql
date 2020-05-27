@@ -6,9 +6,11 @@ DROP PROCEDURE IF EXISTS p_load_data_proc;
  p_sort :0 历史，1 增量
  */
 DELIMITER  //
-CREATE PROCEDURE p_load_data_proc(p_date  DATETIME
-                                 , p_sort TINYINT
-                                 )
+CREATE PROCEDURE p_load_data_proc
+    (
+        p_date DATETIME
+    ,   p_sort TINYINT
+    )
 BEGIN
     DECLARE v_aux_sql,v_img_sql,v_aa_sql,v_ac_sql TEXT;
     DECLARE v_opt,v_dt VARCHAR(20);
@@ -18,8 +20,8 @@ BEGIN
 
     SET v_aux_sql = concat("INSERT INTO alarm_aux_pold SELECT * FROM alarm_aux x WHERE x.raised_time_aux  ", v_opt, v_dt);
     SET v_img_sql = concat("INSERT INTO alarm_img_data_pold  SELECT * FROM alarm_img_data d WHERE d.raise_time  ", v_opt, v_dt);
-    SET v_aa_sql = concat("INSERT INTO nos_aa_pnew  SELECT * FROM nos_aa a WHERE a.INPUTDATE  ", v_opt, v_dt);
-    SET v_ac_sql = concat("INSERT INTO nos_ac_pnew SELECT * FROM nos_ac c WHERE c.INPUTDATE  ", v_opt, v_dt);
+    #SET v_aa_sql = concat("INSERT INTO nos_aa_pnew  SELECT * FROM nos_aa a WHERE a.INPUTDATE  ", v_opt, v_dt);
+    #SET v_ac_sql = concat("INSERT INTO nos_ac_pnew SELECT * FROM nos_ac c WHERE c.INPUTDATE  ", v_opt, v_dt);
 
     SET @stmt = v_aux_sql;
     PREPARE stmt FROM @stmt;
@@ -31,15 +33,31 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @stmt = v_aa_sql;
-    PREPARE stmt FROM @stmt;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+    IF p_sort = 0
+    THEN
+        INSERT INTO nos_aa_pnew SELECT * FROM nos_aa;
+        INSERT INTO nos_ac_pnew SELECT * FROM nos_ac;
+        DELETE FROM nos_aa_pnew WHERE INPUTDATE >= v_dt;
+        DELETE FROM nos_ac_pnew WHERE INPUTDATE >= v_dt;
 
-    SET @stmt = v_ac_sql;
-    PREPARE stmt FROM @stmt;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+    ELSE
+        DROP TABLE IF EXISTS taa_ids;
+        CREATE TABLE taa_ids
+            SELECT *
+                FROM alarm
+                WHERE raised_time >= v_dt;
+        INSERT INTO nos_aa_pnew SELECT * FROM nos_aa a WHERE exists(SELECT NULL FROM taa_ids i WHERE a.ID = i.id);
+        DROP TABLE IF EXISTS taa_ids;
+
+        DROP TABLE IF EXISTS tac_ids;
+        CREATE TABLE tac_ids
+            SELECT id
+                FROM c3_sms
+                WHERE detect_time >= v_dt;
+
+        INSERT INTO nos_ac_pnew SELECT * FROM nos_ac c WHERE exists(SELECT NULL FROM tac_ids i WHERE c.id = i.id);
+        DROP TABLE IF EXISTS tac_ids;
+    END IF;
 
     BEGIN
         DECLARE v_alarm_sql TEXT;
@@ -230,7 +248,8 @@ BEGIN
         SET @stmt_insert_tmp_alarm = concat('insert into tmp_mg_alarm ', v_alarm_sql);
         PREPARE stmt_insert_tmp_alarm FROM @stmt_insert_tmp_alarm;
 
-        IF p_sort = 1 THEN
+        IF p_sort = 1
+        THEN
             SET v_ed = p_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
@@ -242,7 +261,8 @@ BEGIN
 
         lb_alarm :
         LOOP
-            IF v_sd >= v_ov THEN
+            IF v_sd >= v_ov
+            THEN
                 LEAVE lb_alarm;
             END IF;
 
@@ -254,328 +274,334 @@ BEGIN
             EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
 
 
-            INSERT INTO alarm_pnew(id,
-                                   vendor,
-                                   category_code,
-                                   detect_device_code,
-                                   data_type,
-                                   dvalue1,
-                                   dvalue2,
-                                   dvalue3,
-                                   dvalue4,
-                                   dvalue5,
-                                   nvalue1,
-                                   nvalue2,
-                                   nvalue3,
-                                   nvalue4,
-                                   nvalue5,
-                                   nvalue6,
-                                   nvalue8,
-                                   nvalue13,
-                                   nvalue14,
-                                   nvalue15,
-                                   nvalue16,
-                                   created_time,
-                                   raised_time,
-                                   report_date,
-                                   status_time,
-                                   report_person,
-                                   is_typical,
-                                   severity,
-                                   status,
-                                   code,
-                                   cust_alarm_code,
-                                   p_org_code,
-                                   svalue8,
-                                   svalue14,
-                                   svalue15,
-                                   km_mark,
-                                   pole_number,
-                                   brg_tun_code,
-                                   position_code,
-                                   direction,
-                                   line_code,
-                                   org_code,
-                                   workshop_code,
-                                   power_section_code,
-                                   bureau_code,
-                                   alarm_analysis,
-                                   task_id,
-                                   tax_monitor_status,
-                                   routing_no,
-                                   area_no,
-                                   station_no,
-                                   source,
-                                   eoas_direction,
-                                   eoas_km,
-                                   eoas_location,
-                                   eoas_time,
-                                   eoas_train_speed,
-                                   raised_time_m,
-                                   tax_position,
-                                   tax_schedule_status,
-                                   pos_confirmed,
-                                   is_customer_ana,
-                                   org_file_location,
-                                   pic_file_location,
-                                   summary,
-                                   repair_date,
-                                   isdayreport,
-                                   isexportreport,
-                                   lock_person_id,
-                                   is_trans_allowed,
-                                   acflag_code,
-                                   sample_code,
-                                   scencesample_code,
-                                   accesscount,
-                                   initial_code,
-                                   aflg_code,
-                                   algcode,
-                                   reportwordstatus,
-                                   rerun_type,
-                                   spark_elapse,
-                                   isblackcenter,
-                                   dev_type_ana,
-                                   spart_pixel_pct,
-                                   spart_pixels,
-                                   gray_avg_left,
-                                   gray_avg_right,
-                                   gray_avg_bow_rect,
-                                   spark_shape,
-                                   spark_num,
-                                   device_id,
-                                   eoas_trainno,
-                                   alarm_rep_count,
-                                   sample_detail_code,
-                                   valid_gps,
-                                   initial_severity,
-                                   process_status)
-            SELECT id,
-                   vendor,
-                   category_code,
-                   detect_device_code,
-                   data_type,
-                   dvalue1,
-                   dvalue2,
-                   dvalue3,
-                   dvalue4,
-                   dvalue5,
-                   nvalue1,
-                   nvalue2,
-                   nvalue3,
-                   nvalue4,
-                   nvalue5,
-                   nvalue6,
-                   nvalue8,
-                   nvalue13,
-                   nvalue14,
-                   nvalue15,
-                   nvalue16,
-                   created_time,
-                   raised_time,
-                   report_date,
-                   status_time,
-                   report_person,
-                   is_typical,
-                   severity,
-                   status,
-                   code,
-                   cust_alarm_code,
-                   p_org_code,
-                   svalue8,
-                   svalue14,
-                   svalue15,
-                   km_mark,
-                   pole_number,
-                   brg_tun_code,
-                   position_code,
-                   direction,
-                   line_code,
-                   org_code,
-                   workshop_code,
-                   power_section_code,
-                   bureau_code,
-                   alarm_analysis,
-                   task_id,
-                   tax_monitor_status,
-                   routing_no,
-                   area_no,
-                   station_no,
-                   source,
-                   eoas_direction,
-                   eoas_km,
-                   eoas_location,
-                   eoas_time,
-                   eoas_train_speed,
-                   raised_time_m,
-                   tax_position,
-                   tax_schedule_status,
-                   pos_confirmed,
-                   is_customer_ana,
-                   org_file_location,
-                   pic_file_location,
-                   summary,
-                   repair_date,
-                   isdayreport,
-                   isexportreport,
-                   lock_person_id,
-                   is_trans_allowed,
-                   acflag_code,
-                   sample_code,
-                   scencesample_code,
-                   accesscount,
-                   initial_code,
-                   aflg_code,
-                   algcode,
-                   reportwordstatus,
-                   rerun_type,
-                   spark_elapse,
-                   isblackcenter,
-                   dev_type_ana,
-                   spart_pixel_pct,
-                   spart_pixels,
-                   gray_avg_left,
-                   gray_avg_right,
-                   gray_avg_bow_rect,
-                   spark_shape,
-                   spark_num,
-                   device_id,
-                   eoas_trainno,
-                   alarm_rep_count,
-                   sample_detail_code,
-                   valid_gps,
-                   initial_severity,
-                   process_status
-            FROM tmp_mg_alarm;
+            INSERT
+                INTO alarm_pnew(
+                                 id
+                               , vendor
+                               , category_code
+                               , detect_device_code
+                               , data_type
+                               , dvalue1
+                               , dvalue2
+                               , dvalue3
+                               , dvalue4
+                               , dvalue5
+                               , nvalue1
+                               , nvalue2
+                               , nvalue3
+                               , nvalue4
+                               , nvalue5
+                               , nvalue6
+                               , nvalue8
+                               , nvalue13
+                               , nvalue14
+                               , nvalue15
+                               , nvalue16
+                               , created_time
+                               , raised_time
+                               , report_date
+                               , status_time
+                               , report_person
+                               , is_typical
+                               , severity
+                               , status
+                               , code
+                               , cust_alarm_code
+                               , p_org_code
+                               , svalue8
+                               , svalue14
+                               , svalue15
+                               , km_mark
+                               , pole_number
+                               , brg_tun_code
+                               , position_code
+                               , direction
+                               , line_code
+                               , org_code
+                               , workshop_code
+                               , power_section_code
+                               , bureau_code
+                               , alarm_analysis
+                               , task_id
+                               , tax_monitor_status
+                               , routing_no
+                               , area_no
+                               , station_no
+                               , source
+                               , eoas_direction
+                               , eoas_km
+                               , eoas_location
+                               , eoas_time
+                               , eoas_train_speed
+                               , raised_time_m
+                               , tax_position
+                               , tax_schedule_status
+                               , pos_confirmed
+                               , is_customer_ana
+                               , org_file_location
+                               , pic_file_location
+                               , summary
+                               , repair_date
+                               , isdayreport
+                               , isexportreport
+                               , lock_person_id
+                               , is_trans_allowed
+                               , acflag_code
+                               , sample_code
+                               , scencesample_code
+                               , accesscount
+                               , initial_code
+                               , aflg_code
+                               , algcode
+                               , reportwordstatus
+                               , rerun_type
+                               , spark_elapse
+                               , isblackcenter
+                               , dev_type_ana
+                               , spart_pixel_pct
+                               , spart_pixels
+                               , gray_avg_left
+                               , gray_avg_right
+                               , gray_avg_bow_rect
+                               , spark_shape
+                               , spark_num
+                               , device_id
+                               , eoas_trainno
+                               , alarm_rep_count
+                               , sample_detail_code
+                               , valid_gps
+                               , initial_severity
+                               , process_status
+                )
+            SELECT id
+                 , vendor
+                 , category_code
+                 , detect_device_code
+                 , data_type
+                 , dvalue1
+                 , dvalue2
+                 , dvalue3
+                 , dvalue4
+                 , dvalue5
+                 , nvalue1
+                 , nvalue2
+                 , nvalue3
+                 , nvalue4
+                 , nvalue5
+                 , nvalue6
+                 , nvalue8
+                 , nvalue13
+                 , nvalue14
+                 , nvalue15
+                 , nvalue16
+                 , created_time
+                 , raised_time
+                 , report_date
+                 , status_time
+                 , report_person
+                 , is_typical
+                 , severity
+                 , status
+                 , code
+                 , cust_alarm_code
+                 , p_org_code
+                 , svalue8
+                 , svalue14
+                 , svalue15
+                 , km_mark
+                 , pole_number
+                 , brg_tun_code
+                 , position_code
+                 , direction
+                 , line_code
+                 , org_code
+                 , workshop_code
+                 , power_section_code
+                 , bureau_code
+                 , alarm_analysis
+                 , task_id
+                 , tax_monitor_status
+                 , routing_no
+                 , area_no
+                 , station_no
+                 , source
+                 , eoas_direction
+                 , eoas_km
+                 , eoas_location
+                 , eoas_time
+                 , eoas_train_speed
+                 , raised_time_m
+                 , tax_position
+                 , tax_schedule_status
+                 , pos_confirmed
+                 , is_customer_ana
+                 , org_file_location
+                 , pic_file_location
+                 , summary
+                 , repair_date
+                 , isdayreport
+                 , isexportreport
+                 , lock_person_id
+                 , is_trans_allowed
+                 , acflag_code
+                 , sample_code
+                 , scencesample_code
+                 , accesscount
+                 , initial_code
+                 , aflg_code
+                 , algcode
+                 , reportwordstatus
+                 , rerun_type
+                 , spark_elapse
+                 , isblackcenter
+                 , dev_type_ana
+                 , spart_pixel_pct
+                 , spart_pixels
+                 , gray_avg_left
+                 , gray_avg_right
+                 , gray_avg_bow_rect
+                 , spark_shape
+                 , spark_num
+                 , device_id
+                 , eoas_trainno
+                 , alarm_rep_count
+                 , sample_detail_code
+                 , valid_gps
+                 , initial_severity
+                 , process_status
+                FROM tmp_mg_alarm;
 
-            INSERT INTO alarm_aux_pnew(alarm_id,
-                                       bmi_file_name,
-                                       rpt_file_name,
-                                       bow_offset,
-                                       gps_body_direction,
-                                       img_body_direction,
-                                       reportwordurl,
-                                       lock_person_name,
-                                       lock_time,
-                                       confidence_level,
-                                       raised_time_aux,
-                                       is_abnormal,
-                                       svalue6,
-                                       svalue7,
-                                       svalue10,
-                                       svalue12,
-                                       svalue13,
-                                       alarm_reason,
-                                       airesult,
-                                       remark,
-                                       trans_info,
-                                       dev_name,
-                                       station_name,
-                                       process_deptname,
-                                       report_deptname,
-                                       plan_id,
-                                       plan_task_id,
-                                       process_date,
-                                       process_details,
-                                       process_overdue,
-                                       process_person,
-                                       process_type,
-                                       profession_type,
-                                       repaired_pic,
-                                       repaired_status,
-                                       repair_method,
-                                       repair_org,
-                                       repair_person,
-                                       report_overdue,
-                                       review_info,
-                                       review_person,
-                                       review_time,
-                                       check_details,
-                                       check_person,
-                                       check_result,
-                                       harddisk_manage_id,
-                                       attachment,
-                                       comp_code,
-                                       comp_type,
-                                       nvalue7,
-                                       nvalue9,
-                                       nvalue11,
-                                       nvalue12,
-                                       nvalue17,
-                                       nvalue18,
-                                       nvalue19,
-                                       nvalue20,
-                                       power_device_code,
-                                       power_device_type,
-                                       substation_code,
-                                       map_add_ima,
-                                       vi_add_ima,
-                                       oa_add_ima)
-            SELECT alarm_id,
-                   bmi_file_name,
-                   rpt_file_name,
-                   bow_offset,
-                   gps_body_direction,
-                   img_body_direction,
-                   reportwordurl,
-                   lock_person_name,
-                   lock_time,
-                   confidence_level,
-                   raised_time_aux,
-                   is_abnormal,
-                   svalue6,
-                   svalue7,
-                   svalue10,
-                   svalue12,
-                   svalue13,
-                   alarm_reason,
-                   airesult,
-                   remark,
-                   trans_info,
-                   dev_name,
-                   station_name,
-                   process_deptname,
-                   report_deptname,
-                   plan_id,
-                   plan_task_id,
-                   process_date,
-                   process_details,
-                   process_overdue,
-                   process_person,
-                   process_type,
-                   profession_type,
-                   repaired_pic,
-                   repaired_status,
-                   repair_method,
-                   repair_org,
-                   repair_person,
-                   report_overdue,
-                   review_info,
-                   review_person,
-                   review_time,
-                   check_details,
-                   check_person,
-                   check_result,
-                   harddisk_manage_id,
-                   attachment,
-                   comp_code,
-                   comp_type,
-                   nvalue7,
-                   nvalue9,
-                   nvalue11,
-                   nvalue12,
-                   nvalue17,
-                   nvalue18,
-                   nvalue19,
-                   nvalue20,
-                   power_device_code,
-                   power_device_type,
-                   substation_code,
-                   map_add_ima,
-                   vi_add_ima,
-                   oa_add_ima
+            INSERT
+                INTO alarm_aux_pnew(
+                                     alarm_id
+                                   , bmi_file_name
+                                   , rpt_file_name
+                                   , bow_offset
+                                   , gps_body_direction
+                                   , img_body_direction
+                                   , reportwordurl
+                                   , lock_person_name
+                                   , lock_time
+                                   , confidence_level
+                                   , raised_time_aux
+                                   , is_abnormal
+                                   , svalue6
+                                   , svalue7
+                                   , svalue10
+                                   , svalue12
+                                   , svalue13
+                                   , alarm_reason
+                                   , airesult
+                                   , remark
+                                   , trans_info
+                                   , dev_name
+                                   , station_name
+                                   , process_deptname
+                                   , report_deptname
+                                   , plan_id
+                                   , plan_task_id
+                                   , process_date
+                                   , process_details
+                                   , process_overdue
+                                   , process_person
+                                   , process_type
+                                   , profession_type
+                                   , repaired_pic
+                                   , repaired_status
+                                   , repair_method
+                                   , repair_org
+                                   , repair_person
+                                   , report_overdue
+                                   , review_info
+                                   , review_person
+                                   , review_time
+                                   , check_details
+                                   , check_person
+                                   , check_result
+                                   , harddisk_manage_id
+                                   , attachment
+                                   , comp_code
+                                   , comp_type
+                                   , nvalue7
+                                   , nvalue9
+                                   , nvalue11
+                                   , nvalue12
+                                   , nvalue17
+                                   , nvalue18
+                                   , nvalue19
+                                   , nvalue20
+                                   , power_device_code
+                                   , power_device_type
+                                   , substation_code
+                                   , map_add_ima
+                                   , vi_add_ima
+                                   , oa_add_ima
+                )
+            SELECT alarm_id
+                 , bmi_file_name
+                 , rpt_file_name
+                 , bow_offset
+                 , gps_body_direction
+                 , img_body_direction
+                 , reportwordurl
+                 , lock_person_name
+                 , lock_time
+                 , confidence_level
+                 , raised_time_aux
+                 , is_abnormal
+                 , svalue6
+                 , svalue7
+                 , svalue10
+                 , svalue12
+                 , svalue13
+                 , alarm_reason
+                 , airesult
+                 , remark
+                 , trans_info
+                 , dev_name
+                 , station_name
+                 , process_deptname
+                 , report_deptname
+                 , plan_id
+                 , plan_task_id
+                 , process_date
+                 , process_details
+                 , process_overdue
+                 , process_person
+                 , process_type
+                 , profession_type
+                 , repaired_pic
+                 , repaired_status
+                 , repair_method
+                 , repair_org
+                 , repair_person
+                 , report_overdue
+                 , review_info
+                 , review_person
+                 , review_time
+                 , check_details
+                 , check_person
+                 , check_result
+                 , harddisk_manage_id
+                 , attachment
+                 , comp_code
+                 , comp_type
+                 , nvalue7
+                 , nvalue9
+                 , nvalue11
+                 , nvalue12
+                 , nvalue17
+                 , nvalue18
+                 , nvalue19
+                 , nvalue20
+                 , power_device_code
+                 , power_device_type
+                 , substation_code
+                 , map_add_ima
+                 , vi_add_ima
+                 , oa_add_ima
 
-            FROM tmp_mg_alarm;
+                FROM tmp_mg_alarm;
 
 
             SET v_sd = v_ed;
@@ -752,7 +778,8 @@ BEGIN
               AND detect_time < ?
             ";
 
-        IF p_sort = 1 THEN
+        IF p_sort = 1
+        THEN
             SET v_ed = p_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
@@ -769,7 +796,8 @@ BEGIN
 
         lb_sms :
         LOOP
-            IF v_sd >= v_ov THEN
+            IF v_sd >= v_ov
+            THEN
                 LEAVE lb_sms;
             END IF;
 
