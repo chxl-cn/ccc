@@ -1,0 +1,63 @@
+[{
+		"BaseInfo": {
+			"LineName": "京哈线",
+			"Direction": "上行",
+			"St": "秦皇岛",
+			"BridgeTunnel": "某桥隧",
+			"PoleNo": "2044",
+			"KM": 297690,
+			"Date": "2020-01-01 5:13:09 667",
+			"TrainNo": "CRH2A-5021",
+			"Seat": 3
+		},
+		"StatusInfo": {
+			"BowStatus": "升弓",
+			"Longitude": 119.572192,
+			"Latitude": 39.9643535,
+			"SatellitesN": 11,
+			"TrainNumber": "D256",
+			"Speed": 39,
+			"Net_t": 0,
+			"Env_t": -0.6,
+			"Height": 5980,
+			"Stagger": -107,
+			"Heightdiff": 0,
+			"Distance": 0,
+			"EvnSensorStatus": 0,	
+			"Status": "11|11|11|11",
+			"DeviceCompany": "国铁电气",
+			"DeviceModel": "Gt3"
+		}
+	},
+	{
+		"BaseInfo": {
+			"LineName": "京哈线",
+			"Direction": "上行",
+			"St": "秦皇岛",
+			"BridgeTunnel": "某桥隧",
+			"PoleNo": "2044",
+			"KM": 297690,
+			"Date": "2020-01-01 5:13:09 667",
+			"TrainNo": "CRH2A-5021",
+			"Seat": 7
+		},
+		"StatusInfo": {
+			"BowStatus": "升弓",
+			"Longitude": 119.572192,
+			"Latitude": 39.9643535,
+			"SatellitesN": 11,
+			"TrainNumber": "D256",
+			"Speed": 39,
+			"Net_t": 0,
+			"Env_t": -0.6,
+			"Height": 5980,
+			"Stagger": -107,
+			"Heightdiff": 0,
+			"Distance": 0,
+			"EvnSensorStatus": 0,
+			"Status": "11|11|11|11",
+			"DeviceCompany": "国铁电气",
+			"DeviceModel": "Gt3"
+		}
+	}
+]

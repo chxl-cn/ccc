@@ -54,12 +54,12 @@
 服务/组件 | 版本号 |  是否更新 |升级内容
 -|-|-|-
  云转发| 3CDataTransmitterBroker_V1.4.1 | 无 |-
- 3C数据接收服务| FileReceiveWeb_V2.1.2 | 无 |-
- 现场解析服务| 3CDataInterfaceSite_V4.1 | 有 |模型重构，提供统一的alarm访问组件
+ 3C数据接收服务| FileReceiveWeb_V2.2.0 | 有 | 增加日志管理功能，增加日志nlog日志打印，增加新的票据认证，旧票据认证key过短
+ 现场解析服务| 3CDataInterfaceSite_V4.1.3 | 有 |模型重构，提供统一的alarm访问组件
  动机车对外数据终端网站| DPC_3C_O_8.0.0 | 有 |统一模型，读写分离,SQL优化
- 3C缺陷报告生成服务| CreateDoc_V2.4 | 有 |统一模型，重构报表的消息通信逻辑，支持分布式部署；config文件参数优化；
+ 3C缺陷报告生成服务| CreateDoc_V2.4.4 | 有 |统一模型，重构报表的消息通信逻辑，支持分布式部署；config文件参数优化；
  3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.3.0 | 有|统一模型，读写分离；支持redis做数据缓存，支持分布式部署。
- 转发服务| 3CTransmit_5.11.0 | 有 |模型重构，trans_data表优化。
+ 转发服务| 3CTransmit_5.11.3 | 有 |模型重构，trans_data表优化。
  迁移工具| TransData_V2.1 | 有 |功能优化，方便运维；编辑后迁移界面支持增删改单条保存，类似Navicat编辑界面；提供加解密界面；提供基础数据分类导出；数据导出支持批量执行，生成一个bat文件。
  数据同步工具| - | 有 |DBA工具，支持实时库同步至历史库；如果是单库部署不需要这个工具。
 

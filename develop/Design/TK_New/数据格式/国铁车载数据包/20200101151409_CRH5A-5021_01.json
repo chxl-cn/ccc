@@ -1,0 +1,24 @@
+{
+	"Latitude" : "39.9636583",
+	"Longitude" : "119.5598458",
+	"SatellitesN" : "10",
+	"TrainNumber" : "-1",
+	"bowStatus" : "1|0",
+	"data" : "20200101151409",
+	"env_t" : "-0.60|-1.00",
+	"height" : "5887",
+	"net_t" : "-1.00|7.00",
+	"seat" : "03|06",
+	"speed" : "98",
+	"stagger" : "3",
+	"stagger2" : "-1000",
+	"status" : 
+	{
+		"A_camera" : "11|11|11|11",
+		"B_camera" : "11|11|11|11",
+		"Cpu" : "28|56|30|47",
+		"Socket" : "1|1|1|1",
+		"env_status" : "1|1"
+	},
+	"trainNo" : "CRH5A-5021"
+}

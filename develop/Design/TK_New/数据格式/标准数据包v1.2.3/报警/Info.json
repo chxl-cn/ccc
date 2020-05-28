@@ -1,0 +1,39 @@
+{
+	"BaseInfo": {
+		"DeviceCompany": "国铁电气",
+		"DeviceModel": "GT3",
+		"Type": "燃弧",
+		"Severity": "一级",
+		"LineName": "哈佳客专",
+		"Direction": "上行",
+		"PoleNo": "30",
+		"KM": 332333,
+		"Date": "2020-01-01 7:23:50",
+		"TrainNo": "CRH5A-5021",
+		"Seat": 3,
+		"Frame": 5,
+		"Speed": 159,
+		"Net_t": 71,
+		"Env_t": -19,
+		"Height": 5970,
+		"Stagger": -167,
+		"HeightDiff": 0,
+		"Distance": 0
+	},
+	"AppendInfo": {
+		"St": "佳木斯西站",
+		"BridgeTunnel": "",
+		"Longitude": 130.2446505,
+		"Latitude": 46.7717913,
+		"SatellitesNum": 11,
+		"TrainNumber": "-1",
+		"ArcingTime": 9,
+		"ArcingRate": 0.0,
+		"ArcingFrequency": 2,
+		"ArcingStrength": 0.07,
+		"ArcingPix":232,
+		"ArcingPixRate":0.03,
+		"Gxgdd": "佳木斯供电段",
+		"SsRailway": "哈尔滨铁路局"
+	}
+}
