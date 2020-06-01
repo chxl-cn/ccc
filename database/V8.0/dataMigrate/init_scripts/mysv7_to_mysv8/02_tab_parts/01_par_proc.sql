@@ -58,10 +58,11 @@ BEGIN
     ) ENGINE MEMORY;
 
     INSERT INTO wv_tbs(tbn)
-    VALUES ('alarm_aux_pold')
-         , ('alarm_img_data_pold')
-         , ('nos_aa_pold')
-         , ('nos_ac_pold')
+    VALUES
+         #('alarm_aux_pold')
+         #, ('alarm_img_data_pold')
+         #, ('nos_aa_pold')
+         #, ('nos_ac_pold')
          , ('alarm_pnew')
          , ('alarm_aux_pnew')
          , ('c3_sms_pnew')
