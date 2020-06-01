@@ -64,7 +64,6 @@ CREATE TABLE `alarm_aux`
     `vi_add_ima`         TINYTEXT,
     `oa_add_ima`         TINYTEXT,
     `audit_status`       VARCHAR(20),
-    `irvs_json`          TEXT,
     KEY `alarm_id` (`alarm_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
