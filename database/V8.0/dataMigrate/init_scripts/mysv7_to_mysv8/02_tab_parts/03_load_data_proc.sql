@@ -18,21 +18,6 @@ BEGIN
     SET v_dt = p_date + 0;
 
 
-    SET v_aux_sql = concat("INSERT INTO alarm_aux_pold SELECT * FROM alarm_aux x WHERE x.raised_time_aux  ", v_opt, v_dt);
-    SET v_img_sql = concat("INSERT INTO alarm_img_data_pold  SELECT * FROM alarm_img_data d WHERE d.raise_time  ", v_opt, v_dt);
-    #SET v_aa_sql = concat("INSERT INTO nos_aa_pnew  SELECT * FROM nos_aa a WHERE a.INPUTDATE  ", v_opt, v_dt);
-    #SET v_ac_sql = concat("INSERT INTO nos_ac_pnew SELECT * FROM nos_ac c WHERE c.INPUTDATE  ", v_opt, v_dt);
-
-    SET @stmt = v_aux_sql;
-    PREPARE stmt FROM @stmt;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-
-    SET @stmt = v_img_sql;
-    PREPARE stmt FROM @stmt;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-
     IF p_sort = 0
     THEN
         INSERT INTO nos_aa_pnew SELECT * FROM nos_aa;
@@ -40,23 +25,74 @@ BEGIN
         DELETE FROM nos_aa_pnew WHERE INPUTDATE >= v_dt;
         DELETE FROM nos_ac_pnew WHERE INPUTDATE >= v_dt;
 
-    ELSE
-        DROP TABLE IF EXISTS taa_ids;
-        CREATE TABLE taa_ids
-            SELECT *
-                FROM alarm
-                WHERE raised_time >= v_dt;
-        INSERT INTO nos_aa_pnew SELECT * FROM nos_aa a WHERE exists(SELECT NULL FROM taa_ids i WHERE a.ID = i.id);
-        DROP TABLE IF EXISTS taa_ids;
+        INSERT INTO alarm_aux_pold SELECT * FROM alarm_aux x;
+        INSERT INTO alarm_img_data_pold SELECT * FROM alarm_img_data d;
 
-        DROP TABLE IF EXISTS tac_ids;
-        CREATE TABLE tac_ids
+        DELETE FROM alarm_aux_pold WHERE raised_time_aux >= v_dt;
+        DELETE FROM alarm_img_data_pold WHERE raise_time >= v_dt;
+
+
+    ELSE
+
+
+        INSERT
+            INTO nos_aa_pnew
+        WITH
+            taa_ids AS
+                (
+            SELECT id
+                FROM alarm
+                WHERE raised_time >= v_dt
+                )
+        SELECT a.*
+            FROM nos_aa  a
+               , taa_ids i
+            WHERE a.ID = i.id;
+
+
+        INSERT
+            INTO alarm_aux_pold
+        WITH
+            taa_ids AS
+                (
+            SELECT id
+                FROM alarm
+                WHERE raised_time >= v_dt
+                )
+        SELECT a.*
+            FROM alarm_aux a
+               , taa_ids   i
+            WHERE a.alarm_id = i.id;
+
+        INSERT
+            INTO alarm_img_data_pold
+        WITH
+            taa_ids AS
+                (
+            SELECT id
+                FROM alarm
+                WHERE raised_time >= v_dt
+                )
+        SELECT a.*
+            FROM alarm_img_data a
+               , taa_ids        i
+            WHERE a.alarm_id = i.id;
+
+
+        INSERT
+            INTO nos_ac_pnew
+        WITH
+            tac_ids AS (
             SELECT id
                 FROM c3_sms
-                WHERE detect_time >= v_dt;
+                WHERE detect_time >= v_dt
+                       )
+        SELECT c.*
+            FROM os_ac   c
+               , tac_ids i
+            WHERE c.id = i.id;
 
-        INSERT INTO nos_ac_pnew SELECT * FROM nos_ac c WHERE exists(SELECT NULL FROM tac_ids i WHERE c.id = i.id);
-        DROP TABLE IF EXISTS tac_ids;
+
     END IF;
 
     BEGIN
@@ -113,7 +149,7 @@ BEGIN
                        bureau_code,
                        alarm_analysis,
                        task_id,
-                       tax_monitor_status,
+                       if(length(tax_monitor_status) > 1 ,1,tax_monitor_status) tax_monitor_status,
                        routing_no,
                        area_no,
                        station_no,
@@ -125,7 +161,7 @@ BEGIN
                        eoas_train_speed,
                        raised_time_m,
                        tax_position,
-                       tax_schedule_status,
+                       if(length(tax_schedule_status) > 1,1,tax_schedule_status) tax_schedule_status,
                        pos_confirmed,
                        is_customer_ana,
                        org_file_location,
@@ -250,7 +286,7 @@ BEGIN
 
         IF p_sort = 1
         THEN
-            SET v_ed = p_date + INTERVAL 1 DAY;
+            SET v_ed = current_date;
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
@@ -689,9 +725,9 @@ BEGIN
                        eoas_location,
                        eoas_time,
                        pos_confirmed,
-                       tax_monitor_status,
+                       if(length(tax_monitor_status) >1 ,1,tax_monitor_status),
                        tax_position,
-                       tax_schedule_status,
+                       if(length(tax_schedule_status) > 1 ,1, tax_schedule_status),
                        version,
                        invalid_track,
                        trans_info,
@@ -780,7 +816,7 @@ BEGIN
 
         IF p_sort = 1
         THEN
-            SET v_ed = p_date + INTERVAL 1 DAY;
+            SET v_ed = current_date;
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
