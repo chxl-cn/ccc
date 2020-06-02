@@ -34,7 +34,7 @@
  现场解析服务| 3CDataInterfaceSite_V4.1.4.0528 | 有 |模型重构，提供统一的alarm访问组件；更新3C组件，规范redis key
  动机车对外数据终端网站| DPC_3C_O_8.1.0 | 有 |统一模型，读写分离,SQL优化；更新3C组件，规范redis key
  3C缺陷报告生成服务| CreateDoc_V2.4.5.0528 | 有 |统一模型，重构报表的消息通信逻辑，支持分布式部署；config文件参数优化；更新3C组件，规范redis key
- 3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.4.5.0522 | 有|统一模型，读写分离；支持redis做数据缓存，支持分布式部署；更新3C组件，规范redis key
+ 3C数据解析WebAPI接口| DPC_3C_Parser_WebAPI_V3.4.5.0528 | 有|统一模型，读写分离；支持redis做数据缓存，支持分布式部署；更新3C组件，规范redis key
  转发服务| 3CTransmit_5.11.4.0528 | 有 |模型重构，trans_data表优化；更新3C组件，规范redis key
  迁移工具| TransData_V2.1 | 有 |功能优化，方便运维；编辑后迁移界面支持增删改单条保存，类似Navicat编辑界面；提供加解密界面；提供基础数据分类导出；数据导出支持批量执行，生成一个bat文件。
  数据同步工具| - | 有 |DBA工具，支持实时库同步至历史库；如果是单库部署不需要这个工具。
