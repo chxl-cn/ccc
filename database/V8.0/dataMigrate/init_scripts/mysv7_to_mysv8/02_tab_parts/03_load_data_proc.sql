@@ -12,11 +12,19 @@ CREATE PROCEDURE p_load_data_proc
     ,   p_sort TINYINT
     )
 BEGIN
-    DECLARE v_aux_sql,v_img_sql,v_aa_sql,v_ac_sql TEXT;
-    DECLARE v_opt,v_dt VARCHAR(20);
+    DECLARE v_goutfile TEXT;
+    DECLARE v_dt VARCHAR(20);
     SET v_dt = p_date + 0;
 
 
+    SET v_goutfile = concat
+        (
+            "INTO OUTFILE 'd:/loaddir/?file.csv'"
+        , char(10), "fields terminated by '^'"
+        , char(10), "lines terminated by '\r\n'"
+        );
+
+    /*
     IF p_sort = 0
     THEN
         INSERT INTO nos_aa_pnew SELECT * FROM nos_aa;
@@ -25,16 +33,8 @@ BEGIN
         DELETE FROM nos_aa_pnew WHERE INPUTDATE >= v_dt;
         DELETE FROM nos_ac_pnew WHERE INPUTDATE >= v_dt;
 
-        #INSERT INTO alarm_aux_pold SELECT * FROM alarm_aux x;
-        #INSERT INTO alarm_img_data_pold SELECT * FROM alarm_img_data d;
-
-        #DELETE FROM alarm_aux_pold WHERE raised_time_aux >= v_dt;
-        #DELETE FROM alarm_img_data_pold WHERE raise_time >= v_dt;
-
 
     ELSE
-
-
         INSERT
             INTO nos_aa_pnew
         WITH
@@ -58,19 +58,23 @@ BEGIN
                 WHERE detect_time >= v_dt
                        )
         SELECT c.*
-            FROM os_ac   c
+            FROM nos_ac   c
                , tac_ids i
             WHERE c.id = i.id;
 
 
     END IF;
 
+     */
+
     BEGIN
         DECLARE v_alarm_sql TEXT;
         DECLARE v_sd DATETIME;
         DECLARE v_ed DATETIME;
+        DECLARE v_sql TEXT;
+        DECLARE v_outfile TEXT;
         SET v_alarm_sql =
-                "SELECT a.id  id,
+                'SELECT a.id  id,
                        vendor,
                        category_code,
                        detect_device_code,
@@ -236,7 +240,7 @@ BEGIN
                     AND d.raise_time >= ? AND d.raise_time < ?
                 WHERE a.raised_time >= ?
                   AND a.raised_time < ?
-                ";
+                ';
 
         DROP TABLE IF EXISTS tmp_mg_alarm;
         SET @stmt_create_tmp_alarm = concat('create table tmp_mg_alarm ', v_alarm_sql);
@@ -258,7 +262,7 @@ BEGIN
             SET v_sd = p_date;
         ELSE
             SET v_ed = p_date + INTERVAL 1 DAY;
-            SET v_sd = "2015-01-01";
+            SET v_sd = '2015-01-01';
         END IF;
 
         SET @sd = v_sd;
@@ -266,106 +270,7 @@ BEGIN
 
         EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
 
-
-        INSERT
-            INTO alarm_pnew(
-                             id
-                           , vendor
-                           , category_code
-                           , detect_device_code
-                           , data_type
-                           , dvalue1
-                           , dvalue2
-                           , dvalue3
-                           , dvalue4
-                           , dvalue5
-                           , nvalue1
-                           , nvalue2
-                           , nvalue3
-                           , nvalue4
-                           , nvalue5
-                           , nvalue6
-                           , nvalue8
-                           , nvalue13
-                           , nvalue14
-                           , nvalue15
-                           , nvalue16
-                           , created_time
-                           , raised_time
-                           , report_date
-                           , status_time
-                           , report_person
-                           , is_typical
-                           , severity
-                           , status
-                           , code
-                           , cust_alarm_code
-                           , p_org_code
-                           , svalue8
-                           , svalue14
-                           , svalue15
-                           , km_mark
-                           , pole_number
-                           , brg_tun_code
-                           , position_code
-                           , direction
-                           , line_code
-                           , org_code
-                           , workshop_code
-                           , power_section_code
-                           , bureau_code
-                           , alarm_analysis
-                           , task_id
-                           , tax_monitor_status
-                           , routing_no
-                           , area_no
-                           , station_no
-                           , source
-                           , eoas_direction
-                           , eoas_km
-                           , eoas_location
-                           , eoas_time
-                           , eoas_train_speed
-                           , raised_time_m
-                           , tax_position
-                           , tax_schedule_status
-                           , pos_confirmed
-                           , is_customer_ana
-                           , org_file_location
-                           , pic_file_location
-                           , summary
-                           , repair_date
-                           , isdayreport
-                           , isexportreport
-                           , lock_person_id
-                           , is_trans_allowed
-                           , acflag_code
-                           , sample_code
-                           , scencesample_code
-                           , accesscount
-                           , initial_code
-                           , aflg_code
-                           , algcode
-                           , reportwordstatus
-                           , rerun_type
-                           , spark_elapse
-                           , isblackcenter
-                           , dev_type_ana
-                           , spart_pixel_pct
-                           , spart_pixels
-                           , gray_avg_left
-                           , gray_avg_right
-                           , gray_avg_bow_rect
-                           , spark_shape
-                           , spark_num
-                           , device_id
-                           , eoas_trainno
-                           , alarm_rep_count
-                           , sample_detail_code
-                           , valid_gps
-                           , initial_severity
-                           , process_status
-            )
+        SET v_sql = '
         SELECT id
              , vendor
              , category_code
@@ -462,75 +367,17 @@ BEGIN
              , valid_gps
              , initial_severity
              , process_status
-            FROM tmp_mg_alarm;
+            FROM tmp_mg_alarm';
 
-        INSERT
-            INTO alarm_aux_pnew(
-                                 alarm_id
-                               , bmi_file_name
-                               , rpt_file_name
-                               , bow_offset
-                               , gps_body_direction
-                               , img_body_direction
-                               , reportwordurl
-                               , lock_person_name
-                               , lock_time
-                               , confidence_level
-                               , raised_time_aux
-                               , is_abnormal
-                               , svalue6
-                               , svalue7
-                               , svalue10
-                               , svalue12
-                               , svalue13
-                               , alarm_reason
-                               , airesult
-                               , remark
-                               , trans_info
-                               , dev_name
-                               , station_name
-                               , process_deptname
-                               , report_deptname
-                               , plan_id
-                               , plan_task_id
-                               , process_date
-                               , process_details
-                               , process_overdue
-                               , process_person
-                               , process_type
-                               , profession_type
-                               , repaired_pic
-                               , repaired_status
-                               , repair_method
-                               , repair_org
-                               , repair_person
-                               , report_overdue
-                               , review_info
-                               , review_person
-                               , review_time
-                               , check_details
-                               , check_person
-                               , check_result
-                               , harddisk_manage_id
-                               , attachment
-                               , comp_code
-                               , comp_type
-                               , nvalue7
-                               , nvalue9
-                               , nvalue11
-                               , nvalue12
-                               , nvalue17
-                               , nvalue18
-                               , nvalue19
-                               , nvalue20
-                               , power_device_code
-                               , power_device_type
-                               , substation_code
-                               , map_add_ima
-                               , vi_add_ima
-                               , oa_add_ima
-            )
-        SELECT alarm_id
+        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', p_sort));
+        SET v_sql = concat(v_sql, char(10), v_outfile);
+        SET @alarm_pnew = v_sql;
+        PREPARE stmt_alarm_pnew FROM @alarm_pnew;
+        EXECUTE stmt_alarm_pnew;
+        DEALLOCATE PREPARE stmt_alarm_pnew;
+
+
+        SET v_sql = 'SELECT alarm_id
              , bmi_file_name
              , rpt_file_name
              , bow_offset
@@ -593,7 +440,15 @@ BEGIN
              , map_add_ima
              , vi_add_ima
              , oa_add_ima
-            FROM tmp_mg_alarm;
+            FROM tmp_mg_alarm';
+
+        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', p_sort));
+        SET v_sql = concat(v_sql, char(10), v_outfile);
+        SET @alarm_aux_pnew = v_sql;
+        PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
+        EXECUTE stmt_alarm_aux_pnew;
+        DEALLOCATE PREPARE stmt_alarm_aux_pnew;
+
 
     END;
 
@@ -601,51 +456,10 @@ BEGIN
         DECLARE v_ed DATETIME;
         DECLARE v_sd DATETIME;
         DECLARE v_ov DATETIME;
-        DECLARE v_sms,v_monitor TEXT;
+        DECLARE v_sms_sql,v_monitor_sql,v_sql,v_outfile TEXT;
 
-        SET v_sms =
-                "
-                INSERT INTO c3_sms_pnew(id,
-                                        detect_time,
-                                        locomotive_code,
-                                        bow_status,
-                                        p_org_code,
-                                        train_no,
-                                        pole_code,
-                                        pole_no,
-                                        log_filename,
-                                        gps_course,
-                                        gps_speed,
-                                        km_mark,
-                                        record_time,
-                                        line_no,
-                                        routing_no,
-                                        satellite_num,
-                                        speed,
-                                        recv_time,
-                                        line_code,
-                                        direction,
-                                        position_code,
-                                        bureau_code,
-                                        power_section_code,
-                                        org_code,
-                                        eoas_direction,
-                                        eoas_km,
-                                        eoas_location,
-                                        eoas_time,
-                                        pos_confirmed,
-                                        tax_monitor_status,
-                                        tax_position,
-                                        tax_schedule_status,
-                                        version,
-                                        invalid_track,
-                                        trans_info,
-                                        driver_no,
-                                        file_location,
-                                        backup_file_dir,
-                                        relative_path,
-                                        log_file_path,
-                                        valid_gps)
+        SET v_sms_sql =
+                '
                 SELECT id,
                        detect_time,
                        locomotive_code,
@@ -690,43 +504,12 @@ BEGIN
                 FROM c3_sms
                 WHERE detect_time >= ?
                   AND detect_time < ?
-                ";
+                ';
 
 
-        SET v_monitor =
-                "
-            INSERT INTO c3_sms_monitor_pnew(id,
-                                            detect_time,
-                                            device_group_no,
-                                            device_version,
-                                            temp_sensor_status,
-                                            bow_updown_status,
-                                            parallel_span,
-                                            env_temp_1,
-                                            env_temp_2,
-                                            env_temp_3,
-                                            env_temp_4,
-                                            line_height_1,
-                                            line_height_2,
-                                            line_height_3,
-                                            line_height_4,
-                                            irv_temp_1,
-                                            irv_temp_2,
-                                            irv_temp_3,
-                                            irv_temp_4,
-                                            pulling_value_1,
-                                            pulling_value_2,
-                                            pulling_value_3,
-                                            pulling_value_4,
-                                            is_con_fz,
-                                            is_con_ir,
-                                            is_con_ov,
-                                            is_con_vi,
-                                            is_rec_fz,
-                                            is_rec_ir,
-                                            is_rec_ov,
-                                            is_rec_vi,
-                                            extra_info)
+        SET v_monitor_sql =
+                '
+
             SELECT id,
                    detect_time,
                    device_group_no,
@@ -762,23 +545,19 @@ BEGIN
             FROM c3_sms
             WHERE detect_time >= ?
               AND detect_time < ?
-            ";
+            ';
 
         IF p_sort = 1
         THEN
-            SET v_ed = current_date ;
+            SET v_ed = current_date;
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
-            SET v_ed = "2018-01-02";
-            SET v_sd = "2015-01-01";
+            SET v_ed = '2018-01-02';
+            SET v_sd = '2015-01-01';
             SET v_ov = p_date;
         END IF;
 
-        SET @stmt_sms = v_sms;
-        SET @stmt_monitor = v_monitor;
-        PREPARE stmt_sms FROM @stmt_sms;
-        PREPARE stmt_monitor FROM @stmt_monitor;
 
         lb_sms :
         LOOP
@@ -789,15 +568,26 @@ BEGIN
 
             SET @sd = v_sd;
             SET @ed = v_ed;
-            EXECUTE stmt_sms USING @sd,@ed;
-            EXECUTE stmt_monitor USING @sd,@ed;
+
+            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_pnew_', v_ed, '_', p_sort));
+            SET v_sql = concat(v_sms_sql, char(10), v_outfile);
+            SET @c3_sms_pnew = v_sql;
+            PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
+            EXECUTE stmt_c3_sms_pnew USING @sd,@ed;
+            DEALLOCATE PREPARE stmt_c3_sms_pnew;
+
+
+            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_monitor_pnew_', v_ed, '_', p_sort));
+            SET v_sql = concat(v_sms_sql, char(10), v_outfile);
+            SET @c3_sms_monitor_pnew = v_sql;
+            PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
+            EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
+            DEALLOCATE PREPARE stmt_c3_sms_monitor_pnew;
+
 
             SET v_sd = v_ed;
-            SET v_ed = v_ed + INTERVAL 1 DAY;
+            SET v_ed = v_ed + INTERVAL 1 QUARTER;
 
         END LOOP;
-        DEALLOCATE PREPARE stmt_sms;
-        DEALLOCATE PREPARE stmt_monitor;
-
     END;
 END //
