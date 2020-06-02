@@ -14,7 +14,6 @@ CREATE PROCEDURE p_load_data_proc
 BEGIN
     DECLARE v_aux_sql,v_img_sql,v_aa_sql,v_ac_sql TEXT;
     DECLARE v_opt,v_dt VARCHAR(20);
-    SET v_opt = if(p_sort = 1, ">=", "<");
     SET v_dt = p_date + 0;
 
 
@@ -50,37 +49,6 @@ BEGIN
                , taa_ids i
             WHERE a.ID = i.id;
 
-
-        /*
-        INSERT
-            INTO alarm_aux_pold
-        WITH
-            taa_ids AS
-                (
-            SELECT id
-                FROM alarm
-                WHERE raised_time >= v_dt
-                )
-        SELECT a.*
-            FROM alarm_aux a
-               , taa_ids   i
-            WHERE a.alarm_id = i.id;
-
-        INSERT
-            INTO alarm_img_data_pold
-        WITH
-            taa_ids AS
-                (
-            SELECT id
-                FROM alarm
-                WHERE raised_time >= v_dt
-                )
-        SELECT a.*
-            FROM alarm_img_data a
-               , taa_ids        i
-            WHERE a.alarm_id = i.id;
-        */
-
         INSERT
             INTO nos_ac_pnew
         WITH
@@ -101,10 +69,8 @@ BEGIN
         DECLARE v_alarm_sql TEXT;
         DECLARE v_sd DATETIME;
         DECLARE v_ed DATETIME;
-        DECLARE v_ov DATETIME;
         SET v_alarm_sql =
-                "
-                SELECT a.id          id,
+                "SELECT a.id  id,
                        vendor,
                        category_code,
                        detect_device_code,
@@ -288,13 +254,13 @@ BEGIN
 
         IF p_sort = 1
         THEN
-            SET v_ed = current_date;
+            SET v_ed = current_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
         ELSE
-            SET v_ed = v_ed + INTERVAL 1 DAY;
+            SET v_ed = p_date + INTERVAL 1 DAY;
             SET v_sd = "2015-01-01";
         END IF;
-        TRUNCATE TABLE tmp_mg_alarm;
+
         SET @sd = v_sd;
         SET @ed = v_ed;
 
@@ -627,212 +593,211 @@ BEGIN
              , map_add_ima
              , vi_add_ima
              , oa_add_ima
-
             FROM tmp_mg_alarm;
 
+    END;
 
-        BEGIN
-            DECLARE v_ed DATETIME;
-            DECLARE v_sd DATETIME;
-            DECLARE v_ov DATETIME;
-            DECLARE v_sms,v_monitor TEXT;
+    BEGIN
+        DECLARE v_ed DATETIME;
+        DECLARE v_sd DATETIME;
+        DECLARE v_ov DATETIME;
+        DECLARE v_sms,v_monitor TEXT;
 
-            SET v_sms =
-                    "
-                    INSERT INTO c3_sms_pnew(id,
-                                            detect_time,
-                                            locomotive_code,
-                                            bow_status,
-                                            p_org_code,
-                                            train_no,
-                                            pole_code,
-                                            pole_no,
-                                            log_filename,
-                                            gps_course,
-                                            gps_speed,
-                                            km_mark,
-                                            record_time,
-                                            line_no,
-                                            routing_no,
-                                            satellite_num,
-                                            speed,
-                                            recv_time,
-                                            line_code,
-                                            direction,
-                                            position_code,
-                                            bureau_code,
-                                            power_section_code,
-                                            org_code,
-                                            eoas_direction,
-                                            eoas_km,
-                                            eoas_location,
-                                            eoas_time,
-                                            pos_confirmed,
-                                            tax_monitor_status,
-                                            tax_position,
-                                            tax_schedule_status,
-                                            version,
-                                            invalid_track,
-                                            trans_info,
-                                            driver_no,
-                                            file_location,
-                                            backup_file_dir,
-                                            relative_path,
-                                            log_file_path,
-                                            valid_gps)
-                    SELECT id,
-                           detect_time,
-                           locomotive_code,
-                           bow_status,
-                           p_org_code,
-                           NULL train_no,
-                           NULL pole_code,
-                           NULL pole_no,
-                           NULL log_filename,
-                           gps_course,
-                           gps_speed,
-                           km_mark,
-                           record_time,
-                           line_no,
-                           NULL routing_no,
-                           satellite_num,
-                           speed,
-                           recv_time,
-                           line_code,
-                           direction,
-                           position_code,
-                           bureau_code,
-                           power_section_code,
-                           org_code,
-                           eoas_direction,
-                           eoas_km,
-                           eoas_location,
-                           eoas_time,
-                           pos_confirmed,
-                           if(length(tax_monitor_status) >1 ,1,tax_monitor_status),
-                           tax_position,
-                           if(length(tax_schedule_status) > 1 ,1, tax_schedule_status),
-                           version,
-                           invalid_track,
-                           trans_info,
-                           driver_no,
-                           file_location,
-                           backup_file_dir,
-                           relative_path,
-                           NULL log_file_path,
-                           NULL valid_gps
-                    FROM c3_sms
-                    WHERE detect_time >= ?
-                      AND detect_time < ?;
-                    ";
-
-
-            SET v_monitor =
-                    "
-                INSERT INTO c3_sms_monitor_pnew(id,
-                                                detect_time,
-                                                device_group_no,
-                                                device_version,
-                                                temp_sensor_status,
-                                                bow_updown_status,
-                                                parallel_span,
-                                                env_temp_1,
-                                                env_temp_2,
-                                                env_temp_3,
-                                                env_temp_4,
-                                                line_height_1,
-                                                line_height_2,
-                                                line_height_3,
-                                                line_height_4,
-                                                irv_temp_1,
-                                                irv_temp_2,
-                                                irv_temp_3,
-                                                irv_temp_4,
-                                                pulling_value_1,
-                                                pulling_value_2,
-                                                pulling_value_3,
-                                                pulling_value_4,
-                                                is_con_fz,
-                                                is_con_ir,
-                                                is_con_ov,
-                                                is_con_vi,
-                                                is_rec_fz,
-                                                is_rec_ir,
-                                                is_rec_ov,
-                                                is_rec_vi,
-                                                extra_info)
+        SET v_sms =
+                "
+                INSERT INTO c3_sms_pnew(id,
+                                        detect_time,
+                                        locomotive_code,
+                                        bow_status,
+                                        p_org_code,
+                                        train_no,
+                                        pole_code,
+                                        pole_no,
+                                        log_filename,
+                                        gps_course,
+                                        gps_speed,
+                                        km_mark,
+                                        record_time,
+                                        line_no,
+                                        routing_no,
+                                        satellite_num,
+                                        speed,
+                                        recv_time,
+                                        line_code,
+                                        direction,
+                                        position_code,
+                                        bureau_code,
+                                        power_section_code,
+                                        org_code,
+                                        eoas_direction,
+                                        eoas_km,
+                                        eoas_location,
+                                        eoas_time,
+                                        pos_confirmed,
+                                        tax_monitor_status,
+                                        tax_position,
+                                        tax_schedule_status,
+                                        version,
+                                        invalid_track,
+                                        trans_info,
+                                        driver_no,
+                                        file_location,
+                                        backup_file_dir,
+                                        relative_path,
+                                        log_file_path,
+                                        valid_gps)
                 SELECT id,
                        detect_time,
-                       device_group_no,
-                       device_version,
-                       temp_sensor_status,
-                       bow_updown_status,
-                       parallel_span,
-                       env_temp_1,
-                       env_temp_2,
-                       env_temp_3,
-                       env_temp_4,
-                       line_height_1,
-                       line_height_2,
-                       line_height_3,
-                       line_height_4,
-                       irv_temp_1,
-                       irv_temp_2,
-                       irv_temp_3,
-                       irv_temp_4,
-                       pulling_value_1,
-                       pulling_value_2,
-                       pulling_value_3,
-                       pulling_value_4,
-                       is_con_fz,
-                       is_con_ir,
-                       is_con_ov,
-                       is_con_vi,
-                       is_rec_fz,
-                       is_rec_ir,
-                       is_rec_ov,
-                       is_rec_vi,
-                       extra_info
+                       locomotive_code,
+                       bow_status,
+                       p_org_code,
+                       NULL train_no,
+                       NULL pole_code,
+                       NULL pole_no,
+                       NULL log_filename,
+                       gps_course,
+                       gps_speed,
+                       km_mark,
+                       record_time,
+                       line_no,
+                       NULL routing_no,
+                       satellite_num,
+                       speed,
+                       recv_time,
+                       line_code,
+                       direction,
+                       position_code,
+                       bureau_code,
+                       power_section_code,
+                       org_code,
+                       eoas_direction,
+                       eoas_km,
+                       eoas_location,
+                       eoas_time,
+                       pos_confirmed,
+                       if(length(tax_monitor_status) >1 ,1,tax_monitor_status),
+                       tax_position,
+                       if(length(tax_schedule_status) > 1 ,1, tax_schedule_status),
+                       version,
+                       invalid_track,
+                       trans_info,
+                       driver_no,
+                       file_location,
+                       backup_file_dir,
+                       relative_path,
+                       NULL log_file_path,
+                       NULL valid_gps
                 FROM c3_sms
                 WHERE detect_time >= ?
                   AND detect_time < ?
                 ";
 
-            IF p_sort = 1
+
+        SET v_monitor =
+                "
+            INSERT INTO c3_sms_monitor_pnew(id,
+                                            detect_time,
+                                            device_group_no,
+                                            device_version,
+                                            temp_sensor_status,
+                                            bow_updown_status,
+                                            parallel_span,
+                                            env_temp_1,
+                                            env_temp_2,
+                                            env_temp_3,
+                                            env_temp_4,
+                                            line_height_1,
+                                            line_height_2,
+                                            line_height_3,
+                                            line_height_4,
+                                            irv_temp_1,
+                                            irv_temp_2,
+                                            irv_temp_3,
+                                            irv_temp_4,
+                                            pulling_value_1,
+                                            pulling_value_2,
+                                            pulling_value_3,
+                                            pulling_value_4,
+                                            is_con_fz,
+                                            is_con_ir,
+                                            is_con_ov,
+                                            is_con_vi,
+                                            is_rec_fz,
+                                            is_rec_ir,
+                                            is_rec_ov,
+                                            is_rec_vi,
+                                            extra_info)
+            SELECT id,
+                   detect_time,
+                   device_group_no,
+                   device_version,
+                   temp_sensor_status,
+                   bow_updown_status,
+                   parallel_span,
+                   env_temp_1,
+                   env_temp_2,
+                   env_temp_3,
+                   env_temp_4,
+                   line_height_1,
+                   line_height_2,
+                   line_height_3,
+                   line_height_4,
+                   irv_temp_1,
+                   irv_temp_2,
+                   irv_temp_3,
+                   irv_temp_4,
+                   pulling_value_1,
+                   pulling_value_2,
+                   pulling_value_3,
+                   pulling_value_4,
+                   is_con_fz,
+                   is_con_ir,
+                   is_con_ov,
+                   is_con_vi,
+                   is_rec_fz,
+                   is_rec_ir,
+                   is_rec_ov,
+                   is_rec_vi,
+                   extra_info
+            FROM c3_sms
+            WHERE detect_time >= ?
+              AND detect_time < ?
+            ";
+
+        IF p_sort = 1
+        THEN
+            SET v_ed = current_date ;
+            SET v_sd = p_date;
+            SET v_ov = v_ed + INTERVAL 1 DAY;
+        ELSE
+            SET v_ed = "2018-01-02";
+            SET v_sd = "2015-01-01";
+            SET v_ov = p_date;
+        END IF;
+
+        SET @stmt_sms = v_sms;
+        SET @stmt_monitor = v_monitor;
+        PREPARE stmt_sms FROM @stmt_sms;
+        PREPARE stmt_monitor FROM @stmt_monitor;
+
+        lb_sms :
+        LOOP
+            IF v_sd >= v_ov
             THEN
-                SET v_ed = current_date;
-                SET v_sd = p_date;
-                SET v_ov = v_ed + INTERVAL 1 DAY;
-            ELSE
-                SET v_ed = "2018-01-02";
-                SET v_sd = "2015-01-01";
-                SET v_ov = p_date;
+                LEAVE lb_sms;
             END IF;
 
-            SET @stmt_sms = v_sms;
-            SET @stmt_monitor = v_monitor;
-            PREPARE stmt_sms FROM @stmt_sms;
-            PREPARE stmt_monitor FROM @stmt_monitor;
+            SET @sd = v_sd;
+            SET @ed = v_ed;
+            EXECUTE stmt_sms USING @sd,@ed;
+            EXECUTE stmt_monitor USING @sd,@ed;
 
-            lb_sms :
-            LOOP
-                IF v_sd >= v_ov
-                THEN
-                    LEAVE lb_sms;
-                END IF;
+            SET v_sd = v_ed;
+            SET v_ed = v_ed + INTERVAL 1 DAY;
 
-                SET @sd = v_sd;
-                SET @ed = v_ed;
-                EXECUTE stmt_sms USING @sd,@ed;
-                EXECUTE stmt_monitor USING @sd,@ed;
+        END LOOP;
+        DEALLOCATE PREPARE stmt_sms;
+        DEALLOCATE PREPARE stmt_monitor;
 
-                SET v_sd = v_ed;
-                SET v_ed = v_ed + INTERVAL 1 DAY;
-
-            END LOOP;
-            DEALLOCATE PREPARE stmt_sms;
-            DEALLOCATE PREPARE stmt_monitor;
-
-        END;
-    END
-    //
+    END;
+END //
