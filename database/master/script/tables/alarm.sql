@@ -48,7 +48,7 @@ CREATE TABLE `alarm`
     `alarm_analysis`      TEXT,
     `task_id`             VARCHAR(40),
     `tax_monitor_status`  VARCHAR(1),
-    `routing_no`          TINYINT(4),
+    `routing_no`          INT ,
     `area_no`             TINYTEXT,
     `station_no`          TINYTEXT,
     `source`              TINYTEXT,

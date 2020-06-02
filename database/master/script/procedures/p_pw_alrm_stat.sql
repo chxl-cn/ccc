@@ -72,8 +72,8 @@ BEGIN
     DROP TABLE IF EXISTS wv_sms_ds;
     DROP TABLE IF EXISTS wv_sms_ln;
 
-    CREATE TABLE wv_sms_ds
-        ENGINE MEMORY
+    CREATE TEMPORARY TABLE wv_sms_ds
+        #ENGINE MEMORY
         SELECT locomotive_code, count(*) AS rtds
             FROM (
                  SELECT locomotive_code, date(detect_time) AS rt
@@ -83,7 +83,7 @@ BEGIN
                  ) tt
             GROUP BY locomotive_code;
 
-    CREATE TABLE wv_sms_ln
+    CREATE TEMPORARY  TABLE wv_sms_ln
         #ENGINE MEMORY
         SELECT locomotive_code, group_concat(line_code) AS line_code
             FROM (
