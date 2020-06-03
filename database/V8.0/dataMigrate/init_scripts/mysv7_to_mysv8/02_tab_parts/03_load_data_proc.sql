@@ -251,12 +251,15 @@ BEGIN
             SET v_outfile = replace(v_goutfile, ':file:', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'nos_aa');
 
+            /*
             SET v_sql = concat(v_aa_sql, char(10), v_outfile);
             SET @nos_aa_pnew = v_sql;
             PREPARE stmt_nos_aa FROM @nos_aa_pnew;
             EXECUTE stmt_nos_aa USING @sd,@ed;
             DEALLOCATE PREPARE stmt_nos_aa;
 
+
+             */
             INSERT
                 INTO wv_load(
                               fv
@@ -642,6 +645,7 @@ BEGIN
                     ,   'c3_sms_monitor_pnew'
                     );
 
+            /*
             SET v_outfile = replace(v_goutfile, ':file:', concat('nos_ac_pnew_', date(v_ed), p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'nos_ac');
             SET v_sql = concat(v_ac_sql, char(10), v_outfile);
@@ -650,6 +654,8 @@ BEGIN
             EXECUTE stmt_nos_ac USING @sd,@ed;
             DEALLOCATE PREPARE stmt_nos_ac;
 
+
+             */
             INSERT
                 INTO wv_load(
                               fv
