@@ -18,7 +18,7 @@ BEGIN
     SET v_dt = p_date + 0;
 
 
-    SET v_goutfile = "INTO OUTFILE 'd:/loaddir/:dir:/:file:.csv'";
+    SET v_goutfile = "'d:/loaddir/:dir:/:file:.csv'";
     SET v_gdmt = concat(char(10), "fields terminated by '^'", char(10), "lines terminated by '\r\n'");
 
     SET NAMES utf8mb4;
@@ -29,7 +29,7 @@ BEGIN
       fv VARCHAR(200) ,
       t  VARCHAR(200) DEFAULT 'into table' ,
       tv VARCHAR(200) ,
-      d  VARCHAR(200) DEFAULT "fields terminated by '^' lines terminated by '\r\n'"
+      d  VARCHAR(200) DEFAULT "fields terminated by '^' "
     );
 
     BEGIN
@@ -374,7 +374,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'alarm');
-            SET v_sql = concat(v_sql, char(10), v_outfile,v_gdmt);
+            SET v_sql = concat(v_sql, char(10), " into outfile ", v_outfile, v_gdmt);
             SET @alarm_pnew = v_sql;
             PREPARE stmt_alarm_pnew FROM @alarm_pnew;
             EXECUTE stmt_alarm_pnew;
@@ -460,7 +460,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'alarm_aux');
-            SET v_sql = concat(v_sql, char(10), v_outfile,v_gdmt);
+            SET v_sql = concat(v_sql, char(10), " into outfile ", v_outfile, v_gdmt);
             SET @alarm_aux_pnew = v_sql;
             PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
             EXECUTE stmt_alarm_aux_pnew;
@@ -479,7 +479,20 @@ BEGIN
 
 
             SET v_sd = v_ed;
-            SET v_ed = v_ed + INTERVAL 1 DAY;
+            BEGIN
+                DECLARE v_td DATETIME;
+
+                SET v_td = v_ed;
+
+                SET v_ed = v_td + INTERVAL 5 DAY;
+                IF v_ed <= v_ov
+                THEN
+                    ITERATE lbl_alarm;
+                END IF;
+
+                SET v_ed = v_td + INTERVAL 1 DAY;
+            END;
+
         END LOOP;
 
 
@@ -604,7 +617,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'c3_sms');
-            SET v_sql = concat(v_sms_sql, char(10), v_outfile,v_gdmt);
+            SET v_sql = concat(v_sms_sql, char(10), " into outfile ", v_outfile, v_gdmt);
             SET @c3_sms_pnew = v_sql;
             PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
             EXECUTE stmt_c3_sms_pnew USING @sd,@ed;
@@ -624,7 +637,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'c3_sms_monitor');
-            SET v_sql = concat(v_sms_sql, char(10), v_outfile,v_gdmt);
+            SET v_sql = concat(v_sms_sql, char(10), " into outfile ", v_outfile, v_gdmt);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
             EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
@@ -644,7 +657,7 @@ BEGIN
             /*
             SET v_outfile = replace(v_goutfile, ':file:', concat('nos_ac_pnew_', date(v_ed), p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'nos_ac');
-            SET v_sql = concat(v_ac_sql, char(10), v_outfile,v_gdmt);
+            SET v_sql = concat(v_ac_sql, char(10), " into outfile ", v_outfile,v_gdmt);
             SET @nos_ac_pnew = v_sql;
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
             EXECUTE stmt_nos_ac USING @sd,@ed;
@@ -668,20 +681,9 @@ BEGIN
                 DECLARE v_td DATETIME;
 
                 SET v_td = v_ed;
-                SET v_ed = v_td + INTERVAL 1 QUARTER;
-                IF v_ed < v_ov
-                THEN
-                    ITERATE lb_sms;
-                END IF;
 
-                SET v_ed = v_td + INTERVAL 1 MONTH;
-                IF v_ed < v_ov
-                THEN
-                    ITERATE lb_sms;
-                END IF;
-
-                SET v_ed = v_td + INTERVAL 1 WEEK;
-                IF v_ed < v_ov
+                SET v_ed = v_td + INTERVAL 5 DAY;
+                IF v_ed <= v_ov
                 THEN
                     ITERATE lb_sms;
                 END IF;
@@ -691,10 +693,10 @@ BEGIN
         END LOOP;
     END;
 
-    SELECT * FROM wv_load WHERE tv = 'nos_ac_pnew' INTO OUTFILE 'd:/loaddir/nos_ac/load_nos_ac.sql' FIELDS TERMINATED BY ' ';
-    SELECT * FROM wv_load WHERE tv = 'nos_aa_pnew' INTO OUTFILE 'd:/loaddir/nos_aa/load_nos_aa.sql' FIELDS TERMINATED BY ' ';
-    SELECT * FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql' FIELDS TERMINATED BY ' ';
-    SELECT * FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql' FIELDS TERMINATED BY ' ';
-    SELECT * FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql' FIELDS TERMINATED BY ' ';
-    SELECT * FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_nos_ac.sql' FIELDS TERMINATED BY ' ';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'nos_ac_pnew' INTO OUTFILE 'd:/loaddir/nos_ac/load_nos_ac.sql' FIELDS TERMINATED BY '^';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'nos_aa_pnew' INTO OUTFILE 'd:/loaddir/nos_aa/load_nos_aa.sql' FIELDS TERMINATED BY '^';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql' FIELDS TERMINATED BY '^';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql' FIELDS TERMINATED BY '^';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql' FIELDS TERMINATED BY '^';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_nos_ac.sql' FIELDS TERMINATED BY '^';
 END //
