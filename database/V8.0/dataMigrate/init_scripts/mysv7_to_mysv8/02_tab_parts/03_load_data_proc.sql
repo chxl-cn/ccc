@@ -10,6 +10,7 @@ CREATE PROCEDURE p_load_data_proc
     (
         p_date DATETIME
     ,   p_sort TINYINT
+    ,   p_sd   DATETIME
     )
 BEGIN
     DECLARE v_goutfile TEXT;
@@ -232,7 +233,7 @@ BEGIN
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
-            SET v_sd = '2015-01-01';
+            SET v_sd = p_sd;
             SET v_ed = v_sd + INTERVAL 1 DAY;
             SET v_ov = p_date;
         END IF;
@@ -373,7 +374,7 @@ BEGIN
             FROM tmp_mg_alarm';
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, ':dir:', concat('alarm', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', 'alarm');
             SET v_sql = concat(v_sql, char(10), v_outfile);
             SET @alarm_pnew = v_sql;
             PREPARE stmt_alarm_pnew FROM @alarm_pnew;
@@ -459,7 +460,7 @@ BEGIN
             FROM tmp_mg_alarm';
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, ':dir:', concat('alarm_aux', DATE(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', 'alarm_aux');
             SET v_sql = concat(v_sql, char(10), v_outfile);
             SET @alarm_aux_pnew = v_sql;
             PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
@@ -586,7 +587,7 @@ BEGIN
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
-            SET v_sd = '2015-01-01';
+            SET v_sd = p_sd;
             SET v_ed = v_sd + INTERVAL 1 DAY;
             SET v_ov = p_date;
         END IF;
@@ -603,7 +604,7 @@ BEGIN
             SET @ed = v_ed;
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, ':dir:', concat('c3_sms', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', 'c3_sms');
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_pnew = v_sql;
             PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
@@ -623,7 +624,7 @@ BEGIN
 
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, ':file:', concat('c3_sms_monitor', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':file:', 'c3_sms_monitor');
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
@@ -642,7 +643,7 @@ BEGIN
                     );
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('nos_ac_pnew_', date(v_ed), p_sort));
-            SET v_outfile = replace(v_outfile, ':dir:', concat('nos_ac', date(v_ed), p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', 'nos_ac');
             SET v_sql = concat(v_ac_sql, char(10), v_outfile);
             SET @nos_ac_pnew = v_sql;
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
