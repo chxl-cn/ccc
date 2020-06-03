@@ -215,7 +215,6 @@ BEGIN
 
         PREPARE stmt_create_tmp_alarm FROM @stmt_create_tmp_alarm;
         EXECUTE stmt_create_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
-
         DEALLOCATE PREPARE stmt_create_tmp_alarm;
 
         SET @stmt_insert_tmp_alarm = concat('insert into tmp_mg_alarm ', v_alarm_sql);
