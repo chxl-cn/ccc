@@ -19,7 +19,7 @@ BEGIN
 
     SET v_goutfile = concat
         (
-            "INTO OUTFILE 'd:/loaddir/?file.csv'"
+            "INTO OUTFILE 'd:/loaddir/?dir/?file.csv'"
         , char(10), "fields terminated by '^'"
         , char(10), "lines terminated by '\r\n'"
         );
@@ -36,11 +36,8 @@ BEGIN
     );
 
     BEGIN
-        DECLARE v_alarm_sql,v_aa_sql,v_ins_sql TEXT;
-        DECLARE v_sd DATETIME;
-        DECLARE v_ed DATETIME;
-        DECLARE v_sql TEXT;
-        DECLARE v_outfile TEXT;
+        DECLARE v_alarm_sql,v_aa_sql,v_sql,v_outfile TEXT;
+        DECLARE v_sd,v_ed,v_ov DATETIME;
 
 
         SET v_aa_sql = 'select * from nos_aa a where a.INPUTDATE>=? and a.INPUTDATE <? ';
@@ -228,35 +225,55 @@ BEGIN
         EXECUTE stmt_create_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
         DEALLOCATE PREPARE stmt_create_tmp_alarm;
 
-        SET @stmt_insert_tmp_alarm = concat('insert into tmp_mg_alarm ', v_alarm_sql);
-        PREPARE stmt_insert_tmp_alarm FROM @stmt_insert_tmp_alarm;
 
         IF p_sort = 1
         THEN
-            SET v_ed = current_date + INTERVAL 1 DAY;
+            SET v_ed = current_date;
             SET v_sd = p_date;
+            SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
-            SET v_ed = p_date;
             SET v_sd = '2015-01-01';
+            SET v_ed = v_sd + INTERVAL 1 DAY;
+            SET v_ov = p_date;
         END IF;
 
-        SET @sd = v_sd;
-        SET @ed = v_ed;
+        lbl_alarm:
+        LOOP
+            IF v_ed > v_ov
+            THEN
+                LEAVE lbl_alarm;
+            END IF;
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
-        SET v_sql = concat(v_aa_sql, char(10), v_outfile);
-        SET @nos_aa_pnew = v_sql;
-        PREPARE stmt_nos_aa FROM @nos_aa_pnew;
-        EXECUTE stmt_nos_aa USING @sd,@ed;
-        DEALLOCATE PREPARE stmt_nos_aa;
+            SET @sd = v_sd;
+            SET @ed = v_ed;
 
-        INSERT INTO wv_load(fv , tv )   VALUES(v_outfile,'nos_aa_pnew' );
+            SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_goutfile, '?dir', 'nos_aa');
 
+            SET v_sql = concat(v_aa_sql, char(10), v_outfile);
+            SET @nos_aa_pnew = v_sql;
+            PREPARE stmt_nos_aa FROM @nos_aa_pnew;
+            EXECUTE stmt_nos_aa USING @sd,@ed;
+            DEALLOCATE PREPARE stmt_nos_aa;
 
+            INSERT
+                INTO wv_load(
+                              fv
+                            , tv
+                )
+                VALUES
+                    (
+                        v_outfile
+                    ,   'nos_aa_pnew'
+                    );
 
-        EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
+            TRUNCATE TABLE tmp_mg_alarm;
+            SET @stmt_insert_tmp_alarm = concat('insert into tmp_mg_alarm ', v_alarm_sql);
+            PREPARE stmt_insert_tmp_alarm FROM @stmt_insert_tmp_alarm;
+            EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
+            DEALLOCATE PREPARE stmt_insert_tmp_alarm;
 
-        SET v_sql = '
+            SET v_sql = '
         SELECT id
              , vendor
              , category_code
@@ -355,16 +372,26 @@ BEGIN
              , process_status
             FROM tmp_mg_alarm';
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', date(v_ed), '_', p_sort));
-        SET v_sql = concat(v_sql, char(10), v_outfile);
-        SET @alarm_pnew = v_sql;
-        PREPARE stmt_alarm_pnew FROM @alarm_pnew;
-        EXECUTE stmt_alarm_pnew;
-        DEALLOCATE PREPARE stmt_alarm_pnew;
+            SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, '?dir', concat('alarm', date(v_ed), '_', p_sort));
+            SET v_sql = concat(v_sql, char(10), v_outfile);
+            SET @alarm_pnew = v_sql;
+            PREPARE stmt_alarm_pnew FROM @alarm_pnew;
+            EXECUTE stmt_alarm_pnew;
+            DEALLOCATE PREPARE stmt_alarm_pnew;
 
-        INSERT INTO wv_load(fv, tv)    VALUES (v_outfile , 'alarm_pnew' );
+            INSERT
+                INTO wv_load(
+                              fv
+                            , tv
+                )
+                VALUES
+                    (
+                        v_outfile
+                    ,   'alarm_pnew'
+                    );
 
-        SET v_sql = '
+            SET v_sql = '
         SELECT alarm_id
              , bmi_file_name
              , rpt_file_name
@@ -431,14 +458,30 @@ BEGIN
              ,null audit_status
             FROM tmp_mg_alarm';
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
-        SET v_sql = concat(v_sql, char(10), v_outfile);
-        SET @alarm_aux_pnew = v_sql;
-        PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
-        EXECUTE stmt_alarm_aux_pnew;
-        DEALLOCATE PREPARE stmt_alarm_aux_pnew;
+            SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, '?dir', concat('alarm_aux', DATE(v_ed), '_', p_sort));
+            SET v_sql = concat(v_sql, char(10), v_outfile);
+            SET @alarm_aux_pnew = v_sql;
+            PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
+            EXECUTE stmt_alarm_aux_pnew;
+            DEALLOCATE PREPARE stmt_alarm_aux_pnew;
 
-        INSERT INTO wv_load( fv , tv )   VALUES   (v_outfile,'alarm_aux_pnew' );
+            INSERT
+                INTO wv_load(
+                              fv
+                            , tv
+                )
+                VALUES
+                    (
+                        v_outfile
+                    ,   'alarm_aux_pnew'
+                    );
+
+
+            SET v_sd = v_ed;
+            SET v_ed = v_ed + INTERVAL 1 DAY;
+        END LOOP;
+
 
     END;
 
@@ -543,15 +586,15 @@ BEGIN
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
-            SET v_ed = '2018-01-01';
             SET v_sd = '2015-01-01';
+            SET v_ed = v_sd + INTERVAL 1 DAY;
             SET v_ov = p_date;
         END IF;
 
 
         lb_sms :
         LOOP
-            IF v_sd >= v_ov
+            IF v_ed > v_ov
             THEN
                 LEAVE lb_sms;
             END IF;
@@ -560,32 +603,62 @@ BEGIN
             SET @ed = v_ed;
 
             SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, '?dir', concat('c3_sms', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_pnew = v_sql;
             PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
             EXECUTE stmt_c3_sms_pnew USING @sd,@ed;
             DEALLOCATE PREPARE stmt_c3_sms_pnew;
 
-            INSERT  INTO wv_load( fv , tv  )  VALUES   ( v_outfile,   'c3_sms_pnew'  );
+            INSERT
+                INTO wv_load(
+                              fv
+                            , tv
+                )
+                VALUES
+                    (
+                        v_outfile
+                    ,   'c3_sms_pnew'
+                    );
 
 
             SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, '?file', concat('c3_sms_monitor', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
             EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
             DEALLOCATE PREPARE stmt_c3_sms_monitor_pnew;
 
-            INSERT INTO wv_load( fv, tv )   VALUES  (  v_outfile ,   'c3_sms_monitor_pnew' );
+            INSERT
+                INTO wv_load(
+                              fv
+                            , tv
+                )
+                VALUES
+                    (
+                        v_outfile
+                    ,   'c3_sms_monitor_pnew'
+                    );
 
             SET v_outfile = replace(v_goutfile, '?file', concat('nos_ac_pnew_', date(v_ed), p_sort));
+            SET v_outfile = replace(v_outfile, '?dir', concat('nos_ac', date(v_ed), p_sort));
             SET v_sql = concat(v_ac_sql, char(10), v_outfile);
             SET @nos_ac_pnew = v_sql;
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
             EXECUTE stmt_nos_ac USING @sd,@ed;
             DEALLOCATE PREPARE stmt_nos_ac;
 
-            INSERT   INTO wv_load( fv , tv   )   VALUES  (   v_outfile  ,   'nos_ac_pnew'  );
+            INSERT
+                INTO wv_load(
+                              fv
+                            , tv
+                )
+                VALUES
+                    (
+                        v_outfile
+                    ,   'nos_ac_pnew'
+                    );
 
             SET v_sd = v_ed;
             BEGIN
@@ -615,5 +688,10 @@ BEGIN
         END LOOP;
     END;
 
-    select * from wv_load INTO OUTFILE 'd:/loaddir/load_data.sql' FIELDS TERMINATED BY ' ';
+    SELECT * FROM wv_load WHERE tv = 'nos_ac_pnew' INTO OUTFILE 'd:/loaddir/nos_ac/load_nos_ac.sql' FIELDS TERMINATED BY ' ';
+    SELECT * FROM wv_load WHERE tv = 'nos_aa_pnew' INTO OUTFILE 'd:/loaddir/nos_aa/load_nos_aa.sql' FIELDS TERMINATED BY ' ';
+    SELECT * FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql' FIELDS TERMINATED BY ' ';
+    SELECT * FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql' FIELDS TERMINATED BY ' ';
+    SELECT * FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql' FIELDS TERMINATED BY ' ';
+    SELECT * FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_nos_ac.sql' FIELDS TERMINATED BY ' ';
 END //
