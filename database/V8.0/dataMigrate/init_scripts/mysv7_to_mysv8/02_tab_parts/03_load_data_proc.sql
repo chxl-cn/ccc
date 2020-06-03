@@ -19,7 +19,7 @@ BEGIN
 
     SET v_goutfile = concat
         (
-            "INTO OUTFILE 'd:/loaddir/?dir/?file.csv'"
+            "INTO OUTFILE 'd:/loaddir/:dir:/:file:.csv'"
         , char(10), "fields terminated by '^'"
         , char(10), "lines terminated by '\r\n'"
         );
@@ -247,8 +247,8 @@ BEGIN
             SET @sd = v_sd;
             SET @ed = v_ed;
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, '?dir', 'nos_aa');
+            SET v_outfile = replace(v_goutfile, ':file:', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', 'nos_aa');
 
             SET v_sql = concat(v_aa_sql, char(10), v_outfile);
             SET @nos_aa_pnew = v_sql;
@@ -372,8 +372,8 @@ BEGIN
              , process_status
             FROM tmp_mg_alarm';
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, '?dir', concat('alarm', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', concat('alarm', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sql, char(10), v_outfile);
             SET @alarm_pnew = v_sql;
             PREPARE stmt_alarm_pnew FROM @alarm_pnew;
@@ -458,8 +458,8 @@ BEGIN
              ,null audit_status
             FROM tmp_mg_alarm';
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, '?dir', concat('alarm_aux', DATE(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', concat('alarm_aux', DATE(v_ed), '_', p_sort));
             SET v_sql = concat(v_sql, char(10), v_outfile);
             SET @alarm_aux_pnew = v_sql;
             PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
@@ -602,8 +602,8 @@ BEGIN
             SET @sd = v_sd;
             SET @ed = v_ed;
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, '?dir', concat('c3_sms', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', concat('c3_sms', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_pnew = v_sql;
             PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
@@ -622,8 +622,8 @@ BEGIN
                     );
 
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, '?file', concat('c3_sms_monitor', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
+            SET v_outfile = replace(v_outfile, ':file:', concat('c3_sms_monitor', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
@@ -641,8 +641,8 @@ BEGIN
                     ,   'c3_sms_monitor_pnew'
                     );
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('nos_ac_pnew_', date(v_ed), p_sort));
-            SET v_outfile = replace(v_outfile, '?dir', concat('nos_ac', date(v_ed), p_sort));
+            SET v_outfile = replace(v_goutfile, ':file:', concat('nos_ac_pnew_', date(v_ed), p_sort));
+            SET v_outfile = replace(v_outfile, ':dir:', concat('nos_ac', date(v_ed), p_sort));
             SET v_sql = concat(v_ac_sql, char(10), v_outfile);
             SET @nos_ac_pnew = v_sql;
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
