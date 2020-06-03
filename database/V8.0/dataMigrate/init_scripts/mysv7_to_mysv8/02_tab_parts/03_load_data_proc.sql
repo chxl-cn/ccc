@@ -569,7 +569,7 @@ BEGIN
             SET @sd = v_sd;
             SET @ed = v_ed;
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_pnew_', v_ed, '_', p_sort));
+            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_pnew = v_sql;
             PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
@@ -577,7 +577,7 @@ BEGIN
             DEALLOCATE PREPARE stmt_c3_sms_pnew;
 
 
-            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_monitor_pnew_', v_ed, '_', p_sort));
+            SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
