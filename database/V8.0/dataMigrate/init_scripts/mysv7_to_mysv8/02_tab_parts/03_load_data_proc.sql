@@ -24,48 +24,16 @@ BEGIN
         , char(10), "lines terminated by '\r\n'"
         );
 
-    BEGIN
-
-        DECLARE v_aa_sql ,v_ac_sql,v_outfile,v_sql TEXT;
-        DECLARE v_sd,v_ed DATETIME;
-        SET v_aa_sql = 'select * from nos_aa a where a.INPUTDATE>=? and a.INPUTDATE <? ';
-        SET v_ac_sql = 'select * from nos_ac a where a.INPUTDATE>=? and a.INPUTDATE <? ';
-
-
-        IF p_sort = 1
-        THEN
-            SET v_sd = p_date;
-            SET v_ed = current_date + INTERVAL 1 DAY;
-        ELSE
-            SET v_sd = '2015-01-01';
-            SET v_ed = p_date;
-
-        END IF;
-
-
-        SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), p_sort));
-        SET v_sql = concat(v_aa_sql, char(10), v_outfile);
-        SET @nos_aa_pnew = v_sql;
-        PREPARE stmt_nos_aa FROM @nos_aa_pnew;
-        EXECUTE stmt_nos_aa;
-        DEALLOCATE PREPARE stmt_nos_aa;
-
-        SET v_outfile = replace(v_goutfile, '?file', concat('nos_ac_pnew_', date(v_ed), p_sort));
-        SET v_sql = concat(v_ac_sql, char(10), v_outfile);
-        SET @nos_ac_pnew = v_sql;
-        PREPARE stmt_nos_ac FROM @nos_ac_pnew;
-        EXECUTE stmt_nos_ac;
-        DEALLOCATE PREPARE stmt_nos_ac;
-
-    END;
-
 
     BEGIN
-        DECLARE v_alarm_sql TEXT;
+        DECLARE v_alarm_sql,v_aa_sql TEXT;
         DECLARE v_sd DATETIME;
         DECLARE v_ed DATETIME;
         DECLARE v_sql TEXT;
         DECLARE v_outfile TEXT;
+
+        SET v_aa_sql = 'select * from nos_aa a where a.INPUTDATE>=? and a.INPUTDATE <? ';
+
         SET v_alarm_sql =
                 'SELECT a.id  id,
                        vendor,
@@ -267,6 +235,15 @@ BEGIN
 
         EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
 
+
+        SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), p_sort));
+        SET v_sql = concat(v_aa_sql, char(10), v_outfile);
+        SET @nos_aa_pnew = v_sql;
+        PREPARE stmt_nos_aa FROM @nos_aa_pnew;
+        EXECUTE stmt_nos_aa;
+        DEALLOCATE PREPARE stmt_nos_aa;
+
+
         SET v_sql = '
         SELECT id
              , vendor
@@ -453,8 +430,9 @@ BEGIN
         DECLARE v_ed DATETIME;
         DECLARE v_sd DATETIME;
         DECLARE v_ov DATETIME;
-        DECLARE v_sms_sql,v_monitor_sql,v_sql,v_outfile TEXT;
+        DECLARE v_sms_sql,v_monitor_sql,v_ac_sql, v_sql,v_outfile TEXT;
 
+        SET v_ac_sql = 'select * from nos_ac a where a.INPUTDATE>=? and a.INPUTDATE <? ';
         SET v_sms_sql =
                 '
                 SELECT id,
@@ -581,6 +559,13 @@ BEGIN
             EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
             DEALLOCATE PREPARE stmt_c3_sms_monitor_pnew;
 
+
+            SET v_outfile = replace(v_goutfile, '?file', concat('nos_ac_pnew_', date(v_ed), p_sort));
+            SET v_sql = concat(v_ac_sql, char(10), v_outfile);
+            SET @nos_ac_pnew = v_sql;
+            PREPARE stmt_nos_ac FROM @nos_ac_pnew;
+            EXECUTE stmt_nos_ac;
+            DEALLOCATE PREPARE stmt_nos_ac;
 
             SET v_sd = v_ed;
             BEGIN
