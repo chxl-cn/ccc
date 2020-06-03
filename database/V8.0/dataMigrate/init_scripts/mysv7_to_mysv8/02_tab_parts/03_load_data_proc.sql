@@ -234,10 +234,14 @@ BEGIN
                        NULL          vi_add_ima,
                        NULL          oa_add_ima
                 FROM alarm a
-                         LEFT JOIN alarm_aux x ON a.id = x.alarm_id
-                    AND x.raised_time_aux >= ? AND raised_time_aux < ?
-                         LEFT JOIN alarm_img_data d ON a.id = d.alarm_id
-                    AND d.raise_time >= ? AND d.raise_time < ?
+                         LEFT JOIN alarm_aux x
+                              ON a.id = x.alarm_id
+                                 AND x.raised_time_aux >= ?
+                                 AND raised_time_aux < ?
+                         LEFT JOIN alarm_img_data d
+                               ON a.id = d.alarm_id
+                                  AND d.raise_time >= ?
+                                  AND d.raise_time < ?
                 WHERE a.raised_time >= ?
                   AND a.raised_time < ?
                 ';
@@ -261,7 +265,7 @@ BEGIN
             SET v_ed = current_date + INTERVAL 1 DAY;
             SET v_sd = p_date;
         ELSE
-            SET v_ed = p_date + INTERVAL 1 DAY;
+            SET v_ed = p_date;
             SET v_sd = '2015-01-01';
         END IF;
 
