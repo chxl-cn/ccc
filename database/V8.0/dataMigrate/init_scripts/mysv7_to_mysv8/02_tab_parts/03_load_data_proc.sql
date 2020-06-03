@@ -248,7 +248,7 @@ BEGIN
             SET @ed = v_ed;
 
             SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_goutfile, '?dir', 'nos_aa');
+            SET v_outfile = replace(v_outfile, '?dir', 'nos_aa');
 
             SET v_sql = concat(v_aa_sql, char(10), v_outfile);
             SET @nos_aa_pnew = v_sql;
