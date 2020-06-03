@@ -24,48 +24,41 @@ BEGIN
         , char(10), "lines terminated by '\r\n'"
         );
 
-    /*
-    IF p_sort = 0
-    THEN
-        INSERT INTO nos_aa_pnew SELECT * FROM nos_aa;
-        INSERT INTO nos_ac_pnew SELECT * FROM nos_ac;
+    BEGIN
 
-        DELETE FROM nos_aa_pnew WHERE INPUTDATE >= v_dt;
-        DELETE FROM nos_ac_pnew WHERE INPUTDATE >= v_dt;
+        DECLARE v_aa_sql ,v_ac_sql,v_outfile,v_sql TEXT;
+        DECLARE v_sd,v_ed DATETIME;
+        SET v_aa_sql = 'select * from nos_aa a where a.INPUTDATE>=? and a.INPUTDATE <? ';
+        SET v_ac_sql = 'select * from nos_ac a where a.INPUTDATE>=? and a.INPUTDATE <? ';
 
 
-    ELSE
-        INSERT
-            INTO nos_aa_pnew
-        WITH
-            taa_ids AS
-                (
-            SELECT id
-                FROM alarm
-                WHERE raised_time >= v_dt
-                )
-        SELECT a.*
-            FROM nos_aa  a
-               , taa_ids i
-            WHERE a.ID = i.id;
+        IF p_sort = 1
+        THEN
+            SET v_sd = p_date;
+            SET v_ed = current_date + INTERVAL 1 DAY;
+        ELSE
+            SET v_sd = '2015-01-01';
+            SET v_ed = p_date;
 
-        INSERT
-            INTO nos_ac_pnew
-        WITH
-            tac_ids AS (
-            SELECT id
-                FROM c3_sms
-                WHERE detect_time >= v_dt
-                       )
-        SELECT c.*
-            FROM nos_ac   c
-               , tac_ids i
-            WHERE c.id = i.id;
+        END IF;
 
 
-    END IF;
+        SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), p_sort));
+        SET v_sql = concat(v_aa_sql, char(10), v_outfile);
+        SET @nos_aa_pnew = v_sql;
+        PREPARE stmt_nos_aa FROM @nos_aa_pnew;
+        EXECUTE stmt_nos_aa;
+        DEALLOCATE PREPARE stmt_nos_aa;
 
-     */
+        SET v_outfile = replace(v_goutfile, '?file', concat('nos_ac_pnew_', date(v_ed), p_sort));
+        SET v_sql = concat(v_ac_sql, char(10), v_outfile);
+        SET @nos_ac_pnew = v_sql;
+        PREPARE stmt_nos_ac FROM @nos_ac_pnew;
+        EXECUTE stmt_nos_ac;
+        DEALLOCATE PREPARE stmt_nos_ac;
+
+    END;
+
 
     BEGIN
         DECLARE v_alarm_sql TEXT;
@@ -373,7 +366,7 @@ BEGIN
              , process_status
             FROM tmp_mg_alarm';
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', p_sort));
+        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', date(v_ed), p_sort));
         SET v_sql = concat(v_sql, char(10), v_outfile);
         SET @alarm_pnew = v_sql;
         PREPARE stmt_alarm_pnew FROM @alarm_pnew;
@@ -446,7 +439,7 @@ BEGIN
              , oa_add_ima
             FROM tmp_mg_alarm';
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', p_sort));
+        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
         SET v_sql = concat(v_sql, char(10), v_outfile);
         SET @alarm_aux_pnew = v_sql;
         PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
