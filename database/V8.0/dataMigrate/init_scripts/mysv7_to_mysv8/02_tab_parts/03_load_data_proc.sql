@@ -24,13 +24,24 @@ BEGIN
         , char(10), "lines terminated by '\r\n'"
         );
 
+    SET NAMES utf8mb4;
+
+    DROP TABLE IF EXISTS wv_load;
+    CREATE TEMPORARY TABLE wv_load
+    ( f  VARCHAR(200) DEFAULT 'load data infile' ,
+      fv VARCHAR(200) ,
+      t  VARCHAR(200) DEFAULT 'into table' ,
+      tv VARCHAR(200) ,
+      d  VARCHAR(200) DEFAULT "fields terminated by '^' lines terminated by '\r\n'"
+    );
 
     BEGIN
-        DECLARE v_alarm_sql,v_aa_sql TEXT;
+        DECLARE v_alarm_sql,v_aa_sql,v_ins_sql TEXT;
         DECLARE v_sd DATETIME;
         DECLARE v_ed DATETIME;
         DECLARE v_sql TEXT;
         DECLARE v_outfile TEXT;
+
 
         SET v_aa_sql = 'select * from nos_aa a where a.INPUTDATE>=? and a.INPUTDATE <? ';
 
@@ -232,12 +243,15 @@ BEGIN
         SET @sd = v_sd;
         SET @ed = v_ed;
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), p_sort));
+        SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
         SET v_sql = concat(v_aa_sql, char(10), v_outfile);
         SET @nos_aa_pnew = v_sql;
         PREPARE stmt_nos_aa FROM @nos_aa_pnew;
         EXECUTE stmt_nos_aa USING @sd,@ed;
         DEALLOCATE PREPARE stmt_nos_aa;
+
+        INSERT INTO wv_load(fv , tv )   VALUES(v_outfile,'nos_aa_pnew' );
+
 
 
         EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
@@ -341,13 +355,14 @@ BEGIN
              , process_status
             FROM tmp_mg_alarm';
 
-        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', date(v_ed), p_sort));
+        SET v_outfile = replace(v_goutfile, '?file', concat('alarm_pnew_', date(v_ed), '_', p_sort));
         SET v_sql = concat(v_sql, char(10), v_outfile);
         SET @alarm_pnew = v_sql;
         PREPARE stmt_alarm_pnew FROM @alarm_pnew;
         EXECUTE stmt_alarm_pnew;
         DEALLOCATE PREPARE stmt_alarm_pnew;
 
+        INSERT INTO wv_load(fv, tv)    VALUES (v_outfile , 'alarm_pnew' );
 
         SET v_sql = '
         SELECT alarm_id
@@ -423,6 +438,7 @@ BEGIN
         EXECUTE stmt_alarm_aux_pnew;
         DEALLOCATE PREPARE stmt_alarm_aux_pnew;
 
+        INSERT INTO wv_load( fv , tv )   VALUES   (v_outfile,'alarm_aux_pnew' );
 
     END;
 
@@ -550,6 +566,8 @@ BEGIN
             EXECUTE stmt_c3_sms_pnew USING @sd,@ed;
             DEALLOCATE PREPARE stmt_c3_sms_pnew;
 
+            INSERT  INTO wv_load( fv , tv  )  VALUES   ( v_outfile,   'c3_sms_pnew'  );
+
 
             SET v_outfile = replace(v_goutfile, '?file', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
             SET v_sql = concat(v_sms_sql, char(10), v_outfile);
@@ -558,6 +576,7 @@ BEGIN
             EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
             DEALLOCATE PREPARE stmt_c3_sms_monitor_pnew;
 
+            INSERT INTO wv_load( fv, tv )   VALUES  (  v_outfile ,   'c3_sms_monitor_pnew' );
 
             SET v_outfile = replace(v_goutfile, '?file', concat('nos_ac_pnew_', date(v_ed), p_sort));
             SET v_sql = concat(v_ac_sql, char(10), v_outfile);
@@ -565,6 +584,8 @@ BEGIN
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
             EXECUTE stmt_nos_ac USING @sd,@ed;
             DEALLOCATE PREPARE stmt_nos_ac;
+
+            INSERT   INTO wv_load( fv , tv   )   VALUES  (   v_outfile  ,   'nos_ac_pnew'  );
 
             SET v_sd = v_ed;
             BEGIN
@@ -593,4 +614,6 @@ BEGIN
             END;
         END LOOP;
     END;
+
+    select * from wv_load INTO OUTFILE 'd:/loaddir/load_data.sql';
 END //
