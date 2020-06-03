@@ -553,7 +553,7 @@ BEGIN
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
         ELSE
-            SET v_ed = '2018-01-02';
+            SET v_ed = '2018-01-01';
             SET v_sd = '2015-01-01';
             SET v_ov = p_date;
         END IF;
@@ -586,8 +586,30 @@ BEGIN
 
 
             SET v_sd = v_ed;
-            SET v_ed = v_ed + INTERVAL 1 QUARTER;
+            BEGIN
+                DECLARE v_td DATETIME;
 
+                SET v_td = v_ed;
+                SET v_ed = v_td + INTERVAL 1 QUARTER;
+                IF v_ed < v_ov
+                THEN
+                    ITERATE lb_sms;
+                END IF;
+
+                SET v_ed = v_td + INTERVAL 1 MONTH;
+                IF v_ed < v_ov
+                THEN
+                    ITERATE lb_sms;
+                END IF;
+
+                SET v_ed = v_td + INTERVAL 1 WEEK;
+                IF v_ed < v_ov
+                THEN
+                    ITERATE lb_sms;
+                END IF;
+
+                SET v_ed = v_td + INTERVAL 1 DAY;
+            END;
         END LOOP;
     END;
 END //
