@@ -349,7 +349,8 @@ BEGIN
         DEALLOCATE PREPARE stmt_alarm_pnew;
 
 
-        SET v_sql = 'SELECT alarm_id
+        SET v_sql = '
+        SELECT alarm_id
              , bmi_file_name
              , rpt_file_name
              , bow_offset
@@ -412,6 +413,7 @@ BEGIN
              , map_add_ima
              , vi_add_ima
              , oa_add_ima
+             ,null audit_status
             FROM tmp_mg_alarm';
 
         SET v_outfile = replace(v_goutfile, '?file', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
