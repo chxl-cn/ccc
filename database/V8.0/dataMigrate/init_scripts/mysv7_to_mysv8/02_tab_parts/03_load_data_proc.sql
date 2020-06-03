@@ -232,16 +232,15 @@ BEGIN
         SET @sd = v_sd;
         SET @ed = v_ed;
 
-        EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
-
-
         SET v_outfile = replace(v_goutfile, '?file', concat('nos_aa_pnew_', date(v_ed), p_sort));
         SET v_sql = concat(v_aa_sql, char(10), v_outfile);
         SET @nos_aa_pnew = v_sql;
         PREPARE stmt_nos_aa FROM @nos_aa_pnew;
-        EXECUTE stmt_nos_aa;
+        EXECUTE stmt_nos_aa USING @sd,@ed;
         DEALLOCATE PREPARE stmt_nos_aa;
 
+
+        EXECUTE stmt_insert_tmp_alarm USING @sd,@ed,@sd,@ed,@sd,@ed;
 
         SET v_sql = '
         SELECT id
@@ -563,7 +562,7 @@ BEGIN
             SET v_sql = concat(v_ac_sql, char(10), v_outfile);
             SET @nos_ac_pnew = v_sql;
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
-            EXECUTE stmt_nos_ac;
+            EXECUTE stmt_nos_ac USING @sd,@ed;
             DEALLOCATE PREPARE stmt_nos_ac;
 
             SET v_sd = v_ed;
