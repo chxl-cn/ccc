@@ -484,39 +484,38 @@ BEGIN
 
         SET v_monitor_sql =
                 '
-
-            SELECT id,
-                   detect_time,
-                   device_group_no,
-                   device_version,
-                   temp_sensor_status,
-                   bow_updown_status,
-                   parallel_span,
-                   env_temp_1,
-                   env_temp_2,
-                   env_temp_3,
-                   env_temp_4,
-                   line_height_1,
-                   line_height_2,
-                   line_height_3,
-                   line_height_4,
-                   irv_temp_1,
-                   irv_temp_2,
-                   irv_temp_3,
-                   irv_temp_4,
-                   pulling_value_1,
-                   pulling_value_2,
-                   pulling_value_3,
-                   pulling_value_4,
-                   is_con_fz,
-                   is_con_ir,
-                   is_con_ov,
-                   is_con_vi,
-                   is_rec_fz,
-                   is_rec_ir,
-                   is_rec_ov,
-                   is_rec_vi,
-                   extra_info
+            SELECT id
+                 , detect_time
+                 , device_group_no
+                 , device_version
+                 , temp_sensor_status
+                 , bow_updown_status
+                 , parallel_span
+                 , env_temp_1
+                 , env_temp_2
+                 , env_temp_3
+                 , env_temp_4
+                 , line_height_1
+                 , line_height_2
+                 , line_height_3
+                 , line_height_4
+                 , irv_temp_1
+                 , irv_temp_2
+                 , irv_temp_3
+                 , irv_temp_4
+                 , pulling_value_1
+                 , pulling_value_2
+                 , pulling_value_3
+                 , pulling_value_4
+                 , is_con_fz
+                 , is_con_ir
+                 , is_con_ov
+                 , is_con_vi
+                 , is_rec_fz
+                 , is_rec_ir
+                 , is_rec_ov
+                 , is_rec_vi
+                 , extra_info
             FROM c3_sms
             WHERE detect_time >= ?
               AND detect_time < ?
