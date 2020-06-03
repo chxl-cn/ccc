@@ -13,17 +13,13 @@ CREATE PROCEDURE p_load_data_proc
     ,   p_sd   DATETIME
     )
 BEGIN
-    DECLARE v_goutfile TEXT;
+    DECLARE v_goutfile,v_gdmt TEXT;
     DECLARE v_dt VARCHAR(20);
     SET v_dt = p_date + 0;
 
 
-    SET v_goutfile = concat
-        (
-            "INTO OUTFILE 'd:/loaddir/:dir:/:file:.csv'"
-        , char(10), "fields terminated by '^'"
-        , char(10), "lines terminated by '\r\n'"
-        );
+    SET v_goutfile = "INTO OUTFILE 'd:/loaddir/:dir:/:file:.csv'";
+    SET v_gdmt = concat(char(10), "fields terminated by '^'", char(10), "lines terminated by '\r\n'");
 
     SET NAMES utf8mb4;
 
@@ -252,7 +248,7 @@ BEGIN
             SET v_outfile = replace(v_outfile, ':dir:', 'nos_aa');
 
             /*
-            SET v_sql = concat(v_aa_sql, char(10), v_outfile);
+            SET v_sql = concat(v_aa_sql, char(10), v_outfile,v_gdmt);
             SET @nos_aa_pnew = v_sql;
             PREPARE stmt_nos_aa FROM @nos_aa_pnew;
             EXECUTE stmt_nos_aa USING @sd,@ed;
@@ -378,7 +374,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'alarm');
-            SET v_sql = concat(v_sql, char(10), v_outfile);
+            SET v_sql = concat(v_sql, char(10), v_outfile,v_gdmt);
             SET @alarm_pnew = v_sql;
             PREPARE stmt_alarm_pnew FROM @alarm_pnew;
             EXECUTE stmt_alarm_pnew;
@@ -464,7 +460,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('alarm_aux_pnew_', DATE(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'alarm_aux');
-            SET v_sql = concat(v_sql, char(10), v_outfile);
+            SET v_sql = concat(v_sql, char(10), v_outfile,v_gdmt);
             SET @alarm_aux_pnew = v_sql;
             PREPARE stmt_alarm_aux_pnew FROM @alarm_aux_pnew;
             EXECUTE stmt_alarm_aux_pnew;
@@ -608,7 +604,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'c3_sms');
-            SET v_sql = concat(v_sms_sql, char(10), v_outfile);
+            SET v_sql = concat(v_sms_sql, char(10), v_outfile,v_gdmt);
             SET @c3_sms_pnew = v_sql;
             PREPARE stmt_c3_sms_pnew FROM @c3_sms_pnew;
             EXECUTE stmt_c3_sms_pnew USING @sd,@ed;
@@ -628,7 +624,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'c3_sms_monitor');
-            SET v_sql = concat(v_sms_sql, char(10), v_outfile);
+            SET v_sql = concat(v_sms_sql, char(10), v_outfile,v_gdmt);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
             EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
@@ -648,7 +644,7 @@ BEGIN
             /*
             SET v_outfile = replace(v_goutfile, ':file:', concat('nos_ac_pnew_', date(v_ed), p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'nos_ac');
-            SET v_sql = concat(v_ac_sql, char(10), v_outfile);
+            SET v_sql = concat(v_ac_sql, char(10), v_outfile,v_gdmt);
             SET @nos_ac_pnew = v_sql;
             PREPARE stmt_nos_ac FROM @nos_ac_pnew;
             EXECUTE stmt_nos_ac USING @sd,@ed;
