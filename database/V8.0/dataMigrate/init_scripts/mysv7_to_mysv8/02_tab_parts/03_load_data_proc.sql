@@ -615,5 +615,5 @@ BEGIN
         END LOOP;
     END;
 
-    select * from wv_load INTO OUTFILE 'd:/loaddir/load_data.sql';
+    select * from wv_load INTO OUTFILE 'd:/loaddir/load_data.sql' FIELDS TERMINATED BY ' ';
 END //
