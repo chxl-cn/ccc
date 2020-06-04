@@ -185,7 +185,7 @@ BEGIN
             SET _is_con_fz = if(v_is_con_fz, if(v_is_con_fz & 2, '正常', '异常'), NULL);
             SET _is_rec_fz = if(v_is_rec_fz AND v_is_gport, if(v_is_rec_fz & 2, '正常', '异常'), NULL);
             SET _bow_updown_status = if(v_bow_updown_status & 2, '升', NULL);
-            SET _temp_sensor_status = if(v_temp_sensor_status & 2, '升', NULL);
+            SET _temp_sensor_status = if(v_temp_sensor_status & 2, '正常', NULL);
             SET _socket1 = regexp_substr(regexp_substr(v_extra_info, 'SocketStatus[^,]+'), '[[:digit:]]+', 1, 1);
             SET _socket2 = regexp_substr(regexp_substr(v_extra_info, 'SocketStatus[^,]+'), '[[:digit:]]+', 1, 2);
             SET _cpu1 = regexp_substr(regexp_substr(v_extra_info, 'CpuUsingRate[^,]+'), '[[:digit:]]+', 1, 1);
@@ -253,7 +253,7 @@ BEGIN
             SET _is_con_fz = if(v_is_con_fz, IF(v_is_con_fz & 1, '正常', '异常'), NULL);
             SET _is_rec_fz = if(v_is_rec_fz AND v_is_gport, IF(v_is_rec_fz & 1, '正常', '异常'), NULL);
             SET _bow_updown_status = IF(v_bow_updown_status & 1, '升', NULL);
-            SET _temp_sensor_status = IF(v_temp_sensor_status & 1, '升', NULL);
+            SET _temp_sensor_status = IF(v_temp_sensor_status & 1, '正常', NULL);
             SET _socket1 = regexp_substr(regexp_substr(v_extra_info, 'SocketStatus[^,]+'), '[[:digit:]]+', 1, 3);
             SET _socket2 = regexp_substr(regexp_substr(v_extra_info, 'SocketStatus[^,]+'), '[[:digit:]]+', 1, 4);
             SET _cpu1 = regexp_substr(regexp_substr(v_extra_info, 'CpuUsingRate[^,]+'), '[[:digit:]]+', 1, 3);
