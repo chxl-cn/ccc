@@ -29,7 +29,7 @@ BEGIN
       fv VARCHAR(200) ,
       t  VARCHAR(200) DEFAULT ' into table ' ,
       tv VARCHAR(200) ,
-      d  VARCHAR(200) DEFAULT " fields terminated by '^' lines terminated by '\r\n'"
+      d  VARCHAR(200) DEFAULT " fields terminated by '^' ;"
     );
 
     BEGIN
