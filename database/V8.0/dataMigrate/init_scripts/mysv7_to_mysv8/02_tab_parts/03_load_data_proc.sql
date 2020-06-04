@@ -25,11 +25,11 @@ BEGIN
 
     DROP TABLE IF EXISTS wv_load;
     CREATE TEMPORARY TABLE wv_load
-    ( f  VARCHAR(200) DEFAULT 'load data infile' ,
+    ( f  VARCHAR(200) DEFAULT 'load data infile ' ,
       fv VARCHAR(200) ,
-      t  VARCHAR(200) DEFAULT 'into table' ,
+      t  VARCHAR(200) DEFAULT ' into table' ,
       tv VARCHAR(200) ,
-      d  VARCHAR(200) DEFAULT "fields terminated by '^' lines terminated by '\\\\r\\\\n'"
+      d  VARCHAR(200) DEFAULT " fields terminated by '^' lines terminated by '\\r\\n'"
     );
 
     BEGIN
