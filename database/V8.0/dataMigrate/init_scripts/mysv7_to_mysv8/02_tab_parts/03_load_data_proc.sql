@@ -462,7 +462,7 @@ BEGIN
 
                 SET v_td = v_ed;
 
-                SET v_ed = v_td + INTERVAL 5 DAY;
+                SET v_ed = v_td + INTERVAL 1 WEEK;
                 IF v_ed <= v_ov
                 THEN
                     ITERATE lbl_alarm;
@@ -639,7 +639,7 @@ BEGIN
 
                 SET v_td = v_ed;
 
-                SET v_ed = v_td + INTERVAL 5 DAY;
+                SET v_ed = v_td + INTERVAL 1 WEEK;
                 IF v_ed <= v_ov
                 THEN
                     ITERATE lb_sms;
@@ -650,8 +650,8 @@ BEGIN
         END LOOP;
     END;
 
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql' ;
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql' ;
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql' ;
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_nos_ac.sql' ;
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_nos_ac.sql';
 END //
