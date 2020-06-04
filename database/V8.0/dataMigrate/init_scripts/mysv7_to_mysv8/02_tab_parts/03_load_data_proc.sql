@@ -472,13 +472,13 @@ BEGIN
 
                 SET v_td = v_ed;
 
-                SET v_ed = v_td + INTERVAL 1 QUARTER ;
+                SET v_ed = v_td + INTERVAL 1 QUARTER;
                 IF v_ed <= v_ov
                 THEN
                     ITERATE lbl_alarm;
                 END IF;
 
-                SET v_ed = v_td + INTERVAL 1 MONTH ;
+                SET v_ed = v_td + INTERVAL 1 MONTH;
                 IF v_ed <= v_ov
                 THEN
                     ITERATE lbl_alarm;
@@ -669,6 +669,18 @@ BEGIN
                 DECLARE v_td DATETIME;
 
                 SET v_td = v_ed;
+
+                SET v_ed = v_td + INTERVAL 1 QUARTER;
+                IF v_ed <= v_ov
+                THEN
+                    ITERATE lb_sms;
+                END IF;
+
+                SET v_ed = v_td + INTERVAL 1 MONTH;
+                IF v_ed <= v_ov
+                THEN
+                    ITERATE lb_sms;
+                END IF;
 
                 SET v_ed = v_td + INTERVAL 1 WEEK;
                 IF v_ed <= v_ov
