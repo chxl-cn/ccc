@@ -1,0 +1,325 @@
+{
+  "TableName": "alarm_aux",
+  "Fields": [
+    {
+      "SourceName": "alarm_id",
+      "TargetName": "alarm_id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "bmi_file_name",
+      "TargetName": "bmi_file_name",
+      "DataType": 0
+    },
+    {
+      "SourceName": "rpt_file_name",
+      "TargetName": "rpt_file_name",
+      "DataType": 0
+    },
+    {
+      "SourceName": "bow_offset",
+      "TargetName": "bow_offset",
+      "DataType": 2
+    },
+    {
+      "SourceName": "gps_body_direction",
+      "TargetName": "gps_body_direction",
+      "DataType": 0
+    },
+    {
+      "SourceName": "img_body_direction",
+      "TargetName": "img_body_direction",
+      "DataType": 0
+    },
+    {
+      "SourceName": "reportwordurl",
+      "TargetName": "reportwordurl",
+      "DataType": 0
+    },
+    {
+      "SourceName": "lock_person_name",
+      "TargetName": "lock_person_name",
+      "DataType": 0
+    },
+    {
+      "SourceName": "lock_time",
+      "TargetName": "lock_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "confidence_level",
+      "TargetName": "confidence_level",
+      "DataType": 1
+    },
+    {
+      "SourceName": "raised_time_aux",
+      "TargetName": "raised_time_aux",
+      "DataType": 3
+    },
+    {
+      "SourceName": "is_abnormal",
+      "TargetName": "is_abnormal",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue6",
+      "TargetName": "svalue6",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue7",
+      "TargetName": "svalue7",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue10",
+      "TargetName": "svalue10",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue12",
+      "TargetName": "svalue12",
+      "DataType": 0
+    },
+    {
+      "SourceName": "svalue13",
+      "TargetName": "svalue13",
+      "DataType": 0
+    },
+    {
+      "SourceName": "alarm_reason",
+      "TargetName": "alarm_reason",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "airesult",
+      "DataType": 0
+    },
+    {
+      "SourceName": "remark",
+      "TargetName": "remark",
+      "DataType": 0
+    },
+    {
+      "SourceName": "trans_info",
+      "TargetName": "trans_info",
+      "DataType": 0
+    },
+    {
+      "SourceName": "dev_name",
+      "TargetName": "dev_name",
+      "DataType": 0
+    },
+    {
+      "SourceName": "station_name",
+      "TargetName": "station_name",
+      "DataType": 0
+    },
+    {
+      "SourceName": "process_deptname",
+      "TargetName": "process_deptname",
+      "DataType": 0
+    },
+    {
+      "SourceName": "report_deptname",
+      "TargetName": "report_deptname",
+      "DataType": 0
+    },
+    {
+      "SourceName": "plan_id",
+      "TargetName": "plan_id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "plan_task_id",
+      "TargetName": "plan_task_id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "process_date",
+      "TargetName": "process_date",
+      "DataType": 3
+    },
+    {
+      "SourceName": "process_details",
+      "TargetName": "process_details",
+      "DataType": 0
+    },
+    {
+      "SourceName": "process_overdue",
+      "TargetName": "process_overdue",
+      "DataType": 0
+    },
+    {
+      "SourceName": "process_person",
+      "TargetName": "process_person",
+      "DataType": 0
+    },
+    {
+      "SourceName": "process_type",
+      "TargetName": "process_type",
+      "DataType": 0
+    },
+    {
+      "SourceName": "profession_type",
+      "TargetName": "profession_type",
+      "DataType": 0
+    },
+    {
+      "SourceName": "repaired_pic",
+      "TargetName": "repaired_pic",
+      "DataType": 0
+    },
+    {
+      "SourceName": "repaired_status",
+      "TargetName": "repaired_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "repair_method",
+      "TargetName": "repair_method",
+      "DataType": 0
+    },
+    {
+      "SourceName": "repair_org",
+      "TargetName": "repair_org",
+      "DataType": 0
+    },
+    {
+      "SourceName": "repair_person",
+      "TargetName": "repair_person",
+      "DataType": 0
+    },
+    {
+      "SourceName": "report_overdue",
+      "TargetName": "report_overdue",
+      "DataType": 0
+    },
+    {
+      "SourceName": "review_info",
+      "TargetName": "review_info",
+      "DataType": 0
+    },
+    {
+      "SourceName": "review_person",
+      "TargetName": "review_person",
+      "DataType": 0
+    },
+    {
+      "SourceName": "review_time",
+      "TargetName": "review_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "check_details",
+      "TargetName": "check_details",
+      "DataType": 0
+    },
+    {
+      "SourceName": "check_person",
+      "TargetName": "check_person",
+      "DataType": 0
+    },
+    {
+      "SourceName": "check_result",
+      "TargetName": "check_result",
+      "DataType": 0
+    },
+    {
+      "SourceName": "harddisk_manage_id",
+      "TargetName": "harddisk_manage_id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "attachment",
+      "TargetName": "attachment",
+      "DataType": 0
+    },
+    {
+      "SourceName": "comp_code",
+      "TargetName": "comp_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "comp_type",
+      "TargetName": "comp_type",
+      "DataType": 0
+    },
+    {
+      "SourceName": "nvalue7",
+      "TargetName": "nvalue7",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue9",
+      "TargetName": "nvalue9",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue11",
+      "TargetName": "nvalue11",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue12",
+      "TargetName": "nvalue12",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue17",
+      "TargetName": "nvalue17",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue18",
+      "TargetName": "nvalue18",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue19",
+      "TargetName": "nvalue19",
+      "DataType": 1
+    },
+    {
+      "SourceName": "nvalue20",
+      "TargetName": "nvalue20",
+      "DataType": 1
+    },
+    {
+      "SourceName": "power_device_code",
+      "TargetName": "power_device_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "power_device_type",
+      "TargetName": "power_device_type",
+      "DataType": 0
+    },
+    {
+      "SourceName": "substation_code",
+      "TargetName": "substation_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "map_add_ima",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "vi_add_ima",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "oa_add_ima",
+      "DataType": 0
+    },
+    {
+      "SourceName": "audit_status",
+      "TargetName": "audit_status",
+      "DataType": 0
+    }
+  ]
+}
