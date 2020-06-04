@@ -1,0 +1,210 @@
+{
+  "TableName": "c3_sms",
+  "Fields": [
+    {
+      "SourceName": "id",
+      "TargetName": "id",
+      "DataType": 0
+    },
+    {
+      "SourceName": "detect_time",
+      "TargetName": "detect_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "locomotive_code",
+      "TargetName": "locomotive_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "bow_status",
+      "TargetName": "bow_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "p_org_code",
+      "TargetName": "p_org_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "train_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "pole_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "pole_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "log_filename",
+      "DataType": 0
+    },
+    {
+      "SourceName": "gps_course",
+      "TargetName": "gps_course",
+      "DataType": 2
+    },
+    {
+      "SourceName": "gps_speed",
+      "TargetName": "gps_speed",
+      "DataType": 2
+    },
+    {
+      "SourceName": "km_mark",
+      "TargetName": "km_mark",
+      "DataType": 1
+    },
+    {
+      "SourceName": "record_time",
+      "TargetName": "record_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "line_no",
+      "TargetName": "line_no",
+      "DataType": 1
+    },
+    {
+      "SourceName": "",
+      "TargetName": "routing_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "satellite_num",
+      "TargetName": "satellite_num",
+      "DataType": 1
+    },
+    {
+      "SourceName": "speed",
+      "TargetName": "speed",
+      "DataType": 1
+    },
+    {
+      "SourceName": "recv_time",
+      "TargetName": "recv_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "line_code",
+      "TargetName": "line_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "direction",
+      "TargetName": "direction",
+      "DataType": 0
+    },
+    {
+      "SourceName": "position_code",
+      "TargetName": "position_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "bureau_code",
+      "TargetName": "bureau_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "power_section_code",
+      "TargetName": "power_section_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "org_code",
+      "TargetName": "org_code",
+      "DataType": 0
+    },
+    {
+      "SourceName": "eoas_direction",
+      "TargetName": "eoas_direction",
+      "DataType": 0
+    },
+    {
+      "SourceName": "eoas_km",
+      "TargetName": "eoas_km",
+      "DataType": 1
+    },
+    {
+      "SourceName": "eoas_location",
+      "TargetName": "eoas_location",
+      "DataType": 1
+    },
+    {
+      "SourceName": "eoas_time",
+      "TargetName": "eoas_time",
+      "DataType": 3
+    },
+    {
+      "SourceName": "pos_confirmed",
+      "TargetName": "pos_confirmed",
+      "DataType": 0
+    },
+    {
+      "SourceName": "tax_monitor_status",
+      "TargetName": "tax_monitor_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "tax_position",
+      "TargetName": "tax_position",
+      "DataType": 0
+    },
+    {
+      "SourceName": "tax_schedule_status",
+      "TargetName": "tax_schedule_status",
+      "DataType": 0
+    },
+    {
+      "SourceName": "version",
+      "TargetName": "version",
+      "DataType": 0
+    },
+    {
+      "SourceName": "invalid_track",
+      "TargetName": "invalid_track",
+      "DataType": 0
+    },
+    {
+      "SourceName": "trans_info",
+      "TargetName": "trans_info",
+      "DataType": 0
+    },
+    {
+      "SourceName": "driver_no",
+      "TargetName": "driver_no",
+      "DataType": 0
+    },
+    {
+      "SourceName": "file_location",
+      "TargetName": "file_location",
+      "DataType": 0
+    },
+    {
+      "SourceName": "backup_file_dir",
+      "TargetName": "backup_file_dir",
+      "DataType": 0
+    },
+    {
+      "SourceName": "relative_path",
+      "TargetName": "relative_path",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "log_file_path",
+      "DataType": 0
+    },
+    {
+      "SourceName": "",
+      "TargetName": "valid_gps",
+      "DataType": 1
+    }
+  ]
+}
