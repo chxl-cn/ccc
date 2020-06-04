@@ -244,28 +244,6 @@ BEGIN
             SET @sd = v_sd;
             SET @ed = v_ed;
 
-            SET v_outfile = replace(v_goutfile, ':file:', concat('nos_aa_pnew_', date(v_ed), '_', p_sort));
-            SET v_outfile = replace(v_outfile, ':dir:', 'nos_aa');
-
-            /*
-            SET v_sql = concat(v_aa_sql, char(10), v_outfile,v_gdmt);
-            SET @nos_aa_pnew = v_sql;
-            PREPARE stmt_nos_aa FROM @nos_aa_pnew;
-            EXECUTE stmt_nos_aa USING @sd,@ed;
-            DEALLOCATE PREPARE stmt_nos_aa;
-
-
-             */
-            INSERT
-                INTO wv_load(
-                              fv
-                            , tv
-                )
-                VALUES
-                    (
-                        v_outfile
-                    ,   'nos_aa_pnew'
-                    );
 
             TRUNCATE TABLE tmp_mg_alarm;
             SET @stmt_insert_tmp_alarm = concat('insert into tmp_mg_alarm ', v_alarm_sql);
@@ -654,27 +632,6 @@ BEGIN
                     ,   'c3_sms_monitor_pnew'
                     );
 
-            /*
-            SET v_outfile = replace(v_goutfile, ':file:', concat('nos_ac_pnew_', date(v_ed), p_sort));
-            SET v_outfile = replace(v_outfile, ':dir:', 'nos_ac');
-            SET v_sql = concat(v_ac_sql, char(10), " into outfile ", v_outfile,v_gdmt);
-            SET @nos_ac_pnew = v_sql;
-            PREPARE stmt_nos_ac FROM @nos_ac_pnew;
-            EXECUTE stmt_nos_ac USING @sd,@ed;
-            DEALLOCATE PREPARE stmt_nos_ac;
-
-
-             */
-            INSERT
-                INTO wv_load(
-                              fv
-                            , tv
-                )
-                VALUES
-                    (
-                        v_outfile
-                    ,   'nos_ac_pnew'
-                    );
 
             SET v_sd = v_ed;
             BEGIN
@@ -693,8 +650,6 @@ BEGIN
         END LOOP;
     END;
 
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'nos_ac_pnew' INTO OUTFILE 'd:/loaddir/nos_ac/load_nos_ac.sql' ;
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'nos_aa_pnew' INTO OUTFILE 'd:/loaddir/nos_aa/load_nos_aa.sql' ;
     SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql' ;
     SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql' ;
     SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql' ;
