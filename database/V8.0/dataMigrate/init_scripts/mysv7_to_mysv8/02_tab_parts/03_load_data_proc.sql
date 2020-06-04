@@ -586,6 +586,15 @@ BEGIN
             SET v_ed = current_date;
             SET v_sd = p_date;
             SET v_ov = v_ed + INTERVAL 1 DAY;
+
+            DELETE FROM nos_ac_pnew p WHERE p.INPUTDATE >= p_date AND p.INPUTDATE < current_date + INTERVAL 1 DAY;
+
+            INSERT
+                INTO nos_ac_pnew
+            SELECT r.*
+                FROM c3_sms                l
+                         INNER JOIN nos_ac r
+                                    ON l.id = r.ID AND l.detect_time >= p_date AND l.detect_time < current_date + INTERVAL 1 DAY;
         ELSE
             SET v_sd = p_sd;
             SET v_ed = v_sd + INTERVAL 1 DAY;
