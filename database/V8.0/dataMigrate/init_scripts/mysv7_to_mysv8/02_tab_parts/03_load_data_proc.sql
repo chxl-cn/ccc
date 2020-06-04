@@ -615,7 +615,7 @@ BEGIN
 
             SET v_outfile = replace(v_goutfile, ':file:', concat('c3_sms_monitor_pnew_', date(v_ed), '_', p_sort));
             SET v_outfile = replace(v_outfile, ':dir:', 'c3_sms_monitor');
-            SET v_sql = concat(v_sms_sql, char(10), " into outfile ", v_outfile, v_gdmt);
+            SET v_sql = concat(v_monitor_sql, char(10), " into outfile ", v_outfile, v_gdmt);
             SET @c3_sms_monitor_pnew = v_sql;
             PREPARE stmt_c3_sms_monitor_pnew FROM @c3_sms_monitor_pnew;
             EXECUTE stmt_c3_sms_monitor_pnew USING @sd,@ed;
