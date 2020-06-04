@@ -19,7 +19,7 @@ BEGIN
 
 
     SET v_goutfile = "'d:/loaddir/:dir:/:file:.csv'";
-    SET v_gdmt = concat(char(10), "fields terminated by '^'", char(10), "lines terminated by '\r\n'");
+    SET v_gdmt = concat(char(10), "fields terminated by '^'" /*, char(10), "lines terminated by '\r\n'"*/ );
 
     SET NAMES utf8mb4;
 
@@ -525,7 +525,7 @@ BEGIN
                        backup_file_dir,
                        relative_path,
                        NULL log_file_path,
-                       NULL valid_gps
+                       cast(NULL as DECIMAL(1)) valid_gps
                 FROM c3_sms
                 WHERE detect_time >= ?
                   AND detect_time < ?
@@ -538,7 +538,7 @@ BEGIN
                  , detect_time
                  , device_group_no
                  , device_version
-                 , temp_sensor_status
+                 , cast(temp_sensor_status as char(2))  temp_sensor_status
                  , bow_updown_status
                  , parallel_span
                  , env_temp_1
