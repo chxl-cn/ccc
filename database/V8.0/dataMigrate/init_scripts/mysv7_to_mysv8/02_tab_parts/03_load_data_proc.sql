@@ -653,5 +653,5 @@ BEGIN
     SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_pnew' INTO OUTFILE 'd:/loaddir/alarm/load_alarm.sql';
     SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'alarm_aux_pnew' INTO OUTFILE 'd:/loaddir/alarm_aux/load_alarm_aux.sql';
     SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_pnew' INTO OUTFILE 'd:/loaddir/c3_sms/load_c3_sms.sql';
-    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_nos_ac.sql';
+    SELECT concat(f, fv, t, tv, d) FROM wv_load WHERE tv = 'c3_sms_monitor_pnew' INTO OUTFILE 'd:/loaddir/c3_sms_monitor/load_c3_sms_monitor.sql';
 END //
