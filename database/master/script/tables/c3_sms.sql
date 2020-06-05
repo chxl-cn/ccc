@@ -14,7 +14,7 @@ CREATE TABLE `c3_sms`
     `km_mark`             INT(11),
     `record_time`         DATETIME,
     `line_no`             INT(11),
-    `routing_no`          INT ,
+    `routing_no`          VARCHAR (5),
     `satellite_num`       INT(11),
     `speed`               INT(11),
     `recv_time`           DATETIME,
